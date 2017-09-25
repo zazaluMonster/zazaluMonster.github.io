@@ -104,7 +104,7 @@
 <meta property="og:site_name" content="Zazalu&#39;s Blog">
 <meta property="og:description" content="前言 离上次写论文已经很久了呢，这次的更新，是因为发现自己在和bug斗智斗勇的时候，感觉应该总结点经验，这个经验在现在看来也许只是一个编程方面的解决思路，但是好好的思考其中心思想后，我发现其实解决bug的时候，你采用的行动模式，可能会影响你解决问题的效率。我想记录的便是解决bug的时候，我学到的一种思想，是可以被我循环往复使用的，在以后遇到问题的时候可以借鉴到的解决思路。 ps:最近在做毕设，踩到">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-04-13T11:46:00.000Z">
+<meta property="og:updated_time" content="2017-09-25T01:32:26.960Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SameBugs专题">
 <meta name="twitter:description" content="前言 离上次写论文已经很久了呢，这次的更新，是因为发现自己在和bug斗智斗勇的时候，感觉应该总结点经验，这个经验在现在看来也许只是一个编程方面的解决思路，但是好好的思考其中心思想后，我发现其实解决bug的时候，你采用的行动模式，可能会影响你解决问题的效率。我想记录的便是解决bug的时候，我学到的一种思想，是可以被我循环往复使用的，在以后遇到问题的时候可以借鉴到的解决思路。 ps:最近在做毕设，踩到">
@@ -422,6 +422,8 @@
 </blockquote>
 <p>类似这样的错误</p>
 <p>第一反应便是 你使用了mysql的保留字作为了你的数据库表名或者列名</p>
+<h3 id="2-The-user-specified-as-a-definer-‘someuser’-’-’-does-not-exist"><a href="#2-The-user-specified-as-a-definer-‘someuser’-’-’-does-not-exist" class="headerlink" title="2.  The user specified as a definer (‘someuser’@’%’) does not exist"></a>2.  The user specified as a definer (‘someuser’@’%’) does not exist</h3><p>这类错误代表someuser这个用户不存在，所以它报definer找不到</p>
+<p>解决方法1：最暴力的方法就是在你目前的mysql数据库中新增这个用户，键入如下代码<br>          GRANT ALL ON <em>.</em> TO ‘someuser’@’%’ IDENTIFIED BY ‘someuser’s password’;<br>         FLUSH PRIVILEGES;<br>解决方法2: 如果你不想为你的当前数据库新增用户，那么可以选择此种方法，解决方法请看此贴                      <a href="https://stackoverflow.com/questions/10169960/mysql-error-1449-the-user-specified-as-a-definer-does-not-exist?page=1&amp;tab=votes#tab-top" target="_blank" rel="external">https://stackoverflow.com/questions/10169960/mysql-error-1449-the-user-specified-as-a-definer-does-not-exist?page=1&amp;tab=votes#tab-top</a></p>
 
       
     </div>
@@ -595,7 +597,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java-Exceptions"><span class="nav-number">2.</span> <span class="nav-text">Java Exceptions</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-java-lang-NoSuchMethodError-com-mchange-v2-async-ThreadPoolAsynchronousRunner"><span class="nav-number">2.1.</span> <span class="nav-text">1.java.lang.NoSuchMethodError: com.mchange.v2.async.ThreadPoolAsynchronousRunner.</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#总结："><span class="nav-number">2.1.0.0.1.</span> <span class="nav-text">总结：</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mysql-Exception"><span class="nav-number">3.</span> <span class="nav-text">Mysql Exception</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-the-right-syntax-to-use-near-“xxx”"><span class="nav-number">3.1.</span> <span class="nav-text">1.  the right syntax to use near “xxx”</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java-Exceptions"><span class="nav-number">2.</span> <span class="nav-text">Java Exceptions</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-java-lang-NoSuchMethodError-com-mchange-v2-async-ThreadPoolAsynchronousRunner"><span class="nav-number">2.1.</span> <span class="nav-text">1.java.lang.NoSuchMethodError: com.mchange.v2.async.ThreadPoolAsynchronousRunner.</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#总结："><span class="nav-number">2.1.0.0.1.</span> <span class="nav-text">总结：</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mysql-Exception"><span class="nav-number">3.</span> <span class="nav-text">Mysql Exception</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-the-right-syntax-to-use-near-“xxx”"><span class="nav-number">3.1.</span> <span class="nav-text">1.  the right syntax to use near “xxx”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-The-user-specified-as-a-definer-‘someuser’-’-’-does-not-exist"><span class="nav-number">3.2.</span> <span class="nav-text">2.  The user specified as a definer (‘someuser’@’%’) does not exist</span></a></li></ol></li></ol></div>
             
           </div>
         </section>
