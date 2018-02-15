@@ -1548,7 +1548,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #54ff34;
+  background: #df6a77;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -2426,10 +2426,11 @@ hr {
   }
 }
 .header {
-  background-image: url("/images/header.png");
+  background-image: url("/images/newYear.jpg");
   background-repeat: no-repeat;
   background-attachment: fixed;
   height: 350px;
+  background-position-y: -212px;
 }
 .header-inner {
   text-align: center;
