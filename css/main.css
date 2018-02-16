@@ -1548,7 +1548,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #ff9eff;
+  background: #3e6ac3;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -2449,6 +2449,16 @@ hr {
   font-size: larger;
   top: 13px;
   left: 15px;
+}
+.articleHeaderBox.Important {
+  background-color: rgba(255,0,0,0.149);
+  border-color: rgba(255,0,0,0.251);
+  color: #f00;
+}
+.headerImage {
+  width: 50% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
 .header {
   background-image: url("/images/newYear.jpg");
