@@ -1548,7 +1548,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #75da75;
+  background: #ff9eff;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -2424,6 +2424,31 @@ hr {
     width: auto;
     text-align: center;
   }
+}
+.articleHeaderBox {
+  background-color: #d9edf7;
+  border-color: #b3e5ef;
+  color: #31708f;
+  padding-left: 45px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  padding-right: 15px;
+  position: relative;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+}
+.articleHeaderBox p {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.articleHeaderBox:before {
+  content: "\f05a";
+  position: absolute;
+  font-family: 'FontAwesome';
+  font-size: larger;
+  top: 13px;
+  left: 15px;
 }
 .header {
   background-image: url("/images/newYear.jpg");
