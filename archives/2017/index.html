@@ -134,7 +134,7 @@
 <!-- use nprogress.js. It is a plugin of the Loading Bar of My Blog website -->
 <script type="text/javascript" src="/js/src/nprogress.js"></script>
 
-<!-- you can do some test js here,but please delete them when you test over -->
+<!-- you can do some test js or self custom here,but please delete them when you test over -->
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
@@ -789,6 +789,17 @@
   <!-- <script type="text/javascript" src="/js/src/Kiana.js"></script> -->
   <script type="text/javascript" src="/js/src/topScoll.js"></script>
   <script type="text/javascript" src="/js/src/test.js"></script>
+
+  <!-- 药水制作师live2d -->
+  <div class="waifu">
+    <div class="waifu-tips"></div>
+    <canvas id="live2d" width="280" height="250" class="live2d"></canvas>
+  </div>
+  <script async src="live2d/waifu-tips.js"></script>
+  <script src="live2d/live2d.js"></script>
+  <script type="text/javascript">
+    loadlive2d("live2d", "live2d/Pio/model.json");
+  </script>
   
 </body>
 </html>
