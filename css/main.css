@@ -1548,7 +1548,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #2bb6ff;
+  background: #b8a1aa;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -2425,6 +2425,10 @@ hr {
     text-align: center;
   }
 }
+.waifu-closed {
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: 22px;
+}
 .waifu-tool span {
   display: block;
   cursor: pointer;
@@ -2435,16 +2439,23 @@ hr {
 .waifu-tool {
   display: none;
   color: #aaa;
-  top: 50px;
-  right: 10px;
   font-size: 14px;
-  position: absolute;
+  position: fixed;
+  left: 230px;
+  bottom: 172px;
+  z-index: 1;
 }
-.waifu-tool .on {
+.waifu-tool.on {
   display: block;
 }
-.waifu-tool .off {
+.waifu-tool.off {
   display: none;
+}
+.waifu-tool:hover {
+  color: #09c;
+}
+.fui-cross:before {
+  content: "\e609";
 }
 .waifu {
   position: fixed;
