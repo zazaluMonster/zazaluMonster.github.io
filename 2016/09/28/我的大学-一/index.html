@@ -119,7 +119,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     scheme: 'Mist',
-    sidebar: {"position":"left","display":"post"},
+    sidebar: {"position":"left","display":"hide"},
     fancybox: true,
     motion: true,
     duoshuo: {
@@ -896,10 +896,10 @@
     <div class="waifu-tips"></div>
     <canvas id="live2d" width="280" height="250" class="live2d"></canvas>
   </div>
-  <script async src="live2d/waifu-tips.js"></script>
-  <script src="live2d/live2d.js"></script>
+  <script async src="/live2d/waifu-tips.js"></script>
+  <script src="/live2d/live2d.js"></script>
   <script type="text/javascript">
-    loadlive2d("live2d", "live2d/Pio/model.json");
+    loadlive2d("live2d", "/live2d/Pio/model.json");
   </script>
   
 </body>

@@ -36,7 +36,7 @@ $(document).on('copy', function (){
 
 $.ajax({
     cache: true,
-    url: "path/to/waifu-tips.json",
+    url: "/live2d/waifu-tips.json",
     dataType: "json",
     success: function (result){
         $.each(result.mouseover, function (index, tips){
@@ -111,7 +111,7 @@ function showHitokoto(){
 
 function showMessage(text, timeout){
     if(Array.isArray(text)) text = text[Math.floor(Math.random() * text.length + 1)-1];
-    console.log(text);
+    // console.log(text); 太多输出 去掉
     $('.waifu-tips').stop();
     $('.waifu-tips').html(text).fadeTo(200, 1);
     if (timeout === null) timeout = 5000;
