@@ -1548,7 +1548,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #9863e5;
+  background: #2bb6ff;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -2424,6 +2424,27 @@ hr {
     width: auto;
     text-align: center;
   }
+}
+.waifu-tool span {
+  display: block;
+  cursor: pointer;
+  color: #5b6c7d;
+  line-height: 20px;
+  transition: 0.2s;
+}
+.waifu-tool {
+  display: none;
+  color: #aaa;
+  top: 50px;
+  right: 10px;
+  font-size: 14px;
+  position: absolute;
+}
+.waifu-tool .on {
+  display: block;
+}
+.waifu-tool .off {
+  display: none;
 }
 .waifu {
   position: fixed;

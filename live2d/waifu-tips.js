@@ -34,6 +34,24 @@ $(document).on('copy', function (){
     showMessage('你都复制了些什么呀，转载要记得加上出处哦', 5000);
 });
 
+
+$('.waifu-tool .waifu-closed').click(function (){
+    showMessage('愿你有一天能与重要的人重逢', 1300, true);
+    window.setTimeout(function() {$('.waifu').hide();}, 1300);
+});
+$('.waifu').mouseenter(function () {
+    //显示工具栏
+    $('.waifu-tool').removeClass('off');
+    $('.waifu-tool').addClass('on');
+})
+$('.waifu').mouseleave(function () {
+    //关闭工具栏
+    $('.waifu-tool').removeClass('on');
+    $('.waifu-tool').addClass('off');
+
+})
+
+
 $.ajax({
     cache: true,
     url: "/live2d/waifu-tips.json",
@@ -45,6 +63,7 @@ $.ajax({
                 if(Array.isArray(tips.text)) text = tips.text[Math.floor(Math.random() * tips.text.length + 1)-1];
                 text = text.render({text: $(this).text()});
                 showMessage(text, 3000);
+               
             });
         });
         $.each(result.click, function (index, tips){
