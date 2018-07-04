@@ -753,7 +753,6 @@ pre .javascript .function {
   margin-top: 4px;
 }
 .pagination {
-  margin-bottom: 65px;
   margin: 120px 0 40px;
   text-align: center;
   border-top: 1px solid #eee;
@@ -1549,7 +1548,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #c8ff40;
+  background: #993d88;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -2401,7 +2400,7 @@ hr {
   margin-bottom: 60px;
 }
 .pagination {
-  margin: 120px 0 0;
+  margin: 120px 0 65px 0;
   text-align: left;
 }
 @media (max-width: 767px) {
