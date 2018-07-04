@@ -104,7 +104,7 @@
 <meta property="og:site_name" content="Zazalu&#39;s Blog">
 <meta property="og:description" content="hello,my blog.好久不见.由于最近项目有些地方有涉及到数字签名,RSA加解密,数字证书等东西.虽然对其不太了解,也没有过多的影响到自己的开发,但是抱着一颗好奇的心,对其相关知识进行了网上冲浪,现在对自己所看到的相关资料,进行自我整理以及消化.在这一章,你将了解到[什么是数字签名][什么是公钥私钥][JAVA如何生成公钥私钥进行数字签名]">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-04T07:26:12.667Z">
+<meta property="og:updated_time" content="2018-07-04T07:27:37.226Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用JavaSeurity进行数字签名以及加密处理(一)">
 <meta name="twitter:description" content="hello,my blog.好久不见.由于最近项目有些地方有涉及到数字签名,RSA加解密,数字证书等东西.虽然对其不太了解,也没有过多的影响到自己的开发,但是抱着一颗好奇的心,对其相关知识进行了网上冲浪,现在对自己所看到的相关资料,进行自我整理以及消化.在这一章,你将了解到[什么是数字签名][什么是公钥私钥][JAVA如何生成公钥私钥进行数字签名]">
@@ -402,12 +402,12 @@
 <h2 id="数字签名"><a href="#数字签名" class="headerlink" title="数字签名"></a>数字签名</h2><blockquote>
 <p><strong>数字签名何时诞生</strong></p>
 </blockquote>
-<p>1976年，Whitfield Diffie 和 Martin Hellman 两人第一次提出了数字签名的概念，当时虽然他们并没有现成的方法去得到数据的数字签名，但是他们推测可以使用相关数学<br>函数去进行计算获取到数字签名，这个方案是可行的。</p>
-<p>随后不久， Ronald Rivest, Adi Shamir, 和 Len Adleman便研究出了RSA算法，这是一个可以生成数字签名的算法(虽然当时RSA算法得到的数字签名被公认为还是不安全的)<br>最后第一个可以为指定数据生成数字签名的软件包诞生， Lotus Notes 在1989年将其发布。</p>
+<p>1976年，Whitfield Diffie 和 Martin Hellman 两人第一次提出了数字签名的概念，当时虽然他们并没有现成的方法去得到数据的数字签名，但是他们推测可以使用相关数学函数去进行计算获取到数字签名，这个方案是可行的。</p>
+<p>随后不久， Ronald Rivest, Adi Shamir, 和 Len Adleman便研究出了RSA算法，这是一个可以生成数字签名的算法(虽然当时RSA算法得到的数字签名被公认为还是不安全的)最后第一个可以为指定数据生成数字签名的软件包诞生， Lotus Notes 在1989年将其发布。</p>
 <blockquote>
 <p><strong>数字签名是什么</strong></p>
 </blockquote>
-<p>简单来说，数字签名就是使用公认可靠的签名算法，使用公钥加密技术，生成一段数据的一串散列值。比如<code>hello,zazalu</code>这串数据的数字签名就类似于<code>BE459576785039E8</code>，<br>我们可以将这一串值理解为非常难以破解的东西。</p>
+<p>简单来说，数字签名就是使用公认可靠的签名算法，使用公钥加密技术，生成一段数据的一串散列值。比如<code>hello,zazalu</code>这串数据的数字签名就类似于<code>BE459576785039E8</code>，我们可以将这一串值理解为非常难以破解的东西。</p>
 <blockquote>
 <p><strong>数字签名的用武之地在哪里</strong></p>
 </blockquote>
