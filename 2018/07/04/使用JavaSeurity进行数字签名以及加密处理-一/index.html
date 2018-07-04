@@ -1,0 +1,925 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Java - Signature - Encryption," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="hello,my blog.好久不见.由于最近项目有些地方有涉及到数字签名,RSA加解密,数字证书等东西.虽然对其不太了解,也没有过多的影响到自己的开发,但是抱着一颗好奇的心,对其相关知识进行了网上冲浪,现在对自己所看到的相关资料,进行自我整理以及消化.在这一章,你将了解到[什么是数字签名][什么是公钥私钥][JAVA如何生成公钥私钥进行数字签名]">
+<meta name="keywords" content="Java - Signature - Encryption">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用JavaSeurity进行数字签名以及加密处理(一)">
+<meta property="og:url" content="http://yoursite.com/2018/07/04/使用JavaSeurity进行数字签名以及加密处理-一/index.html">
+<meta property="og:site_name" content="Zazalu&#39;s Blog">
+<meta property="og:description" content="hello,my blog.好久不见.由于最近项目有些地方有涉及到数字签名,RSA加解密,数字证书等东西.虽然对其不太了解,也没有过多的影响到自己的开发,但是抱着一颗好奇的心,对其相关知识进行了网上冲浪,现在对自己所看到的相关资料,进行自我整理以及消化.在这一章,你将了解到[什么是数字签名][什么是公钥私钥][JAVA如何生成公钥私钥进行数字签名]">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-07-04T07:13:17.665Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用JavaSeurity进行数字签名以及加密处理(一)">
+<meta name="twitter:description" content="hello,my blog.好久不见.由于最近项目有些地方有涉及到数字签名,RSA加解密,数字证书等东西.虽然对其不太了解,也没有过多的影响到自己的开发,但是抱着一颗好奇的心,对其相关知识进行了网上冲浪,现在对自己所看到的相关资料,进行自我整理以及消化.在这一章,你将了解到[什么是数字签名][什么是公钥私钥][JAVA如何生成公钥私钥进行数字签名]">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"hide"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/07/04/使用JavaSeurity进行数字签名以及加密处理-一/"/>
+
+  <title> 使用JavaSeurity进行数字签名以及加密处理(一) | Zazalu's Blog </title>
+</head>
+
+<!-- use nprogress.js. It is a plugin of the Loading Bar of My Blog website -->
+<script type="text/javascript" src="/js/src/nprogress.js"></script>
+
+<!-- you can do some test js or self custom here,but please delete them when you test over -->
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?15ccc3aa9c18bcd901435b78b3c09e78";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Zazalu's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">谈何容易</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+    
+    <div class="header-inner-top">
+  <div class="site-meta " style="margin-left: 10%;" >
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start" style="opacity: 1;height: inherit;">
+        <span class="logo-line-before"><i class="" style="transform: translateX(100%);"></i></span>
+        <span class="site-title" style="opacity: 1;top: 6px;left: 26px;font-size: 27px;">Zazalu's Blog</span>
+        <span class="logo-line-after"><i class="" style="transform: translateX(-100%);"></i></span>
+      </a>
+    </div>
+    <p class="site-subtitle" style="opacity: 1; top: 0px;">谈何容易</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+  </div>
+  <nav class="site-nav">
+    <ul class="menu" style="bottom: 0px;">
+      <li class="menu-item menu-item-home menu-item-active" style="opacity: 1; transform: translateY(0px);">
+        <a href="/" rel="section">
+          <i class="menu-item-icon fa fa-fw fa-home"></i> <br> 首页
+        </a>
+      </li>
+      <li class="menu-item menu-item-categories" style="opacity: 1; transform: translateY(0px);">
+        <a href="/categories" rel="section">
+          <i class="menu-item-icon fa fa-fw fa-th"></i> <br> 分类
+        </a>
+      </li>
+      <li class="menu-item menu-item-archives" style="opacity: 1; transform: translateY(0px);">
+        <a href="/archives" rel="section">
+          <i class="menu-item-icon fa fa-fw fa-archive"></i> <br> 归档
+        </a>
+      </li>
+      <li class="menu-item menu-item-tags" style="opacity: 1; transform: translateY(0px);">
+        <a href="/tags" rel="section">
+          <i class="menu-item-icon fa fa-fw fa-tags"></i> <br> 标签
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                使用JavaSeurity进行数字签名以及加密处理(一)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-07-04T09:00:39+08:00" content="2018-07-04">
+              2018-07-04
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Web/" itemprop="url" rel="index">
+                    <span itemprop="name">Web</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2018/07/04/使用JavaSeurity进行数字签名以及加密处理-一/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/07/04/使用JavaSeurity进行数字签名以及加密处理-一/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2018/07/04/使用JavaSeurity进行数字签名以及加密处理-一/" class="leancloud_visitors" data-flag-title="使用JavaSeurity进行数字签名以及加密处理(一)">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <div class="articleHeaderBox"><p>hello,my blog.好久不见.由于最近项目有些地方有涉及到数字签名,RSA加解密,数字证书等东西.虽然对其不太了解,也没有过多的<br>影响到自己的开发,但是抱着一颗好奇的心,对其相关知识进行了网上冲浪,现在对自己所看到的相关资料,进行自我整理以及消化.在这一章,你将了解到[什么是数字签名][什么<br>是公钥私钥][JAVA如何生成公钥私钥进行数字签名]</p></div>
+
+<a id="more"></a>
+<h2 id="数字签名"><a href="#数字签名" class="headerlink" title="数字签名"></a>数字签名</h2><blockquote>
+<p>数字签名何时诞生</p>
+</blockquote>
+<p>1976年，Whitfield Diffie 和 Martin Hellman 两人第一次提出了数字签名的概念，当时虽然他们并没有现成的方法去得到数据的数字签名，但是他们推测可以使用相关数学</p>
+<p>函数去进行计算获取到数字签名，这个方案是可行的。</p>
+<p>随后不久， Ronald Rivest, Adi Shamir, 和 Len Adleman便研究出了RSA算法，这是一个可以生成数字签名的算法(虽然当时RSA算法得到的数字签名被公认为还是不安全的)</p>
+<p>最后第一个可以为指定数据生成数字签名的软件包诞生， Lotus Notes 在1989年将其发布。</p>
+<blockquote>
+<p>数字签名是什么</p>
+</blockquote>
+<p>简单来说，数字签名就是使用公认可靠的签名算法，使用公钥加密技术，生成一段数据的一串散列值。比如<code>hello,zazalu</code>这串数据的数字签名就类似于<code>BE459576785039E8</code>，</p>
+<p>我们可以将这一串值理解为非常难以破解的东西。</p>
+<blockquote>
+<p>数字签名的用武之地在哪里</p>
+</blockquote>
+<p>我用一个生活中的简单例子来做个比喻.</p>
+<p>当我们收到自己爱人的来信时，激动不已的你急忙打开并且进行阅读。在这个简单的环节中，人的大脑其实自动帮你做了一个简单的验签的过程，你在看到那些熟悉的字体，熟悉的</p>
+<p>称呼或者一个简单的暗号后，你就为潜在的认为这封信确实是你的爱人写的，因为只有你熟悉他(她)的写法，只有你才知道暗号的含义。</p>
+<p>数字签名其实起到的就和“暗号”“写法”这类东西类似，都是用来证明发件人确实是你爱人用的。在没有数字签名之前，我们在网上收到一封重要文件，虽然系统提示你发件人为A，</p>
+<p>但是并不代表真的是A，有可能是B正好偷偷用A的电脑发的也说不定。总而言之，在没有数字签名的时候，你无法确定发件人是谁。而数字签名就是起到证明发件人确实是A的作用</p>
+<p>的东西。</p>
+<blockquote>
+<p>数字签名如何生成？</p>
+</blockquote>
+<p>在前面，我有说到，数字签名是使用公认可靠的签名算法，使用公钥加密技术，为数据生成一串散列值。那么具体是怎么样的呢？</p>
+<p>首先我们来简单说明下公钥加密技术，目前我们常用于数字签名的公钥加密技术有两种，一个是RSA，还有一个是DSA。不过在进行数字签名这方面，他们的行为在语言描述上是一</p>
+<p>致的，这里也就不做区分说明。</p>
+<p>不管是RSA还是DSA算法，他们都需要两个密钥，一个叫公钥，一个叫私钥。使用加密算法前，我们需要先使用相关算法库，生成一对密钥对，使用公钥加密的信息只能由私钥进行</p>
+<p>解密(反过来亦可以)，而数字签名是由私钥和签名算法得到的，也就是说数字签名是由私钥加密获取的。这里我们可以简单的思考一个问题，如果私钥加密，那岂不是谁都能解密？</p>
+<p>是的，由于公钥是公有的，谁都能获取，所以按逻辑上来说，我们不应该使用私钥进行加密。但是我们却可以利用这一点来验证这串数据是由谁加密的，因为私钥是保密的。我使用</p>
+<p>私钥生成一串数字签名，那么只要使用我的公钥解析数字签名并且使用相同算法比较数据的散列值，如果是一样的，就说明这个数据就确实是由我发出的，不会有假。这也就说明了</p>
+<p>数字签名的有效性，可靠性。</p>
+<blockquote>
+<p>参考</p>
+</blockquote>
+<p>上面几节，不知道讲没讲明白，但是我已经把我自己的理解全部整理了一遍，如果您还是不理解，不妨可以试试下面链接，都说明的不错</p>
+<ol>
+<li><p><a href="https://security.stackexchange.com/questions/66392/why-should-i-sign-data-thats-already-encrypted" target="_blank" rel="external">https://security.stackexchange.com/questions/66392/why-should-i-sign-data-thats-already-encrypted</a></p>
+</li>
+<li><p><a href="https://docs.oracle.com/javase/tutorial/security/apisign/step3.html" target="_blank" rel="external">https://docs.oracle.com/javase/tutorial/security/apisign/step3.html</a> </p>
+</li>
+<li><p><a href="https://www.jianshu.com/p/090e35989501" target="_blank" rel="external">https://www.jianshu.com/p/090e35989501</a></p>
+</li>
+</ol>
+<h2 id="JAVA如何生成数字签名"><a href="#JAVA如何生成数字签名" class="headerlink" title="JAVA如何生成数字签名"></a>JAVA如何生成数字签名</h2><p>讲完了基础知识后，接下来我们就来做点练习。</p>
+<blockquote>
+<p>获取RSA密钥对的接口方法getRSAKeyPair</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">public KeyPair getRSAKeyPair() throws NoSuchAlgorithmException &#123;</div><div class="line">        //获得密钥生成器,java语言使用KeyPairGenerator</div><div class="line">        KeyPairGenerator keyGen = KeyPairGenerator.getInstance(&quot;RSA&quot;);</div><div class="line">        //获得一个密码随机数生成器(用于密钥生成),使用SecureRandom以及SHA1PRNG</div><div class="line">        //SHA1PRNG意思便是使用SHA1密码散列函数,来生成伪随机数,PRNG = pseudo random number generator,</div><div class="line">        // 有兴趣的同学可以进行深入研究, 这里不会探讨此问题</div><div class="line">        //我们的示例使用SHA1,当然你也可以试试SHA-2，SHA-3</div><div class="line">        SecureRandom random = SecureRandom.getInstance(&quot;SHA1PRNG&quot;);</div><div class="line">        //初始化1024位密钥生成器</div><div class="line">        keyGen.initialize(1024,random);</div><div class="line">        //生成公钥私钥</div><div class="line">        return keyGen.generateKeyPair();</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>使用我们刚刚生成的密钥对去生成指定文件的数字签名,getFileSignature接口参数,file为你指定的文件,keypair为你使用getRSAKeyPair生成的密钥对</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">public Signature getFileSignature(File file,KeyPair keyPair) throws NoSuchAlgorithmException, InvalidKeyException, IOException, SignatureException &#123;</div><div class="line">        if(file == null)&#123;</div><div class="line">            throw new FileNotFoundException();</div><div class="line">        &#125;</div><div class="line">        //获取一个签名器,注意：生成密钥对的时候使用的是什么非对称加密算法和什么散列函数,String参数就填写对应&quot;XXXXwithXXX&quot;</div><div class="line">        //e.g. DSA密钥对,使用SHA1PRNG,则为&quot;SHA1withDSA&quot;</div><div class="line">        Signature dsa = Signature.getInstance(&quot;SHA1withRSA&quot;);</div><div class="line">        //使用私钥初始化签名器,注意：请不要使用公钥初始化,只有私钥才能用来生成数字签名</div><div class="line">        PrivateKey priv = keyPair.getPrivate();</div><div class="line">        dsa.initSign(priv);</div><div class="line">        //使用签名器的update方法将要进行签名文件的数据导入到签名器中(光看api就感觉很类似导入的感觉,所以就这么说明了,如有违和的地方请指正)</div><div class="line">        dsa = updateDsaSignture(dsa,file);</div><div class="line">        //获取数字签名</div><div class="line">        return dsa;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">/**</div><div class="line"> * 将文件数据导入至签名器中</div><div class="line"> * @param dsa 签名器</div><div class="line"> * @param file 需进行签名的文件</div><div class="line"> * @Return: dsa 数据导入完毕的签名器</div><div class="line"> * @Creator: hejj</div><div class="line"> */</div><div class="line">private Signature updateDsaSignture(Signature dsa,File file) throws IOException, SignatureException &#123;</div><div class="line">        FileInputStream fis = new FileInputStream(file);</div><div class="line">        BufferedInputStream bufin = new BufferedInputStream(fis);</div><div class="line">        byte[] buffer = new byte[1024];</div><div class="line">        int len;</div><div class="line">        while ((len = bufin.read(buffer)) &gt;= 0) &#123;</div><div class="line">            dsa.update(buffer, 0, len);</div><div class="line">        &#125;</div><div class="line">        bufin.close();</div><div class="line">        return dsa;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>把数字签名和公钥保存到本地</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">public void saveSignature(File signFile, Signature signature) throws IOException, SignatureException, NoSuchAlgorithmException, InvalidKeyException &#123;</div><div class="line">        if(signFile == null)&#123;</div><div class="line">            signFile = new File(&quot;../resource/signFile&quot;);</div><div class="line">        &#125;</div><div class="line">        if(signFile.exists())&#123;</div><div class="line">            signFile.delete();</div><div class="line">        &#125;else&#123;</div><div class="line">            signFile.createNewFile();</div><div class="line">        &#125;</div><div class="line">        FileOutputStream sigfos = new FileOutputStream(signFile);</div><div class="line">        sigfos.write(signature.sign());</div><div class="line">        sigfos.close();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">private void savePublicKey(File pubKeyFile, PublicKey publicKey) throws NoSuchAlgorithmException, IOException &#123;</div><div class="line">        if(pubKeyFile == null)&#123;</div><div class="line">            throw new FileNotFoundException();</div><div class="line">        &#125;</div><div class="line">        if(pubKeyFile.exists())&#123;</div><div class="line">            pubKeyFile.delete();</div><div class="line">        &#125;else&#123;</div><div class="line">            pubKeyFile.createNewFile();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        byte[] key = publicKey.getEncoded();</div><div class="line">        FileOutputStream keyfos = new FileOutputStream(pubKeyFile);</div><div class="line">        keyfos.write(key);</div><div class="line">        keyfos.close();</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>将所有接口整合，运行起来的demo</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">@Test</div><div class="line">public void signFile() throws NoSuchAlgorithmException, InvalidKeyException, IOException, SignatureException &#123;</div><div class="line">    MyRsaDsaUtil rsaDsaUtil = new MyRsaDsaUtil();</div><div class="line">    //获取密钥对</div><div class="line">    KeyPair keyPair = rsaDsaUtil.getRSAKeyPair();</div><div class="line">    //获取文件签名(请先预创建自己的rsaSigndFile文件)</div><div class="line">    String signFilePath = URLDecoder.decode(MyRsaDsaUtil.class.getResource(&quot;../resource/rsaSignFile&quot;)</div><div class="line">            .getFile(),&quot;utf-8&quot;) ;</div><div class="line">    Signature signature = rsaDsaUtil.getFileSignature(new File(signFilePath),keyPair);</div><div class="line">    //保存文件签名 保存后才能发送给别人哦</div><div class="line">    String signDataFileUrl = &quot;src/test/resource/signData&quot; ;</div><div class="line">    String pubKeyDataFileUrl = &quot;src/test/resource/pubKeyData&quot;;</div><div class="line">    rsaDsaUtil.saveSignature(new File(signDataFileUrl),signature);</div><div class="line">    rsaDsaUtil.savePublicKey(new File(pubKeyDataFileUrl),keyPair.getPublic());</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="小节"><a href="#小节" class="headerlink" title="小节"></a>小节</h2><p>本章我们先从数字签名的基础知识讲起，随后用了实际代码例子进行了练习，现在我们应该都已经学会了使用java生成某个文件的数字签名！</p>
+<p>在下一章中，我们将作为文件接收者，去验证这个数字签名是否正确，从而完成一整个使用数字签名验证发件人有效性的整个流程。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java-Signature-Encryption/" rel="tag">#Java - Signature - Encryption</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/22/致两年后的自己/" rel="next" title="致两年后的自己">
+                <i class="fa fa-chevron-left"></i> 致两年后的自己
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="zazalu" />
+          <p class="site-author-name" itemprop="name">zazalu</p>
+          <p class="site-description motion-element" itemprop="description">祝大家狗年吉祥吧！</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">12</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/T_zazalu" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#数字签名"><span class="nav-number">1.</span> <span class="nav-text">数字签名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JAVA如何生成数字签名"><span class="nav-number">2.</span> <span class="nav-text">JAVA如何生成数字签名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小节"><span class="nav-number">3.</span> <span class="nav-text">小节</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zazalu</span>
+</div>
+
+<div class="powered-by">
+  <!-- 由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动 -->
+  为什么叫zazalu？ 这个嘛。。
+</div>
+
+<div class="theme-info">
+  <!-- 主题--> 
+  就是感觉zazalu -
+  <!-- <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next"> -->
+    <!-- NexT.Mist -->
+    很容易记而已。。
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'https-zazalumonster-github-io-1';
+      var disqus_identifier = '2018/07/04/使用JavaSeurity进行数字签名以及加密处理-一/';
+      var disqus_title = "使用JavaSeurity进行数字签名以及加密处理(一)";
+      var disqus_url = 'http://yoursite.com/2018/07/04/使用JavaSeurity进行数字签名以及加密处理-一/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("eyTYyxArg6WE2ed8hupgliQx-gzGzoHsz", "HKmnL7qi6F5CCprVe8b3v6hT");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  <!-- put your plugin js here -->
+  <!-- 第一代背景js,会跟随鼠标聚焦一堆线 -->
+  <!-- <script type="text/javascript" src="/js/src/background.js"></script> -->
+  <!-- 第二代背景js -->
+  <script type="text/javascript" src="/js/src/three.min.js"></script>
+  <script type="text/javascript" src="/js/src/canvas_lines.min.js"></script>
+
+  <script type="text/javascript" src="/js/src/useNprogress.js"></script>
+  <!-- Kiana玩具模型js -->
+  <!-- <script type="text/javascript" src="/js/src/Kiana.js"></script> -->
+  <script type="text/javascript" src="/js/src/topScoll.js"></script>
+  <script type="text/javascript" src="/js/src/test.js"></script>
+
+  <!-- 药水制作师live2d -->
+  <div class="waifu">
+    <div class="waifu-tips"></div>
+    <canvas id="live2d" width="280" height="250" class="live2d"></canvas>
+    <div class="waifu-tool">
+      <i class="fa-times waifu-closed"></i>
+    </div>
+  </div>
+  <script async src="/live2d/waifu-tips.js"></script>
+  <script src="/live2d/live2d.js"></script>
+  <script type="text/javascript">
+    loadlive2d("live2d", "/live2d/Pio/model.json");
+  </script>
+   <!-- 药水制作师live2d插件结束 -->
+ 
+  
+</body>
+</html>
