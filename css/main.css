@@ -1548,7 +1548,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #7c1211;
+  background: #e0ff06;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -2424,6 +2424,10 @@ hr {
     width: auto;
     text-align: center;
   }
+}
+strong {
+  color: #2c3e50;
+  font-weight: bold;
 }
 .waifu-closed {
   font: normal normal normal 14px/1 FontAwesome;
