@@ -80,7 +80,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Java,Signature,Encryption," />
 
 
 
@@ -96,16 +96,18 @@
 
 
 
-<meta name="description" content="祝大家狗年吉祥吧！">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Zazalu&#39;s Blog">
-<meta property="og:url" content="http://yoursite.com/page/4/index.html">
+<meta name="description" content="在上一章中，我们使用JavaSeurityAPI对dsaSignFile文件进行了一次数字签名，并且将其数字签名以及公钥都保存到了本地硬盘的相应文件中。作为发送方，我们通过各种“交通”手段，将这三个文件一一发给了接收方。在本章我们就来展示接收方如何使用这三个文件，对数字签名进行验证，最终确定dsaSignFile的确实是由发送方发出的">
+<meta name="keywords" content="Java,Signature,Encryption">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用JavaSeurity进行数字签名(二)">
+<meta property="og:url" content="http://yoursite.com/2018/07/05/使用JavaSeurity进行数字签名-二/index.html">
 <meta property="og:site_name" content="Zazalu&#39;s Blog">
-<meta property="og:description" content="祝大家狗年吉祥吧！">
+<meta property="og:description" content="在上一章中，我们使用JavaSeurityAPI对dsaSignFile文件进行了一次数字签名，并且将其数字签名以及公钥都保存到了本地硬盘的相应文件中。作为发送方，我们通过各种“交通”手段，将这三个文件一一发给了接收方。在本章我们就来展示接收方如何使用这三个文件，对数字签名进行验证，最终确定dsaSignFile的确实是由发送方发出的">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-07-05T07:33:44.600Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Zazalu&#39;s Blog">
-<meta name="twitter:description" content="祝大家狗年吉祥吧！">
+<meta name="twitter:title" content="使用JavaSeurity进行数字签名(二)">
+<meta name="twitter:description" content="在上一章中，我们使用JavaSeurityAPI对dsaSignFile文件进行了一次数字签名，并且将其数字签名以及公钥都保存到了本地硬盘的相应文件中。作为发送方，我们通过各种“交通”手段，将这三个文件一一发给了接收方。在本章我们就来展示接收方如何使用这三个文件，对数字签名进行验证，最终确定dsaSignFile的确实是由发送方发出的">
 
 
 
@@ -126,9 +128,9 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/page/4/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/07/05/使用JavaSeurity进行数字签名-二/"/>
 
-  <title> Zazalu's Blog </title>
+  <title> 使用JavaSeurity进行数字签名(二) | Zazalu's Blog </title>
 </head>
 
 <!-- use nprogress.js. It is a plugin of the Loading Bar of My Blog website -->
@@ -164,9 +166,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left 
-   page-home 
- ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -299,9 +299,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
   
@@ -321,10 +321,7 @@
             
             
               
-                
-                <a class="post-title-link" href="/2016/10/20/Servlet的总结/" itemprop="url">
-                  Servlet的总结f
-                </a>
+                使用JavaSeurity进行数字签名(二)
               
             
           </h1>
@@ -336,8 +333,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-10-20T08:56:31+08:00" content="2016-10-20">
-              2016-10-20
+            <time itemprop="dateCreated" datetime="2018-07-05T15:14:07+08:00" content="2018-07-05">
+              2018-07-05
             </time>
           </span>
 
@@ -366,8 +363,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/10/20/Servlet的总结/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/10/20/Servlet的总结/" itemprop="commentsCount"></span>
+                <a href="/2018/07/05/使用JavaSeurity进行数字签名-二/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/07/05/使用JavaSeurity进行数字签名-二/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -377,7 +374,7 @@
 
           
           
-             <span id="/2016/10/20/Servlet的总结/" class="leancloud_visitors" data-flag-title="Servlet的总结f">
+             <span id="/2018/07/05/使用JavaSeurity进行数字签名-二/" class="leancloud_visitors" data-flag-title="使用JavaSeurity进行数字签名(二)">
                &nbsp; | &nbsp;
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -399,313 +396,104 @@
       
 
       
-        
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><hr>
-<p>一开始的笔记都是记在自己的个人电脑里的，虽然姑且放到了icloud上，但是还是觉得不够好用，所以今后的个人笔记全都放到自己的博客上吧。</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/10/20/Servlet的总结/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
+        <div class="articleHeaderBox"><p>在上一章中，我们使用JavaSeurityAPI对dsaSignFile文件进行了一次数字签名，并且将其数字签名以及公钥都保存到了本地硬盘的相应文件中。作为发送方，我们通过各种“交通”手段，将这三个文件一一发给了接收方。在本章我们就来展示接收方如何使用这三个文件，对数字签名进行验证，最终确定dsaSignFile的确实是由发送方发出的</p></div>
+
+<a id="more"></a>
+<blockquote>
+<p><strong>什么是验签</strong></p>
+</blockquote>
+<p>接收方获取到原数据文件，公钥文件，数字签名文件后，使用这三个文件便可以完成验签。验签的基本流程简单来说如下</p>
+<ol>
+<li>使用公钥文件将数字签名还原为散列值A</li>
+<li>使用加签时相同的算法获取原数据文件的散列值B</li>
+<li>对比A和B是否一致，若一致便说明数字签名正确，该文件确实是发送方发出，而不是由别人篡改后发出的</li>
+</ol>
+<blockquote>
+<p><strong>JavaSeurity进行验签</strong></p>
+</blockquote>
+<ol>
+<li>使用公钥文件获取公钥</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">private PublicKey getPubFromPubFile(File pubFile) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException &#123;</div><div class="line">        //从文件中获取公钥字节数据</div><div class="line">        FileInputStream keyfis = new FileInputStream(pubFile);</div><div class="line">        byte[] encKey = new byte[keyfis.available()];</div><div class="line">        keyfis.read(encKey);</div><div class="line">        keyfis.close();</div><div class="line">        //先将公钥字节数据转换为key specification，只有key specification才能使用KeyFactory转化为PublicKey Object</div><div class="line">        //key specification你可以理解为密钥的一种格式，是密钥字节数据的升级</div><div class="line">        X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(encKey);</div><div class="line">        //使用KeyFactory，通过key specification获取PublicKey Object</div><div class="line">        KeyFactory keyFactory = KeyFactory.getInstance(&quot;RSA&quot;);</div><div class="line">        PublicKey pubKey = keyFactory.generatePublic(pubKeySpec);</div><div class="line">        return pubKey;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<ol>
+<li><p>使用数字签名文件获取数字签名字节数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">private byte[] getSignatureBytesFromSignFile(File signFile) throws IOException &#123;</div><div class="line">        FileInputStream sigfis = new FileInputStream(signFile);</div><div class="line">        byte[] sigToVerify = new byte[sigfis.available()];</div><div class="line">        sigfis.read(sigToVerify);</div><div class="line">        sigfis.close();</div><div class="line">        return sigToVerify;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>使用原数据，公钥，数字签名字节数据验证正确性</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">private boolean verifySignature(PublicKey publicKey,File dataFile,byte[] sigToVerify) throws NoSuchAlgorithmException, InvalidKeyException, IOException, SignatureException &#123;</div><div class="line">        //这次我们使用公钥初始化签名器</div><div class="line">        Signature sig = Signature.getInstance(&quot;SHA1withRSA&quot;);</div><div class="line">        sig.initVerify(publicKey);</div><div class="line">        //将原数据导入签名器</div><div class="line">        FileInputStream datafis = new FileInputStream(dataFile);</div><div class="line">        BufferedInputStream bufin = new BufferedInputStream(datafis);</div><div class="line"></div><div class="line">        byte[] buffer = new byte[1024];</div><div class="line">        int len;</div><div class="line">        while (bufin.available() != 0) &#123;</div><div class="line">            len = bufin.read(buffer);</div><div class="line">            sig.update(buffer, 0, len);</div><div class="line">        &#125;</div><div class="line">        bufin.close();</div><div class="line">        //使用签名器进行验证</div><div class="line">        boolean verifies = sig.verify(sigToVerify);</div><div class="line">        return verifies;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>前三步整合为一个验签程序如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">@Test</div><div class="line">    public void verifySign() throws NoSuchAlgorithmException, IOException, InvalidKeySpecException, SignatureException, InvalidKeyException &#123;</div><div class="line">        String pubKeyDataFileUrl = &quot;src/test/resource/pubKeyData&quot;;</div><div class="line">        PublicKey publicKey = getPubFromPubFile(new File(pubKeyDataFileUrl));</div><div class="line">        String signDataFileUrl = &quot;src/test/resource/signData&quot; ;</div><div class="line">        byte[] sigToVerify = getSignatureBytesFromSignFile(new File(signDataFileUrl));</div><div class="line">        String dsaSignFileUrl = &quot;src/test/resource/dsaSignFile&quot; ;</div><div class="line">        boolean verifies = verifySignature(publicKey,new File(dsaSignFileUrl),sigToVerify);</div><div class="line">        System.out.println(&quot;signature verifies: &quot; + verifies);</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<blockquote>
+<p><strong>存在的隐患</strong></p>
+</blockquote>
+<p>到目前为止，使用Java进行加签验签的过程已经全部测试完毕了，但是在我们的这个流程中存在一个隐患。那就是我们不能确保接收方获得的公钥文件是正确的。</p>
+<p>打个比方，如果发送方在发出原数据，公钥文件，数字签名文件后，被中间人拦截。中间人为了达到自己的目的，篡改了原数据的内容，并且使用自己的私钥重新生成了一份新的数字签名文件，并且把公钥文件也替换为自己的公钥文件。然后将这三个文件再发送给接收方。接收方的验签过程并不会报错，从而导致接收方将错误的信息信以为真。</p>
+<p>为了避免这样的情况发生，目前的解决方法之一就是使用数字证书。一个数字证书是由国际上公认的机构进行颁发，每个数字证书中包含了发送方的公钥，以及一个该证书内容的数字签名。接收方则在本地密钥库中寻找该数字证书所对应的公钥数据，如果存在，则使用它解开这个数字证书，随后拿到发送方的公钥。这个过程中最终我们的信任方是计算机本地存储的受信任的根证书列表，只要保证它的正常运作，那么就不会发生被人篡改的情况</p>
+<blockquote>
+<p><strong>小节</strong></p>
+</blockquote>
+<p>java的数字签名练习就到此结束了。本来我还想着写一下RSA加解密，但是发现其实在流程本质上和数字签名是一致的，所以就不浪费时间重新赘述了</p>
+
       
     </div>
 
     <div>
       
+        
+
+      
     </div>
 
     <div>
+      
+        
+
       
     </div>
 
     <footer class="post-footer">
       
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/10/18/我的字符编码总结/" itemprop="url">
-                  我的字符编码总结
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-10-18T19:18:37+08:00" content="2016-10-18">
-              2016-10-18
-            </time>
-          </span>
-
+        <div class="post-tags">
           
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/计算机/" itemprop="url" rel="index">
-                    <span itemprop="name">计算机</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
+            <a href="/tags/Java/" rel="tag">#Java</a>
           
-
+            <a href="/tags/Signature/" rel="tag">#Signature</a>
           
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/10/18/我的字符编码总结/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/10/18/我的字符编码总结/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/10/18/我的字符编码总结/" class="leancloud_visitors" data-flag-title="我的字符编码总结">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
+            <a href="/tags/Encryption/" rel="tag">#Encryption</a>
           
         </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          <img src="http://i66.tinypic.com/33jpqph.png">
-<p>刚开始接触mac osx这类系统的时候，使用default的zip解压，很容易出现乱码问题。每次我使用默认设置解压一个压缩文件的时候，如果这个文件来自一个中国人的windows电脑的话，十有八九肯定是乱码，想都不用想！ 一开始我还没有使用［The Unarchiver］这款软件的时候，用着各种不爽，出现次数多了，火气就起来了（信不信我砸了你，就是这种感觉）</p>
-<p>不过，生气归生气，还是要研究下为什么会出现这种问题的！所以，随后我查阅了好多网上的资料，也看了一些写的比较好的blog学习了下，算是将困扰我很久的字符编码问题给解决了（弄懂一个东西后还真是感觉心情舒畅啊＝v＝）</p>
-<p>其实mac是一直采用utf-8的字符编码，而一般我们中文环境下的windows系统是采用gbk作为默认的字符编码的（现在应该最新的是gb18030，全称叫China National Chinese）。看到这里如果没能反应过来乱码和这两个东西有什么关系的话，没关系，因为接下来我就回来解释下为什么了！</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/10/18/我的字符编码总结/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/04/使用JavaSeurity进行数字签名以及加密处理-一/" rel="next" title="使用JavaSeurity进行数字签名(一)">
+                <i class="fa fa-chevron-left"></i> 使用JavaSeurity进行数字签名(一)
+              </a>
+            
           </div>
-        
-      
-    </div>
 
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
+          <div class="post-nav-prev post-nav-item">
             
-            
-              
-                
-                <a class="post-title-link" href="/2016/10/07/国庆七天‘乐’/" itemprop="url">
-                  2016年的国庆七天‘乐’
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-10-07T22:21:53+08:00" content="2016-10-07">
-              2016-10-07
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/游戏/" itemprop="url" rel="index">
-                    <span itemprop="name">游戏</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/10/07/国庆七天‘乐’/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/10/07/国庆七天‘乐’/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/10/07/国庆七天‘乐’/" class="leancloud_visitors" data-flag-title="2016年的国庆七天‘乐’">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
+          </div>
         </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          <img src="http://i66.tinypic.com/2itnclz.png">
-<p>2016年的国庆小长假终于也要过去了。国庆放假开始前还在打算着七天好好的安排下学习时间，比如早上起来看一篇英语新闻啊，每天花几下时时间学习下ssh，springmvc啊啥有的没的，整理整理自己的资料啊啥的，结果就这么浑浑噩噩的过去了（标准结局呢）</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/10/07/国庆七天‘乐’/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </article>
 
 
-    
-  </section>
 
-  
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
-  </nav>
-
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -713,6 +501,17 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
 
         </div>
         
@@ -732,8 +531,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.jpg"
@@ -794,6 +602,17 @@
 
       </section>
 
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <p class="post-toc-empty">此文章未包含目录</p>
+            
+          </div>
+        </section>
       
 
     </div>
@@ -893,6 +712,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
 
   
 
@@ -909,9 +732,9 @@
 
     <script type="text/javascript">
       var disqus_shortname = 'https-zazalumonster-github-io-1';
-      var disqus_identifier = 'page/4/index.html';
-      var disqus_title = "";
-      var disqus_url = '';
+      var disqus_identifier = '2018/07/05/使用JavaSeurity进行数字签名-二/';
+      var disqus_title = "使用JavaSeurity进行数字签名(二)";
+      var disqus_url = 'http://yoursite.com/2018/07/05/使用JavaSeurity进行数字签名-二/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');
@@ -922,6 +745,8 @@
       }
 
       run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
       
     </script>
   
