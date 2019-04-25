@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>hexo备份之路</title>
+      <link href="/2019/04/25/hexo%E5%A4%87%E4%BB%BD%E4%B9%8B%E8%B7%AF/"/>
+      <url>/2019/04/25/hexo%E5%A4%87%E4%BB%BD%E4%B9%8B%E8%B7%AF/</url>
+      
+        <content type="html"><![CDATA[<p>前阵子，我的hexo博客丢失源文件，吃了没有备份的源文件的苦头，所以现在我的hexo博客已经加上了备份机制，使其更加健壮了，本文将记录如何方便的进行hexo备份</p><p>适用hexo版本 4.x<br>查阅此文档前，您必须保证您已经阅读完毕hexo的官方文档，并且已经实际操作过，不然阅读以下的文字会让你理解上有点困难</p><h2 id="hexo备份步骤"><a href="#hexo备份步骤" class="headerlink" title="hexo备份步骤"></a>hexo备份步骤</h2><ol><li><p>在一个新的文件夹(A文件夹)内使用git去clone你的github上的远程hexo库(yourgitname.github.io)，完成后A文件夹内会出现一个clone后的git库文件夹(yourgitname.github.io),点击进入后，里面是hexo用于生成网页的文件结构，而非hexo本地源文件。</p></li><li><p>打开浏览器，进入自己的github，为自己的远程hexo库建立一个分支，最好名为hexo，并将其设为默认分支（方便我们后续提交）。随后我们需要在这个分支内创建一个.gitignore文件。因为新版本hexo在执行<code>hexo init</code>等一系列建站脚本后，会在本地已经为你创建了一个.gitignore文件了，其文件内容就是我们想要的，将其内容复制到刚刚我们新创建的.gitignore文件内并上传至hexo分支即可（如何创建分支自行百度）</p></li><li><p>hexo分支准备完成后，我们就可以在我们cmd界面使用<code>git checkout  hexo</code>将分支切到hexo分支，然后将我们的hexo源文件复制到这里，复制完成后将这些文件一并上传至远程hexo分支即可。到此就完成了hexo备份。现在我们就可以在本地的hexo分支环境下直接写新文章，写完后上传hexo分支，最后使用<code>hexo d</code>，让hexo脚本自动将生成后的文件上传至master分支。最后github上的hexo库的2个分支就完美的呈现它们的价值了，hexo分支内可以看到我们的本地源文件，master分支上就保存着<code>hexo d</code>对应的那些文件用于直接排版我们的网页</p></li><li><p>以防万一，我们最好在本地也对我们的源文件进行归档备份</p></li></ol><h2 id="后续每次写完新文章后需要执行的shell指令"><a href="#后续每次写完新文章后需要执行的shell指令" class="headerlink" title="后续每次写完新文章后需要执行的shell指令"></a>后续每次写完新文章后需要执行的shell指令</h2><ol><li>git add <newfile></newfile></li><li>git commit -m “备份”</li><li>git push origin hexo</li><li>hexo g</li><li>hexo d</li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> IT </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> hexo </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>2019我的个人电脑机械硬盘问题引发的故事</title>
       <link href="/2019/04/24/2019%E6%88%91%E7%9A%84%E4%B8%AA%E4%BA%BA%E7%94%B5%E8%84%91%E6%9C%BA%E6%A2%B0%E7%A1%AC%E7%9B%98%E9%97%AE%E9%A2%98%E5%BC%95%E5%8F%91%E7%9A%84%E6%95%85%E4%BA%8B/"/>
       <url>/2019/04/24/2019%E6%88%91%E7%9A%84%E4%B8%AA%E4%BA%BA%E7%94%B5%E8%84%91%E6%9C%BA%E6%A2%B0%E7%A1%AC%E7%9B%98%E9%97%AE%E9%A2%98%E5%BC%95%E5%8F%91%E7%9A%84%E6%95%85%E4%BA%8B/</url>
