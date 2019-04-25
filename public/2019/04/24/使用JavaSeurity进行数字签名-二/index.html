@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="在上一章中，我们使用JavaSeurityAPI对dsaSignFile文件进行了一次数字签名，并且将其数字签名以及公钥都保存到了本地硬盘的相应文件中。作为发送方，我们通过各种“交通”手段，将这三个文件一一发给了接收方。在本章我们就来展示接收方如何使用这三个文件，对数字签名进行验证，最终确定dsaSignFile的确实是由发送方发出的  什么是验签  接收方获取到原数据文件，公钥文件，数字签名文件">
+<meta name="keywords" content="signature">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用JavaSeurity进行数字签名(二)">
+<meta property="og:url" content="http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-二/index.html">
+<meta property="og:site_name" content="Zazalu&#39;s Blog">
+<meta property="og:description" content="在上一章中，我们使用JavaSeurityAPI对dsaSignFile文件进行了一次数字签名，并且将其数字签名以及公钥都保存到了本地硬盘的相应文件中。作为发送方，我们通过各种“交通”手段，将这三个文件一一发给了接收方。在本章我们就来展示接收方如何使用这三个文件，对数字签名进行验证，最终确定dsaSignFile的确实是由发送方发出的  什么是验签  接收方获取到原数据文件，公钥文件，数字签名文件">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-04-24T06:48:43.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用JavaSeurity进行数字签名(二)">
+<meta name="twitter:description" content="在上一章中，我们使用JavaSeurityAPI对dsaSignFile文件进行了一次数字签名，并且将其数字签名以及公钥都保存到了本地硬盘的相应文件中。作为发送方，我们通过各种“交通”手段，将这三个文件一一发给了接收方。在本章我们就来展示接收方如何使用这三个文件，对数字签名进行验证，最终确定dsaSignFile的确实是由发送方发出的  什么是验签  接收方获取到原数据文件，公钥文件，数字签名文件">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>使用JavaSeurity进行数字签名(二)</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2019/04/24/2019我的个人电脑机械硬盘问题引发的故事/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2019/04/24/使用JavaSeurity进行数字签名-一/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-二/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-二/&text=使用JavaSeurity进行数字签名(二)"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-二/&title=使用JavaSeurity进行数字签名(二)"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-二/&is_video=false&description=使用JavaSeurity进行数字签名(二)"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=使用JavaSeurity进行数字签名(二)&body=Check out this article: http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-二/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-二/&title=使用JavaSeurity进行数字签名(二)"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-二/&title=使用JavaSeurity进行数字签名(二)"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-二/&title=使用JavaSeurity进行数字签名(二)"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-二/&title=使用JavaSeurity进行数字签名(二)"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-二/&name=使用JavaSeurity进行数字签名(二)&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        使用JavaSeurity进行数字签名(二)
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Zazalu's Blog</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-04-24T06:45:12.000Z" itemprop="datePublished">2019-04-24</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/IT/">IT</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/signature/">signature</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>在上一章中，我们使用JavaSeurityAPI对dsaSignFile文件进行了一次数字签名，并且将其数字签名以及公钥都保存到了本地硬盘的相应文件中。作为发送方，我们通过各种“交通”手段，将这三个文件一一发给了接收方。在本章我们就来展示接收方如何使用这三个文件，对数字签名进行验证，最终确定dsaSignFile的确实是由发送方发出的</p>
+<blockquote>
+<p>什么是验签</p>
+</blockquote>
+<p>接收方获取到原数据文件，公钥文件，数字签名文件后，使用这三个文件便可以完成验签。验签的基本流程简单来说如下</p>
+<ol>
+<li>使用公钥文件将数字签名还原为散列值A</li>
+<li>使用加签时相同的算法获取原数据文件的散列值B</li>
+<li>对比A和B是否一致，若一致便说明数字签名正确，该文件确实是发送方发出，而不是由别人篡改后发出的</li>
+</ol>
+<blockquote>
+<p>JavaSeurity进行验签</p>
+</blockquote>
+<p>1.使用公钥文件获取公钥<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> PublicKey <span class="title">getPubFromPubFile</span><span class="params">(File pubFile)</span> <span class="keyword">throws</span> IOException, NoSuchAlgorithmException, InvalidKeySpecException </span>&#123;</span><br><span class="line">        <span class="comment">//从文件中获取公钥字节数据</span></span><br><span class="line">        FileInputStream keyfis = <span class="keyword">new</span> FileInputStream(pubFile);</span><br><span class="line">        <span class="keyword">byte</span>[] encKey = <span class="keyword">new</span> <span class="keyword">byte</span>[keyfis.available()];</span><br><span class="line">        keyfis.read(encKey);</span><br><span class="line">        keyfis.close();</span><br><span class="line">        <span class="comment">//先将公钥字节数据转换为key specification，只有key specification才能使用KeyFactory转化为PublicKey Object</span></span><br><span class="line">        <span class="comment">//key specification你可以理解为密钥的一种格式，是密钥字节数据的升级</span></span><br><span class="line">        X509EncodedKeySpec pubKeySpec = <span class="keyword">new</span> X509EncodedKeySpec(encKey);</span><br><span class="line">        <span class="comment">//使用KeyFactory，通过key specification获取PublicKey Object</span></span><br><span class="line">        KeyFactory keyFactory = KeyFactory.getInstance(<span class="string">"RSA"</span>);</span><br><span class="line">        PublicKey pubKey = keyFactory.generatePublic(pubKeySpec);</span><br><span class="line">        <span class="keyword">return</span> pubKey;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>2.使用数字签名文件获取数字签名字节数据<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">byte</span>[] getSignatureBytesFromSignFile(File signFile) <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        FileInputStream sigfis = <span class="keyword">new</span> FileInputStream(signFile);</span><br><span class="line">        <span class="keyword">byte</span>[] sigToVerify = <span class="keyword">new</span> <span class="keyword">byte</span>[sigfis.available()];</span><br><span class="line">        sigfis.read(sigToVerify);</span><br><span class="line">        sigfis.close();</span><br><span class="line">        <span class="keyword">return</span> sigToVerify;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>3.使用原数据，公钥，数字签名字节数据验证正确性<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">verifySignature</span><span class="params">(PublicKey publicKey,File dataFile,<span class="keyword">byte</span>[] sigToVerify)</span> <span class="keyword">throws</span> NoSuchAlgorithmException, InvalidKeyException, IOException, SignatureException </span>&#123;</span><br><span class="line">        <span class="comment">//这次我们使用公钥初始化签名器</span></span><br><span class="line">        Signature sig = Signature.getInstance(<span class="string">"SHA1withRSA"</span>);</span><br><span class="line">        sig.initVerify(publicKey);</span><br><span class="line">        <span class="comment">//将原数据导入签名器</span></span><br><span class="line">        FileInputStream datafis = <span class="keyword">new</span> FileInputStream(dataFile);</span><br><span class="line">        BufferedInputStream bufin = <span class="keyword">new</span> BufferedInputStream(datafis);</span><br><span class="line">        <span class="keyword">byte</span>[] buffer = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line">        <span class="keyword">int</span> len;</span><br><span class="line">        <span class="keyword">while</span> (bufin.available() != <span class="number">0</span>) &#123;</span><br><span class="line">            len = bufin.read(buffer);</span><br><span class="line">            sig.update(buffer, <span class="number">0</span>, len);</span><br><span class="line">        &#125;</span><br><span class="line">        bufin.close();</span><br><span class="line">        <span class="comment">//使用签名器进行验证</span></span><br><span class="line">        <span class="keyword">boolean</span> verifies = sig.verify(sigToVerify);</span><br><span class="line">        <span class="keyword">return</span> verifies;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>4.前三步整合为一个验签程序如下<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">verifySign</span><span class="params">()</span> <span class="keyword">throws</span> NoSuchAlgorithmException, IOException, InvalidKeySpecException, SignatureException, InvalidKeyException </span>&#123;</span><br><span class="line">        String pubKeyDataFileUrl = <span class="string">"src/test/resource/pubKeyData"</span>;</span><br><span class="line">        PublicKey publicKey = getPubFromPubFile(<span class="keyword">new</span> File(pubKeyDataFileUrl));</span><br><span class="line">        String signDataFileUrl = <span class="string">"src/test/resource/signData"</span> ;</span><br><span class="line">        <span class="keyword">byte</span>[] sigToVerify = getSignatureBytesFromSignFile(<span class="keyword">new</span> File(signDataFileUrl));</span><br><span class="line">        String dsaSignFileUrl = <span class="string">"src/test/resource/dsaSignFile"</span> ;</span><br><span class="line">        <span class="keyword">boolean</span> verifies = verifySignature(publicKey,<span class="keyword">new</span> File(dsaSignFileUrl),sigToVerify);</span><br><span class="line">        System.out.println(<span class="string">"signature verifies: "</span> + verifies);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>存在的隐患</p>
+</blockquote>
+<p>到目前为止，使用Java进行加签验签的过程已经全部测试完毕了，但是在我们的这个流程中存在一个隐患。那就是我们不能确保接收方获得的公钥文件是正确的。</p>
+<p>打个比方，如果发送方在发出原数据，公钥文件，数字签名文件后，被中间人拦截。中间人为了达到自己的目的，篡改了原数据的内容，并且使用自己的私钥重新生成了一份新的数字签名文件，并且把公钥文件也替换为自己的公钥文件。然后将这三个文件再发送给接收方。接收方的验签过程并不会报错，从而导致接收方将错误的信息信以为真。</p>
+<p>为了避免这样的情况发生，目前的解决方法之一就是使用数字证书。一个数字证书是由国际上公认的机构进行颁发，每个数字证书中包含了发送方的公钥，以及一个该证书内容的数字签名。接收方则在本地密钥库中寻找该数字证书所对应的公钥数据，如果存在，则使用它解开这个数字证书，随后拿到发送方的公钥。这个过程中最终我们的信任方是计算机本地存储的受信任的根证书列表，只要保证它的正常运作，那么就不会发生被人篡改的情况</p>
+<blockquote>
+<p>小节<br>java的数字签名练习就到此结束了。本来我还想着写一下RSA加解密，但是发现其实在流程本质上和数字签名是一致的，所以就不浪费时间重新赘述了</p>
+</blockquote>
+
+  </div>
+</article>
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-二/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-二/&text=使用JavaSeurity进行数字签名(二)"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-二/&title=使用JavaSeurity进行数字签名(二)"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-二/&is_video=false&description=使用JavaSeurity进行数字签名(二)"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=使用JavaSeurity进行数字签名(二)&body=Check out this article: http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-二/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-二/&title=使用JavaSeurity进行数字签名(二)"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-二/&title=使用JavaSeurity进行数字签名(二)"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-二/&title=使用JavaSeurity进行数字签名(二)"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-二/&title=使用JavaSeurity进行数字签名(二)"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-二/&name=使用JavaSeurity进行数字签名(二)&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 zazalu
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+    <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?15ccc3aa9c18bcd901435b78b3c09e78";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'https-zazalumonster-github-io-1';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+
+
+    
+
+
+<!-- 药水制作师live2d -->
+  <!-- 引入css -->
+  <link rel="stylesheet" href="/live2d/css/font-awesome/css/font-awesome.min.css"/>
+  <link href="/live2d/css/waifu.css" rel="stylesheet" type="text/css" />
+  <!-- html -->
+  
+  <div class="waifu-switch">Live2d</div>
+  <div class="waifu">
+    <div class="waifu-tips"></div>
+    <canvas id="live2d" width="252" height="225" class="live2d"></canvas>
+    <div class="waifu-tool">
+      <i class="fa-times waifu-closed"></i>
+    </div>
+  </div>
+  <!-- 引入js -->
+  <script src="/live2d/live2d.js"></script>
+  <script async src="/live2d/waifu-tips.js"></script>
+  <script type="text/javascript">
+    loadlive2d("live2d", "/live2d/Pio/model.json");
+  </script>
+<!-- 药水制作师live2d插件结束 -->
+
+</body>
+</html>
