@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html<%= config.language ? " lang=" + config.language.substring(0, 2) : ""%>>
+<%- partial('_partial/head') %>
+<body class="max-width mx-auto px3 <%- theme.direction -%>">
+    <% if (is_post()) { %>
+      <%- partial('_partial/post/actions_desktop') %>
+    <% } %>
+    <div class="content index py4">
+        <% if (!is_post()) { %>
+          <%- partial('_partial/header') %>
+        <% } %>
+        <%- body %>
+        <% if (is_post()) { %>
+          <%- partial('_partial/post/actions_mobile') %>
+        <% } %>
+        <%- partial('_partial/footer') %>
+    </div>
+    <%- partial('_partial/styles') %>
+    <%- partial('_partial/scripts') %>
+
+<!-- 药水制作师live2d -->
+  <!-- 引入css -->
+  <link rel="stylesheet" href="/live2d/css/font-awesome/css/font-awesome.min.css"/>
+  <link href="/live2d/css/waifu.css" rel="stylesheet" type="text/css" />
+  <!-- html -->
+  
+  <div class="waifu-switch">Live2d</div>
+  <div class="waifu">
+    <div class="waifu-tips"></div>
+    <canvas id="live2d" width="252" height="225" class="live2d"></canvas>
+    <div class="waifu-tool">
+      <i class="fa-times waifu-closed"></i>
+    </div>
+  </div>
+  <!-- 引入js -->
+  <script src="/live2d/live2d.js"></script>
+  <script async src="/live2d/waifu-tips.js"></script>
+  <script type="text/javascript">
+    loadlive2d("live2d", "/live2d/Pio/model.json");
+  </script>
+<!-- 药水制作师live2d插件结束 -->
+
+</body>
+</html>
