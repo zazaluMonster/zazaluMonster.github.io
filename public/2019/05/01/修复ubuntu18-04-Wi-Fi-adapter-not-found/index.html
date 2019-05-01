@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="刚使用ubuntu18.04，在桌面版上想使用wifi的时候，发现显示Wi-Fi adapter not found 这个是因为我们没有安装网卡驱动程序的缘故 所以解决此问题的关键是先明确自己电脑是什么无线网卡！ 1首先我们需明确ubuntu所使用的是什么网卡 使用命令lspci获取我们的network-controller信息。 我的是12(前面的大量输出省略，找到下面这一行就行)Network">
+<meta name="keywords" content="ubuntu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="修复ubuntu18.04上的问题Wi-Fi adapter not found（Realtek RTL8821CE）">
+<meta property="og:url" content="http://yoursite.com/2019/05/01/修复ubuntu18-04-Wi-Fi-adapter-not-found/index.html">
+<meta property="og:site_name" content="Zazalu&#39;s Blog">
+<meta property="og:description" content="刚使用ubuntu18.04，在桌面版上想使用wifi的时候，发现显示Wi-Fi adapter not found 这个是因为我们没有安装网卡驱动程序的缘故 所以解决此问题的关键是先明确自己电脑是什么无线网卡！ 1首先我们需明确ubuntu所使用的是什么网卡 使用命令lspci获取我们的network-controller信息。 我的是12(前面的大量输出省略，找到下面这一行就行)Network">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-05-01T04:15:05.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="修复ubuntu18.04上的问题Wi-Fi adapter not found（Realtek RTL8821CE）">
+<meta name="twitter:description" content="刚使用ubuntu18.04，在桌面版上想使用wifi的时候，发现显示Wi-Fi adapter not found 这个是因为我们没有安装网卡驱动程序的缘故 所以解决此问题的关键是先明确自己电脑是什么无线网卡！ 1首先我们需明确ubuntu所使用的是什么网卡 使用命令lspci获取我们的network-controller信息。 我的是12(前面的大量输出省略，找到下面这一行就行)Network">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>修复ubuntu18.04上的问题Wi-Fi adapter not found（Realtek RTL8821CE）</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2019/04/30/在我的双硬盘windows电脑上安装ubuntu18-04-Desktop-LTS/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2019/05/01/修复ubuntu18-04-Wi-Fi-adapter-not-found/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/05/01/修复ubuntu18-04-Wi-Fi-adapter-not-found/&text=修复ubuntu18.04上的问题Wi-Fi adapter not found（Realtek RTL8821CE）"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/05/01/修复ubuntu18-04-Wi-Fi-adapter-not-found/&title=修复ubuntu18.04上的问题Wi-Fi adapter not found（Realtek RTL8821CE）"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/05/01/修复ubuntu18-04-Wi-Fi-adapter-not-found/&is_video=false&description=修复ubuntu18.04上的问题Wi-Fi adapter not found（Realtek RTL8821CE）"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=修复ubuntu18.04上的问题Wi-Fi adapter not found（Realtek RTL8821CE）&body=Check out this article: http://yoursite.com/2019/05/01/修复ubuntu18-04-Wi-Fi-adapter-not-found/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/05/01/修复ubuntu18-04-Wi-Fi-adapter-not-found/&title=修复ubuntu18.04上的问题Wi-Fi adapter not found（Realtek RTL8821CE）"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/05/01/修复ubuntu18-04-Wi-Fi-adapter-not-found/&title=修复ubuntu18.04上的问题Wi-Fi adapter not found（Realtek RTL8821CE）"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/05/01/修复ubuntu18-04-Wi-Fi-adapter-not-found/&title=修复ubuntu18.04上的问题Wi-Fi adapter not found（Realtek RTL8821CE）"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/05/01/修复ubuntu18-04-Wi-Fi-adapter-not-found/&title=修复ubuntu18.04上的问题Wi-Fi adapter not found（Realtek RTL8821CE）"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/05/01/修复ubuntu18-04-Wi-Fi-adapter-not-found/&name=修复ubuntu18.04上的问题Wi-Fi adapter not found（Realtek RTL8821CE）&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1"><span class="toc-number">1.</span> <span class="toc-text">1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2"><span class="toc-number">2.</span> <span class="toc-text">2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3"><span class="toc-number">3.</span> <span class="toc-text">3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4"><span class="toc-number">4.</span> <span class="toc-text">4</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5"><span class="toc-number">5.</span> <span class="toc-text">5</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6"><span class="toc-number">6.</span> <span class="toc-text">6</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        修复ubuntu18.04上的问题Wi-Fi adapter not found（Realtek RTL8821CE）
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Zazalu's Blog</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-05-01T03:42:24.000Z" itemprop="datePublished">2019-05-01</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/IT/">IT</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/ubuntu/">ubuntu</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>刚使用ubuntu18.04，在桌面版上想使用wifi的时候，发现显示<br><strong>Wi-Fi adapter not found</strong></p>
+<p>这个是因为我们没有安装网卡驱动程序的缘故</p>
+<p>所以解决此问题的关键是先明确自己电脑是什么无线网卡！</p>
+<h2 id="1"><a href="#1" class="headerlink" title="1"></a>1</h2><p>首先我们需明确ubuntu所使用的是什么网卡</p>
+<p>使用命令<code>lspci</code>获取我们的network-controller信息。</p>
+<p>我的是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(前面的大量输出省略，找到下面这一行就行)</span><br><span class="line">Network controller: Realtek Semiconductor Co., Ltd. RTL8821CE 802.11ac PCIe Wireless Network Adapter</span><br></pre></td></tr></table></figure></p>
+<p>从中可以看出我的无线网卡是为<strong>Realtek RTL8821CE</strong></p>
+<p>所以我们要安装的是RTL8821CE的网卡驱动程序</p>
+<h2 id="2"><a href="#2" class="headerlink" title="2"></a>2</h2><p>由于没有wifi，所以你目前没有网络环境，但是为了修复这个问题你必须连接上网络，这个时候你必须先准备好可以上网的有线网络(wired network)</p>
+<h2 id="3"><a href="#3" class="headerlink" title="3"></a>3</h2><p>打开terminal，先输入如下代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br></pre></td></tr></table></figure>
+<p>先更新您的apt软件包管理工具，防止后续我们安装使用相关软件时不会报出一些神奇的错误</p>
+<h2 id="4"><a href="#4" class="headerlink" title="4"></a>4</h2><p>安装下必须的一些软件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install --reinstall git dkms build-essential linux-headers-$(uname -r)</span><br><span class="line">git clone https://github.com/tomaspinho/rtl8821ce</span><br><span class="line">cd rtl8821ce</span><br><span class="line">chmod +x dkms-install.sh</span><br><span class="line">chmod +x dkms-remove.sh</span><br><span class="line">sudo ./dkms-install.sh</span><br></pre></td></tr></table></figure></p>
+<p>上述命令会去</p>
+<ol>
+<li>先安装<br> git(这个不用我解释是什么了吧？)<br> dkms(DKMS是基于动态内核模块支持的可以让开发者无需使用最新的内核版本而对某个单一的内核模块做升级)<br> build-essential（携带编译必须软件包）<br> linux-header-$(uname -r)（重装当前linux内核版本的linux-headers）</li>
+<li>将rtl8821ce的驱动程序clone至本地，相当于我们在windows下载驱动程序一个意思</li>
+<li>进入驱动程序包文件夹</li>
+<li>使用chmod调整相关sh脚本的权限</li>
+<li>运行脚本dkms-install.sh，会自动将rtl8821ce驱动程序安装完毕</li>
+</ol>
+<h2 id="5"><a href="#5" class="headerlink" title="5"></a>5</h2><p>重启ubuntu</p>
+<p>再看看你的wifi配置，应该已经可以使用了！</p>
+<h2 id="6"><a href="#6" class="headerlink" title="6"></a>6</h2><p>其他你可能遇到的问题</p>
+<p>信号弱，使用关键字<code>weak signal</code>去google上搜查答案吧</p>
+
+  </div>
+</article>
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1"><span class="toc-number">1.</span> <span class="toc-text">1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2"><span class="toc-number">2.</span> <span class="toc-text">2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3"><span class="toc-number">3.</span> <span class="toc-text">3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4"><span class="toc-number">4.</span> <span class="toc-text">4</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5"><span class="toc-number">5.</span> <span class="toc-text">5</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6"><span class="toc-number">6.</span> <span class="toc-text">6</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2019/05/01/修复ubuntu18-04-Wi-Fi-adapter-not-found/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/05/01/修复ubuntu18-04-Wi-Fi-adapter-not-found/&text=修复ubuntu18.04上的问题Wi-Fi adapter not found（Realtek RTL8821CE）"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/05/01/修复ubuntu18-04-Wi-Fi-adapter-not-found/&title=修复ubuntu18.04上的问题Wi-Fi adapter not found（Realtek RTL8821CE）"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/05/01/修复ubuntu18-04-Wi-Fi-adapter-not-found/&is_video=false&description=修复ubuntu18.04上的问题Wi-Fi adapter not found（Realtek RTL8821CE）"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=修复ubuntu18.04上的问题Wi-Fi adapter not found（Realtek RTL8821CE）&body=Check out this article: http://yoursite.com/2019/05/01/修复ubuntu18-04-Wi-Fi-adapter-not-found/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/05/01/修复ubuntu18-04-Wi-Fi-adapter-not-found/&title=修复ubuntu18.04上的问题Wi-Fi adapter not found（Realtek RTL8821CE）"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/05/01/修复ubuntu18-04-Wi-Fi-adapter-not-found/&title=修复ubuntu18.04上的问题Wi-Fi adapter not found（Realtek RTL8821CE）"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/05/01/修复ubuntu18-04-Wi-Fi-adapter-not-found/&title=修复ubuntu18.04上的问题Wi-Fi adapter not found（Realtek RTL8821CE）"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/05/01/修复ubuntu18-04-Wi-Fi-adapter-not-found/&title=修复ubuntu18.04上的问题Wi-Fi adapter not found（Realtek RTL8821CE）"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/05/01/修复ubuntu18-04-Wi-Fi-adapter-not-found/&name=修复ubuntu18.04上的问题Wi-Fi adapter not found（Realtek RTL8821CE）&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <!-- 不蒜子统计 -->
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 zazalu
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+  <!-- 不蒜子统计 -->
+  <span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+  </span>
+  <span id="busuanzi_container_site_uv">
+    本站访客数<span id="busuanzi_value_site_uv"></span>人次
+  </span>
+</footer>
+
+
+
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+    <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?15ccc3aa9c18bcd901435b78b3c09e78";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'https-zazalumonster-github-io-1';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+
+
+    
+
+
+<!-- 药水制作师live2d -->
+  <!-- 引入css -->
+  <link rel="stylesheet" href="/live2d/css/font-awesome/css/font-awesome.min.css"/>
+  <link href="/live2d/css/waifu.css" rel="stylesheet" type="text/css" />
+  <!-- html -->
+  
+  <div class="waifu-switch">Live2d</div>
+  <div class="waifu">
+    <div class="waifu-tips"></div>
+    <canvas id="live2d" width="252" height="225" class="live2d"></canvas>
+    <div class="waifu-tool">
+      <i class="fa-times waifu-closed"></i>
+    </div>
+  </div>
+  <!-- 引入js -->
+  <script src="/live2d/live2d.js"></script>
+  <script async src="/live2d/waifu-tips.js"></script>
+  <script type="text/javascript">
+    loadlive2d("live2d", "/live2d/Pio/model.json");
+  </script>
+<!-- 药水制作师live2d插件结束 -->
+
+</body>
+</html>
