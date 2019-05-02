@@ -28,8 +28,12 @@ date: 2019-05-02 16:58:31
 
 >GitHub Pages sites are always publicly accessible when published, even if their repository is private, 
 
-目前来看，转成private库后应该是不会影响hexo博客的正常使用。
+然后我就信了这句英文，事实上他确实没错！
+
+但是当我把我的repo转成private后，我发现我的github pages自动关闭了，然后我选择重新开启，发现弹出付款页面。
+
+后来才得知如果私有库也要同时使用github pages的话，是从Github Free转到了Github Pro，而后者是要付钱的。 
 
 ## 3
 
-如果改为private后，就不怕hexo本地数据被别人轻易fork了，就可以开心的写点小东西，而不怕被抄袭
+从第2点可知，想白嫖走github这一条路是不行的，所以我后续要去看看有没有其他好用的git库给我用用！此文章后续会做更新
