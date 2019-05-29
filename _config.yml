@@ -81,3 +81,5 @@ deploy:
     type: git
     repository: https://github.com/zazaluMonster/zazaluMonster.github.io.git
     branch: master
+    name: zazaluMonster
+    email: hejiajun1432@gmail.com
