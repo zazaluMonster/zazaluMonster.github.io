@@ -3,7 +3,7 @@ function render(template, context) {
     var tokenReg = /(\\)?\{([^\{\}\\]+)(\\)?\}/g;
 
     return template.replace(tokenReg, function (word, slash1, token, slash2) {
-        if (slash1 || slash2) {  
+        if (slash1 || slash2) {
             return word.replace('\\', '');
         }
 
@@ -32,24 +32,24 @@ String.prototype.render = function (context) {
 // };
 
 var x = document.createElement('br');
-  Object.defineProperty(x, 'id', {
-      get:function(){
+Object.defineProperty(x, 'id', {
+    get: function () {
         showMessage('哈哈，你打开了控制台，是想要看看我的秘密吗？', 5000);
         console.log('想知道我的构成秘密？那么请您慢慢看吧');
         return '';
-      }
-  });
+    }
+});
 console.log(x);
 
 
-$(document).on('copy', function (){
+$(document).on('copy', function () {
     showMessage('你都复制了些什么呀，转载要记得加上出处哦', 5000);
 });
 
 
-$('.waifu-tool .waifu-closed').click(function (){
+$('.waifu-tool .waifu-closed').click(function () {
     showMessage('愿你有一天能与重要的人重逢', 1300, true);
-    window.setTimeout(function() {hideWaifu();}, 1300);
+    window.setTimeout(function () { hideWaifu(); }, 1300);
 });
 $('.waifu').mouseenter(function () {
     //显示工具栏
@@ -73,49 +73,55 @@ $.ajax({
     cache: true,
     url: "/live2d/waifu-tips.json",
     dataType: "json",
-    success: function (result){
-        $.each(result.mouseover, function (index, tips){
-            $(document).on("mouseover", tips.selector, function (){
+    success: function (result) {
+        $.each(result.mouseover, function (index, tips) {
+            $(document).on("mouseover", tips.selector, function () {
                 var text = tips.text;
-                if(Array.isArray(tips.text)) text = tips.text[Math.floor(Math.random() * tips.text.length + 1)-1];
-                text = text.render({text: $(this).text()});
+                if (Array.isArray(tips.text)) text = tips.text[Math.floor(Math.random() * tips.text.length + 1) - 1];
+                text = text.render({ text: $(this).text() });
                 showMessage(text, 3000);
-               
+
             });
         });
-        $.each(result.click, function (index, tips){
-            $(document).on("click", tips.selector, function (){
+        $.each(result.click, function (index, tips) {
+            $(document).on("click", tips.selector, function () {
                 var text = tips.text;
-                if(Array.isArray(tips.text)) text = tips.text[Math.floor(Math.random() * tips.text.length + 1)-1];
-                text = text.render({text: $(this).text()});
+                if (Array.isArray(tips.text)) text = tips.text[Math.floor(Math.random() * tips.text.length + 1) - 1];
+                text = text.render({ text: $(this).text() });
                 showMessage(text, 3000);
             });
         });
     }
 });
 
-(function (){
-    //是否需启动live2d
-    if(checkWaifuSwitch()){
-        showWaifu();
-    }else{
-        hideWaifu();
+(function () {
+    //检查是否是PC端
+    if (isPC()) {
+        hideAll();
+    } else {
+        //是否需启动live2d
+        if (checkWaifuSwitch()) {
+            showWaifu();
+        } else {
+            hideWaifu();
+        }
     }
 
+
     var text;
-    if(document.referrer !== ''){
+    if (document.referrer !== '') {
         var referrer = document.createElement('a');
         referrer.href = document.referrer;
         text = 'Hello! 来自 <span style="color:#0099cc;">' + referrer.hostname + '</span> 的朋友';
         var domain = referrer.hostname.split('.')[1];
         if (domain == 'baidu') {
             text = 'Hello! 来自 百度搜索 的朋友<br>你是搜索 <span style="color:#0099cc;">' + referrer.search.split('&wd=')[1].split('&')[0] + '</span> 找到的我吗？';
-        }else if (domain == 'so') {
+        } else if (domain == 'so') {
             text = 'Hello! 来自 360搜索 的朋友<br>你是搜索 <span style="color:#0099cc;">' + referrer.search.split('&q=')[1].split('&')[0] + '</span> 找到的我吗？';
-        }else if (domain == 'google') {
+        } else if (domain == 'google') {
             text = 'Hello! 来自 谷歌搜索 的朋友<br>欢迎阅读<span style="color:#0099cc;">『' + document.title.split(' - ')[0] + '』</span>';
         }
-    }else {
+    } else {
         if (window.location.href == 'http://zazalu.space/') { //如果是主页
             var now = (new Date()).getHours();
             if (now > 23 || now <= 5) {
@@ -137,52 +143,88 @@ $.ajax({
             } else {
                 text = '嗨~ 快来逗我玩吧！';
             }
-        }else {
+        } else {
             text = '欢迎阅读<span style="color:#0099cc;">『' + document.title.split(' - ')[0] + '』</span>';
         }
     }
     showMessage(text, 6000);
 })();
 
-window.setInterval(showHitokoto,30000);
+window.setInterval(showHitokoto, 30000);
 
-function showHitokoto(){
-    $.getJSON('https://api.imjad.cn/hitokoto/?cat=&charset=utf-8&length=28&encode=json',function(result){
+function showHitokoto() {
+    $.getJSON('https://api.imjad.cn/hitokoto/?cat=&charset=utf-8&length=28&encode=json', function (result) {
         showMessage(result.hitokoto, 5000);
     });
 }
 
-function showMessage(text, timeout){
-    if(Array.isArray(text)) text = text[Math.floor(Math.random() * text.length + 1)-1];
+function showMessage(text, timeout) {
+    if (Array.isArray(text)) text = text[Math.floor(Math.random() * text.length + 1) - 1];
     // console.log(text); 控制台输出太多没用log，所以舍弃
     $('.waifu-tips').stop();
     $('.waifu-tips').html(text).fadeTo(200, 1);
     if (timeout === null) timeout = 5000;
     hideMessage(timeout);
 }
-function hideMessage(timeout){
-    $('.waifu-tips').stop().css('opacity',1);
+function hideMessage(timeout) {
+    $('.waifu-tips').stop().css('opacity', 1);
     if (timeout === null) timeout = 5000;
     $('.waifu-tips').delay(timeout).fadeTo(200, 0);
 }
-function showWaifu(){
+function showWaifu() {
     sessionStorage.setItem('waifu-switch', 'on');
-    $('.waifu-switch').css('display','none');
+    $('.waifu-switch').css('display', 'none');
     $('.waifu').show();
 }
-function hideWaifu(){
+function hideWaifu() {
     sessionStorage.setItem('waifu-switch', 'close');
-    $('.waifu-switch').css('display','block');
+    $('.waifu-switch').css('display', 'block');
     $('.waifu').hide();
 }
-function checkWaifuSwitch(){
+function hideAll() {
+    $('.waifu-switch').css('display', 'none');
+    $('.waifu').hide();
+}
+function checkWaifuSwitch() {
     var s = sessionStorage.getItem('waifu-switch');
-        console.log(s);
-    if(s == 'close'){
+    console.log(s);
+
+    if (s == 'close') {
         return false;
-    }else if(s == 'on'){
+    } else if (s == 'on') {
         return true;
-    }else{
+    } else {
+        return false;
+    }
+}
+
+function isPC() {
+    var browser = {
+        versions: function () {
+            var u = navigator.userAgent, app = navigator.appVersion;
+            //Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36
+            return {//移动终端浏览器版本信息 
+                trident: u.indexOf('Trident') > -1, //IE内核
+                presto: u.indexOf('Presto') > -1, //opera内核
+                webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+                gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+                mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+                ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+                android: u.indexOf('Android') > -1 , //android终端
+                iPhone: u.indexOf('iPhone') > -1, //是否为iPhone或者QQHD浏览器
+                iPad: u.indexOf('iPad') > -1, //是否iPad  
+                webApp: u.indexOf('Safari') == -1, //是否web应该程序，没有头部与底部
+                weixin: u.indexOf('MicroMessenger') > -1, //是否微信 
+                qq: u.match(/\sQQ/i) == " qq" //是否QQ
+            };
+        }(),
+        language: (navigator.browserLanguage || navigator.language).toLowerCase()
+    }
+    
+    if (browser.versions.mobile || browser.versions.ios || browser.versions.android ||
+        browser.versions.iPhone || browser.versions.iPad) {
+        return true;
+    } else {
         return false;
     }
 }
