@@ -16,13 +16,13 @@ date: 2019-06-06 12:11:49
 
 ## 安装
 
-shell指令：
+使用Ubuntu高级包管理工具apt安装：
 ```s
 apt-get install python-pip
 pip install git+https://github.com/shadowsocks/shadowsocks.git@master
 ```
 
-## 配置文件
+## 配置网络连接文件
 
 创建配置文件`/etc/shadowsocks.json`，路径随意，不想思考就装etc路径下，这样就符合linux文件系统目录规范放置方式；如果是etc的话，注意root权限
 
@@ -42,19 +42,20 @@ pip install git+https://github.com/shadowsocks/shadowsocks.git@master
 
 ## 启动shadowsocks python版客户端
 
-shell指令启动：
+sslocal（ss提供的一个proxy工具）已一个守护进程启动：
 ```s
 # sslocal是python客户度命令，-c是使用配置文件启动，-d是作为守护进程启动，start是启动。具体使用-h指令获取帮助信息
 /usr/local/bin/sslocal -c /etc/shadowsocks.json -d start  
 ```
 
-shell指令关闭：
+关闭：
 ```s
 # sslocal是python客户度命令，-c是使用配置文件启动，-d是作为守护进程启动，start是启动。具体使用-h指令获取帮助信息
 /usr/local/bin/sslocal -c /etc/shadowsocks.json -d stop
 ```
 或者你直接kill进程也可以，使用`ps -aux | grep sslocal`就可以找到进程
 
+**[!]**: 建议使用守护进程启动，如果不使用守护进程启动，那么这个工具就会一直在terminal页面挂起，实时的打印log。一旦关闭terminal，它也就异常退出了，代理功能就没法持续稳定的运行。
 
 ## 全局代理 （选填项）
 
@@ -129,7 +130,8 @@ After=network.target
 After=network-online.target
 
 [Service]
-Type=simple
+#Type=simple
+Type=forking
 User=root
 ExecStart=/usr/local/bin/sslocal -c /etc/shadowsocks.json -d start
 
@@ -141,9 +143,20 @@ WantedBy=multi-user.target
 
 **[!]** shadowsocks.json的路径填你自己的，如果你安全按照本配置文档来一路做过来的话，就可以直接使用上面的内容
 
+**[!]**: Service模块的Type必须使用forking，因为指令`/usr/local/bin/sslocal -c /etc/shadowsocks.json -d start`执行完后不会一直运行，创建完守护线程后很快会退出，最后Service发现指令已经执行完，于是service就也退出了。但是sslocal这时的守护线程是挂载在service上的，所以service退出，守护线程立马也kill了。这就导致最终你的sslocal没开启，就和走了一次片场一样。所以必须要规定Type=forking，因为forking模式下，Service会将自己的所有守护线程移交给os，那就没问题了，sslocal会在os下继续运行！
+
 3. 让配置文件生效
 
 `systemctl enable /etc/systemd/system/shadowsocks.service`
 
 4. 重启看看效果即可
+
+
+## 有关Systemd管理的指令介绍
+
+1. 当你因为某些原因要修改shadowsocks.service的内容，比如字母打错了。修改完后必须调用`systemctl enable /etc/systemd/system/shadowsocks.service`来使其重新生效
+
+2. sslocal提供log打印到文件的功能，使用-help查看具体帮助就可以翻阅到如何使用了
+
+3. 启动（关闭）service服务，使用指令`systemctl start(stop) shadowsocks.service` 
 
