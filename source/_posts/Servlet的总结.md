@@ -5,7 +5,7 @@ categories: IT
 date: 2019-04-24 13:52:41
 ---
 
-一篇对JavaWeb的Servlet的个人理解
+一篇对JavaWeb的Servlet的个人理解（2019-06-24 对本文进行了一定修改，追求下时效性）
 
 <!-- more -->
 ## 什么是Servlet
@@ -27,7 +27,7 @@ servlet是运行在web服务器上的小型Java程序（即服务器端的小应
 
 作为web开发人员来说，知道tomcat，那么肯定也知道apache。
 
-Tomcat现在是Apache 软件基金会（Apache Software Foundation）的Jakarta 项目中的一个核心项目。由Apache、Sun 和其他一些公司及个人共同开发而成。（Java开发人员不知道Sun的人可以去死了）
+Tomcat现在是Apache 软件基金会（Apache Software Foundation）的Jakarta 项目中的一个核心项目。由Apache、Sun 和其他一些公司及个人共同开发而成。
 
 Tomcat的特点
 
@@ -197,8 +197,80 @@ ServletConfig，可以说是具有这个Servlet的相关配置信息的类
 
 Servlet的所有工作流程已经总结完毕，有对其中部分不理解的地方，可以对这个部分进行google的关键字搜索了解更多的知识！
 
-友情链接：
-
+参考：
 * https://www.ibm.com/developerworks/cn/java/j-lo-servlet/
 * https://www.ibm.com/developerworks/cn/java/j-lo-tomcat1/
 * http://www.tqcto.com/article/web/51385.html
+
+---
+
+## 后续补充
+---
+
+Servlet的核心基础内容，可以在我的icloud云上看我以前写的笔记
+
+下面介绍一些Sevlet的最新技术变化，虽然我们现在javaWeb的开发早已经不直接使用Sevlet了都用MVC框架代替，但是MVC框架底层依旧还是在操作我们的Servlet，所以关注一下是没有坏处的，有助于理解Web的MVC框架背后实现原理
+
+---
+
+Servlet 3.0 新特性介绍，基于jdk 1.6（）
+
+1. 异步处理支持，原本的Sevlet是堵塞的，有了异步处理支持后，可以使用Servlet的官方API来做到异步处理支持。当然使用你自己实现的异步处理也完全没问题
+
+2. 新增的注解支持，比如@WebServlet，@WebInitParam等等，都是为了简化xml配置文件为目的的
+
+3. 可插性支持，引入了称之为“Web 模块部署描述符片段“的 web-fragment.xml 部署描述文件，这个文件放置在Jar包的META-INF 目录下。为什么说是可插性支持呢？因为你可以自己写一堆Servlet文件，就可以把他们打包起来，然后把它们的xml配置信息写到web-fragment.xml里，生成一个jar包。这个jar包就可以插到任何Servlet的程序中被正常使用了，jar包内的servlet配置不需要重新写到当前项目的xml中，Servlet3.0会自动扫描jar包内的 web-fragment.xml
+
+4. ServletContext 的性能增强
+
+5. HttpServletRequest 对文件上传的支持，使用
+
+```
+Part getPart(String name)
+Collection<Part> getParts()
+```
+
+就可以轻松获取文件数据，Part还提供了一些好用的api，方便你处理这些文件，不过form表单仍然要求是 multipart/form-data的
+
+Servlet 3.0 的新特性参考：https://www.ibm.com/developerworks/cn/java/j-lo-servlet30/index.html
+Servlet 3.0 的新特性参考：https://www.cnblogs.com/davenkin/p/async-servlet.html
+
+---
+
+Servlet 3.1 新特性介绍，jdk1.7
+
+0. 编程式配置，使用java代码的格式来配置web.xml，一种现在流行的配置方式，继承javax.servlet.ServletContextListener接口，还可以使得这个Java配置类可插拔
+
+1. Non-blocking I/O, 
+非堵塞的I/O，在使用I/O进行网络数据读取的时候，加入了几个回调函数
+```
+ onDataAvailable - 在数据没有阻塞，已经完全准备好可以读取的时候调用。
+ onAllDataRead - 所有数据读取完成后调用。
+ onError - 请求中发生错误的时候调用。
+```
+这样我们就可以在回调函数里，开启I/O进行读取，这样就不会堵塞当前线程的执行
+
+参考：https://www.cnblogs.com/davenkin/p/async-servlet.html
+
+2. 支持HTTP protocol upgrade mechanism 
+
+客户端可以发起握手协议的升级，最常见的从HTTP / 1.1 升级到HTTP/2 甚至WebSocket 
+
+https://cloud.tencent.com/developer/section/1189838
+
+---
+
+Servlet 4.0新特性介绍，jdk1.8
+
+主要是实现了对HTTP/2的全面支持
+
+1. 服务器推送
+
+2. 全新的URL映射匹配方式
+
+参考：https://www.ibm.com/developerworks/cn/java/j-javaee8-servlet4/index.html
+
+
+
+
+

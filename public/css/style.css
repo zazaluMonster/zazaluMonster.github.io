@@ -1375,52 +1375,49 @@ article .content .caption {
   content: ")";
 }
 .highlight {
-  color: #6e6b5e;
-  background: #fefbec;
+  background: #000;
+  color: #eaeaea;
 }
 .highlight .code .comment,
 .highlight .code .quote {
-  color: #7d7a68;
+  color: #969896;
 }
 .highlight .code .variable,
 .highlight .code .template-variable,
-.highlight .code .attribute,
 .highlight .code .tag,
 .highlight .code .name,
-.highlight .code .regexp,
-.highlight .code .link,
 .highlight .code .selector-id,
-.highlight .code .selector-class {
-  color: #d73737;
+.highlight .code .selector-class,
+.highlight .code .regexp,
+.highlight .code .deletion {
+  color: #d54e53;
 }
 .highlight .code .number,
-.highlight .code .meta,
 .highlight .code .built_in,
 .highlight .code .builtin-name,
 .highlight .code .literal,
 .highlight .code .type,
-.highlight .code .params {
-  color: #b65611;
+.highlight .code .params,
+.highlight .code .meta,
+.highlight .code .link {
+  color: #e78c45;
+}
+.highlight .code .attribute {
+  color: #e7c547;
 }
 .highlight .code .string,
 .highlight .code .symbol,
-.highlight .code .bullet {
-  color: #60ac39;
+.highlight .code .bullet,
+.highlight .code .addition {
+  color: #b9ca4a;
 }
 .highlight .code .title,
 .highlight .code .section {
-  color: #6684e1;
+  color: #7aa6da;
 }
 .highlight .code .keyword,
 .highlight .code .selector-tag {
-  color: #b854d4;
-}
-.highlight .code .highlight {
-  display: block;
-  overflow-x: auto;
-  background: #fefbec;
-  color: #6e6b5e;
-  padding: 0.5em;
+  color: #c397d8;
 }
 .highlight .code .emphasis {
   font-style: italic;
@@ -1445,10 +1442,14 @@ pre code {
   border: none;
 }
 code {
-  padding: 0 5px;
-  border: 1px dotted #666;
+  font-family: 'Roboto Mono', Monaco, courier, monospace;
+  font-size: 0.9em;
+  background-color: #47434c;
+  color: #f5f5f5;
+  padding: 3px 5px;
+  margin: 0 2px 5px 0;
   border-radius: 2px;
-  -webkit-border-radius: 2px;
+  white-space: nowrap;
 }
 .highlight {
   overflow-x: auto;

@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html>
+<!-- 引入视差滚动css -->
+<!-- <link rel="stylesheet" href="/parallax/parallaxCss.css"> -->
 <head><meta name="generator" content="Hexo 3.8.0">
     <!-- so meta -->
     <meta charset="utf-8">
@@ -48,6 +50,24 @@
 </head>
 
 <body class="max-width mx-auto px3 ltr">
+  <!-- 添加视差滚动容器 -->
+  <!-- <ul id="scene" class="scene unselectable" data-friction-x="0.1" data-friction-y="0.1" data-scalar-x="25" data-scalar-y="15" style="width: 100%; height: 769px; transform: translate3d(0px, 0px, 0px); transform-style: preserve-3d; backface-visibility: hidden;">
+      <li class="layer" data-depth="0.00" style="position: relative; display: block; left: 0px; top: 0px; transform: translate3d(0px, 0px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="background"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light orange b phase-4"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light purple c phase-5"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light orange d phase-3"></div></li>
+      <li class="layer" data-depth="0.15" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(43.575px, 14.7375px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.30" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(87.15px, 29.475px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.30" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(87.15px, 29.475px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.40" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(116.2px, 39.3px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.50" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(145.25px, 49.125px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="lighthouse depth-60"></div></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.80" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(232.4px, 78.6px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="1.00" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(290.5px, 98.25px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+  </ul> -->
     
     <div class="content index py4">
         
@@ -113,7 +133,7 @@
   
   <span class="h2">Topics</span>
   <span class="widget tagcloud">
-    <a href="/tags/Bugs/" style="font-size: 16.67px;">Bugs</a> <a href="/tags/JavaWeb/" style="font-size: 10px;">JavaWeb</a> <a href="/tags/Proxy/" style="font-size: 10px;">Proxy</a> <a href="/tags/hexo/" style="font-size: 20px;">hexo</a> <a href="/tags/signature/" style="font-size: 13.33px;">signature</a> <a href="/tags/ubuntu/" style="font-size: 13.33px;">ubuntu</a> <a href="/tags/回忆向/" style="font-size: 16.67px;">回忆向</a> <a href="/tags/编码/" style="font-size: 10px;">编码</a> <a href="/tags/随笔/" style="font-size: 16.67px;">随笔</a>
+    <a href="/tags/Bugs/" style="font-size: 16.67px;">Bugs</a> <a href="/tags/JavaWeb/" style="font-size: 10px;">JavaWeb</a> <a href="/tags/Proxy/" style="font-size: 10px;">Proxy</a> <a href="/tags/hexo/" style="font-size: 20px;">hexo</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/signature/" style="font-size: 13.33px;">signature</a> <a href="/tags/ubuntu/" style="font-size: 13.33px;">ubuntu</a> <a href="/tags/回忆向/" style="font-size: 16.67px;">回忆向</a> <a href="/tags/数据结构/" style="font-size: 10px;">数据结构</a> <a href="/tags/编码/" style="font-size: 16.67px;">编码</a> <a href="/tags/跨域访问/" style="font-size: 10px;">跨域访问</a> <a href="/tags/随笔/" style="font-size: 20px;">随笔</a>
   </span>
   <span class="h2">Most recent</span>
   
@@ -128,7 +148,7 @@
     <div class="meta">
       
         
-          <time datetime="2019-06-08T04:21:27.000Z" itemprop="datePublished">2019-06-08</time>
+          <time datetime="2019-06-30T08:26:15.000Z" itemprop="datePublished">2019-06-30</time>
         
       
     </div>
@@ -136,7 +156,7 @@
 
         <span>
     
-        <a class href="/2019/06/08/git-push大文件报错解决/">git push大文件报错解决</a>
+        <a class href="/2019/06/30/CORS-question-and-curl-use-in-web-test/">前后端分离之跨域问题以及curl在web测试上的应用</a>
     
 
 
@@ -148,7 +168,7 @@
     <div class="meta">
       
         
-          <time datetime="2019-06-06T04:11:49.000Z" itemprop="datePublished">2019-06-06</time>
+          <time datetime="2019-06-24T04:56:25.000Z" itemprop="datePublished">2019-06-24</time>
         
       
     </div>
@@ -156,7 +176,7 @@
 
         <span>
     
-        <a class href="/2019/06/06/ubuntu18-04配置shadowsocks客户端/">ubuntu18.04配置shadowsocks客户端</a>
+        <a class href="/2019/06/24/JavaEncoded3/">Java乱码问题之URLEncoder和URLDecoder</a>
     
 
 
@@ -168,7 +188,7 @@
     <div class="meta">
       
         
-          <time datetime="2019-06-05T10:12:08.000Z" itemprop="datePublished">2019-06-05</time>
+          <time datetime="2019-06-16T01:59:00.000Z" itemprop="datePublished">2019-06-16</time>
         
       
     </div>
@@ -176,7 +196,7 @@
 
         <span>
     
-        <a class href="/2019/06/05/番茄工作法的有用论/">番茄工作法的有用论</a>
+        <a class href="/2019/06/16/ToFather/">又是一年父亲节</a>
     
 
 
@@ -188,7 +208,7 @@
     <div class="meta">
       
         
-          <time datetime="2019-05-29T07:40:34.000Z" itemprop="datePublished">2019-05-29</time>
+          <time datetime="2019-06-15T11:21:15.000Z" itemprop="datePublished">2019-06-15</time>
         
       
     </div>
@@ -196,7 +216,7 @@
 
         <span>
     
-        <a class href="/2019/05/29/人性的混乱/">人性的混乱</a>
+        <a class href="/2019/06/15/Java的字符编码问题一语道破-GBK-UTF等常用编码/">Java的字符编码问题一语道破(GBK,UTF-8,ISO-8859-1)</a>
     
 
 
@@ -208,7 +228,7 @@
     <div class="meta">
       
         
-          <time datetime="2019-05-02T08:58:31.000Z" itemprop="datePublished">2019-05-02</time>
+          <time datetime="2019-06-14T02:14:12.000Z" itemprop="datePublished">2019-06-14</time>
         
       
     </div>
@@ -216,7 +236,7 @@
 
         <span>
     
-        <a class href="/2019/05/02/hexo博客备份浅谈/">hexo博客“安全”备份浅谈</a>
+        <a class href="/2019/06/14/ubuntu18-04安装mysql8-0-16-Community/">ubuntu18.04安装mysql8.0.16(Community)，内附详细说明适合小白学习哦</a>
     
 
 
@@ -335,5 +355,8 @@
   </script>
 <!-- 药水制作师live2d插件结束 -->
 
+<!-- 引入视差滚动特效js -->
+<!-- <script src="/parallax/parallax.min.js"></script>
+<script src="/parallax/parallaxController.js"></script> -->
 </body>
 </html>
