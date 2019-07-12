@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>数据库中的时区转换</title>
+      <link href="/2019/07/12/database-timestamp-timezone-notice/"/>
+      <url>/2019/07/12/database-timestamp-timezone-notice/</url>
+      
+        <content type="html"><![CDATA[<h1 id="1"><a href="#1" class="headerlink" title="1"></a>1</h1><p>在我接触过的项目中，存储时间基本都是使用变长字符串按照<code>yyyyMMdd</code>等类似格式存储的，而不是使用<code>datatime</code>或者<code>timestamp</code>这些数据库提供的时间类型进行存储</p><p>这样使用有好有坏，根据项目情况选择使用。</p><h1 id="2"><a href="#2" class="headerlink" title="2"></a>2</h1><p>我长期维护的项目都是采用前者，也就是存储字符串<code>yyyyMMdd</code>。</p><p>所以最近遇到一个用了<code>timestamp</code>存储创建时间的情况，在我自己电脑的测试环境下进行单元测试的时候，我发现每次我存储的时间都会存在10多个小时的时差。 当时由于几乎没遇到过这种情况，所以我没想到原理上出了什么问题。后来才得知是<code>timestamp</code>会做时区转换。</p><h1 id="为什么要做时区转换？"><a href="#为什么要做时区转换？" class="headerlink" title="为什么要做时区转换？"></a>为什么要做时区转换？</h1><p>因为人家存的是一个时间戳(long)，显示的时候为了好看点，就按照默认时区做了转换。如果默认时区和你所在时区不一致，转换就出问题，导致每次都有时差</p><h1 id="怎么纠正这种坑"><a href="#怎么纠正这种坑" class="headerlink" title="怎么纠正这种坑"></a>怎么纠正这种坑</h1><p>很简单，修改数据库的默认时区即可。网上攻略很多，不谈了。我们要知道原理是因为时区的即可。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 计算机 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 时区 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>前后端分离之跨域问题以及curl在web测试上的应用</title>
       <link href="/2019/06/30/CORS-question-and-curl-use-in-web-test/"/>
       <url>/2019/06/30/CORS-question-and-curl-use-in-web-test/</url>
