@@ -334,7 +334,16 @@ beforeCreate 和 created
 # 其他
 
 1. simpleDataFormat 高并发下存在问题
+
+由于SimpleDateFormat不是线程安全的, 导致多个线程使用同一个SimpleDateFormat实例的时候, 会因为状态变量共享导致异常报错
+
+解决方法: 使用ThreadLocal包装,使得每个线程对应一个实例. 但是这样如果线程很多的情况下又会创建太多的SimpleDateFormat实例, 这时候你可以使用DateTimeFormatter, LocalDateTime(jdk8)去代替, 不过线程安全其实也就意味着要做控制,所以我认为性能可能会低于前者
+
 2. 常见的线程安全集合类
+
+Vector HashTable
+
+ConcurrentXXX, CopyOnWriteXXX
 
 
 # 非技术类问题
