@@ -136,7 +136,7 @@ open_graph:
 
 # Fill in your Disqus Comments Shortname to enable Disqus comments.
 disqus:
-  enabled: true
+  enabled: false
   shortname: https-zazalumonster-github-io-1
 
 # Fill in your Google Analytics tracking ID to enable Google Analytics.
@@ -153,3 +153,7 @@ baidu_analytics:
 # logo and/or favicons of you website.
 gravatar:
   email: name@email.com
+
+# js,css,png等静态资源国内托管地址BaseUrl(目的是为了加快静态资源的下载)
+Trusteeship:
+  baseUrl: https://he_jia_jun.gitee.io/zazalumonster.github.io/

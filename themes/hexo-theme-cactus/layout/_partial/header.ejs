@@ -2,9 +2,9 @@
   <a href="<%- url_for("/") %>">
   <% if (theme.logo && theme.logo.enabled) { %>
     <% if (theme.gravatar.email && theme.logo.gravatar) { %>
-      <div id="logo" style="background-image: url(<%- gravatar(theme.gravatar.email) %>);"></div>
+      <div id="logo" style="background-image: url(<%- gravatar(theme.Trusteeship.baseUrl  + theme.gravatar.email) %>);"></div>
     <% } else { %>
-      <div id="logo" style="background-image: url(<%- url_for(theme.logo.url) %>);"></div>
+      <div id="logo" style="background-image: url(<%- url_for(theme.Trusteeship.baseUrl + theme.logo.url) %>);"></div>
     <% } %>
   <% } %>
     <div id="title">

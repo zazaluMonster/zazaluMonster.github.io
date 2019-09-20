@@ -8,7 +8,7 @@ subtitle: My own diary, My own friend.
 description: 一个普通人的博客，有时候写点IT，有时候写点生活
 keywords:
 author: zazalu
-language:
+language: en
 timezone:
 
 # URL
@@ -83,3 +83,13 @@ deploy:
     branch: master
     name: zazaluMonster
     email: hejiajun1432@gmail.com
+
+# Gitalk comments config. (if use Gitalk, please close Disqus comments first)
+gitalk:
+  enabled: true
+  clientID: '73a23fdac799d4edb132'
+  clientSecret: '8200d919660d513fdd8629a7c45c13d7d13d9b6f'
+  repo: 'zazaluMonster.github.io'
+  owner: 'zazaluMonster'
+  admin: ['zazaluMonster']
+  distractionFreeMode: false

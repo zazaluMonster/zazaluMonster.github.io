@@ -1,10 +1,10 @@
 <!-- jquery -->
-<%- js('lib/jquery/jquery.min') %>
-<%- js('lib/justified-gallery/js/jquery.justifiedGallery.min.js') %>
-<%- js('js/main') %>
+<%- js(theme.Trusteeship.baseUrl + 'lib/jquery/jquery.min') %>
+<%- js(theme.Trusteeship.baseUrl + 'lib/justified-gallery/js/jquery.justifiedGallery.min.js') %>
+<%- js(theme.Trusteeship.baseUrl + 'js/main') %>
 <!-- search -->
 <% if (config.search && (page.search || page.type === "search")){ %>
-  <%- js('js/search.js') %>
+  <%- js(theme.Trusteeship.baseUrl + 'js/search.js') %>
   <script type="text/javascript">
   $(function() {
 
