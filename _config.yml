@@ -78,12 +78,15 @@ theme: hexo-theme-cactus
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
-    type: git
-    repository: https://github.com/zazaluMonster/zazaluMonster.github.io.git
-    branch: master
-    name: zazaluMonster
-    email: hejiajun1432@gmail.com
-
+    - type: git
+      repository: https://github.com/zazaluMonster/zazaluMonster.github.io.git
+      branch: master
+      name: zazaluMonster
+      email: hejiajun1432@gmail.com
+    - type: git
+      repository: https://gitee.com/he_jia_jun/zazaluMonster.github.io.git
+      branch: master
+      
 # Gitalk comments config. (if use Gitalk, please close Disqus comments first)
 gitalk:
   enabled: true
