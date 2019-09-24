@@ -123,10 +123,3 @@ MyBatis(-Plus)|熟悉
 Oracle|会
 Redis|会
 Nginx|会
-
-
-
-
-
-
-

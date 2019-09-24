@@ -12,7 +12,7 @@
 <meta name="keywords" content="signature">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用JavaSeurity进行数字签名(一)">
-<meta property="og:url" content="http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-一/index.html">
+<meta property="og:url" content="https://zazalu.space/2019/04/24/使用JavaSeurity进行数字签名-一/index.html">
 <meta property="og:site_name" content="Zazalu&#39;s Blog">
 <meta property="og:description" content="Hello,my blog.好久不见.由于最近项目有些地方有涉及到数字签名,RSA加解密,数字证书等东西.虽然对其不太了解,也没有过多的影响到自己的开发,但是抱着一颗好奇的心,对其相关知识进行了网上冲浪,现在对自己所看到的相关资料,进行自我整理以及消化.在这一章,你将了解到[什么是数字签名] [什么是公钥私钥] [JAVA如何生成公钥私钥进行数字签名] 数字签名 数字签名何时诞生?   1976年">
 <meta property="og:locale" content="en">
@@ -113,16 +113,16 @@
     <br>
     <div id="share" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-一/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-一/&text=使用JavaSeurity进行数字签名(一)"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-一/&title=使用JavaSeurity进行数字签名(一)"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-一/&is_video=false&description=使用JavaSeurity进行数字签名(一)"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=使用JavaSeurity进行数字签名(一)&body=Check out this article: http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-一/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-一/&title=使用JavaSeurity进行数字签名(一)"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-一/&title=使用JavaSeurity进行数字签名(一)"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-一/&title=使用JavaSeurity进行数字签名(一)"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-一/&title=使用JavaSeurity进行数字签名(一)"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-一/&name=使用JavaSeurity进行数字签名(一)&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://zazalu.space/2019/04/24/使用JavaSeurity进行数字签名-一/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://zazalu.space/2019/04/24/使用JavaSeurity进行数字签名-一/&text=使用JavaSeurity进行数字签名(一)"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://zazalu.space/2019/04/24/使用JavaSeurity进行数字签名-一/&title=使用JavaSeurity进行数字签名(一)"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zazalu.space/2019/04/24/使用JavaSeurity进行数字签名-一/&is_video=false&description=使用JavaSeurity进行数字签名(一)"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=使用JavaSeurity进行数字签名(一)&body=Check out this article: https://zazalu.space/2019/04/24/使用JavaSeurity进行数字签名-一/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://zazalu.space/2019/04/24/使用JavaSeurity进行数字签名-一/&title=使用JavaSeurity进行数字签名(一)"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://zazalu.space/2019/04/24/使用JavaSeurity进行数字签名-一/&title=使用JavaSeurity进行数字签名(一)"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://zazalu.space/2019/04/24/使用JavaSeurity进行数字签名-一/&title=使用JavaSeurity进行数字签名(一)"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://zazalu.space/2019/04/24/使用JavaSeurity进行数字签名-一/&title=使用JavaSeurity进行数字签名(一)"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://zazalu.space/2019/04/24/使用JavaSeurity进行数字签名-一/&name=使用JavaSeurity进行数字签名(一)&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -259,16 +259,16 @@
 
     <div id="share-footer" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-一/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-一/&text=使用JavaSeurity进行数字签名(一)"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-一/&title=使用JavaSeurity进行数字签名(一)"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-一/&is_video=false&description=使用JavaSeurity进行数字签名(一)"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=使用JavaSeurity进行数字签名(一)&body=Check out this article: http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-一/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-一/&title=使用JavaSeurity进行数字签名(一)"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-一/&title=使用JavaSeurity进行数字签名(一)"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-一/&title=使用JavaSeurity进行数字签名(一)"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-一/&title=使用JavaSeurity进行数字签名(一)"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/04/24/使用JavaSeurity进行数字签名-一/&name=使用JavaSeurity进行数字签名(一)&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://zazalu.space/2019/04/24/使用JavaSeurity进行数字签名-一/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://zazalu.space/2019/04/24/使用JavaSeurity进行数字签名-一/&text=使用JavaSeurity进行数字签名(一)"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://zazalu.space/2019/04/24/使用JavaSeurity进行数字签名-一/&title=使用JavaSeurity进行数字签名(一)"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zazalu.space/2019/04/24/使用JavaSeurity进行数字签名-一/&is_video=false&description=使用JavaSeurity进行数字签名(一)"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=使用JavaSeurity进行数字签名(一)&body=Check out this article: https://zazalu.space/2019/04/24/使用JavaSeurity进行数字签名-一/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://zazalu.space/2019/04/24/使用JavaSeurity进行数字签名-一/&title=使用JavaSeurity进行数字签名(一)"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://zazalu.space/2019/04/24/使用JavaSeurity进行数字签名-一/&title=使用JavaSeurity进行数字签名(一)"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://zazalu.space/2019/04/24/使用JavaSeurity进行数字签名-一/&title=使用JavaSeurity进行数字签名(一)"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://zazalu.space/2019/04/24/使用JavaSeurity进行数字签名-一/&title=使用JavaSeurity进行数字签名(一)"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://zazalu.space/2019/04/24/使用JavaSeurity进行数字签名-一/&name=使用JavaSeurity进行数字签名(一)&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
