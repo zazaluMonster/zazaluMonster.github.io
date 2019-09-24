@@ -27,3 +27,25 @@ date: 2019-04-25 11:21:26
 3. git push origin hexo
 4. hexo g
 5. hexo d
+
+## 加入gitee后的新增操作指令 2019.9.24
+
+我目前把自己的博客在gitee pages上也弄了一份，目的是为了借助下gitee在国内访问比较快的优点。
+
+所以现在要额外备份gitee的版本
+
+如果是新的机子,按顺序做如下操作即可
+
+1. 安装git和hexo
+2. git init  +  git remote add origin 'github repo url' + git remote add gitee 'gitee repo url'
+3. git pull origin hexo 把hexo文件全部拉取过来
+
+到这里为止我估计环境就ok了，那么每次写完新文章如果想顺便做备份的话，其shell指令就如下:
+
+1. git add <newfile>
+2. git commit -m "backup"
+3. - git push origin hexo
+   - git push gitee hexo
+4. hexo g
+5. hexo d
+6. node ./comment.js #用于自动化初始化gitalk的issue，不一定每次都要执行

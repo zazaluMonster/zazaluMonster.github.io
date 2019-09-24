@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Zazalu&#39;s Blog">
 <meta property="og:description" content="前阵子，我的hexo博客丢失源文件，吃了没有备份的源文件的苦头，所以现在我的hexo博客已经加上了备份机制，使其更加健壮了，本文将记录如何方便的进行hexo备份 适用hexo版本 4.x查阅此文档前，您必须保证您已经阅读完毕hexo的官方文档，并且已经实际操作过，不然阅读以下的文字会让你理解上有点困难 hexo备份步骤 在一个新的文件夹(A文件夹)内使用git去clone你的github上的">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-09-16T17:58:27.000Z">
+<meta property="og:updated_time" content="2019-09-24T08:17:28.538Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="hexo备份之路">
 <meta name="twitter:description" content="前阵子，我的hexo博客丢失源文件，吃了没有备份的源文件的苦头，所以现在我的hexo博客已经加上了备份机制，使其更加健壮了，本文将记录如何方便的进行hexo备份 适用hexo版本 4.x查阅此文档前，您必须保证您已经阅读完毕hexo的官方文档，并且已经实际操作过，不然阅读以下的文字会让你理解上有点困难 hexo备份步骤 在一个新的文件夹(A文件夹)内使用git去clone你的github上的">
@@ -127,7 +127,7 @@
 
     </div>
     <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#hexo备份步骤"><span class="toc-number">1.</span> <span class="toc-text">hexo备份步骤</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后续每次写完新文章后需要执行的shell指令"><span class="toc-number">2.</span> <span class="toc-text">后续每次写完新文章后需要执行的shell指令</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#hexo备份步骤"><span class="toc-number">1.</span> <span class="toc-text">hexo备份步骤</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后续每次写完新文章后需要执行的shell指令"><span class="toc-number">2.</span> <span class="toc-text">后续每次写完新文章后需要执行的shell指令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#加入gitee后的新增操作指令-2019-9-24"><span class="toc-number">3.</span> <span class="toc-text">加入gitee后的新增操作指令 2019.9.24</span></a></li></ol>
     </div>
   </span>
 </div>
@@ -195,6 +195,27 @@
 <li>hexo g</li>
 <li>hexo d</li>
 </ol>
+<h2 id="加入gitee后的新增操作指令-2019-9-24"><a href="#加入gitee后的新增操作指令-2019-9-24" class="headerlink" title="加入gitee后的新增操作指令 2019.9.24"></a>加入gitee后的新增操作指令 2019.9.24</h2><p>我目前把自己的博客在gitee pages上也弄了一份，目的是为了借助下gitee在国内访问比较快的优点。</p>
+<p>所以现在要额外备份gitee的版本</p>
+<p>如果是新的机子,按顺序做如下操作即可</p>
+<ol>
+<li>安装git和hexo</li>
+<li>git init  +  git remote add origin ‘github repo url’ + git remote add gitee ‘gitee repo url’</li>
+<li>git pull origin hexo 把hexo文件全部拉取过来</li>
+</ol>
+<p>到这里为止我估计环境就ok了，那么每次写完新文章如果想顺便做备份的话，其shell指令就如下:</p>
+<ol>
+<li>git add <newfile></newfile></li>
+<li>git commit -m “backup”</li>
+<li><ul>
+<li>git push origin hexo</li>
+<li>git push gitee hexo</li>
+</ul>
+</li>
+<li>hexo g</li>
+<li>hexo d</li>
+<li>node ./comment.js #用于自动化初始化gitalk的issue</li>
+</ol>
 
   </div>
 </article>
@@ -224,7 +245,7 @@
     </div>
 
     <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#hexo备份步骤"><span class="toc-number">1.</span> <span class="toc-text">hexo备份步骤</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后续每次写完新文章后需要执行的shell指令"><span class="toc-number">2.</span> <span class="toc-text">后续每次写完新文章后需要执行的shell指令</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#hexo备份步骤"><span class="toc-number">1.</span> <span class="toc-text">hexo备份步骤</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后续每次写完新文章后需要执行的shell指令"><span class="toc-number">2.</span> <span class="toc-text">后续每次写完新文章后需要执行的shell指令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#加入gitee后的新增操作指令-2019-9-24"><span class="toc-number">3.</span> <span class="toc-text">加入gitee后的新增操作指令 2019.9.24</span></a></li></ol>
     </div>
 
     <div id="share-footer" style="display: none">
