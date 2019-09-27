@@ -149,3 +149,30 @@ function send(options) {
 # 5 操作步骤
 
 每次`hexo d`后执行`node ./comment.js`即可,不过不要觉得他们的执行顺序由强约束，其实你可以随时执行`node ./comment.js`，两者没有必要关联，只不过每次你hexo d后，肯定会新增的文章需要生成评论，所以调用一次
+
+# 6 后续发生的问题总结
+
+当执行node ./comment.js出现如下问题时, 
+```shell
+internal/modules/cjs/loader.js:638
+    throw err;
+    ^
+
+Error: Cannot find module './options'
+    at Function.Module._resolveFilename (internal/modules/cjs/loader.js:636:15)
+    at Function.Module._load (internal/modules/cjs/loader.js:562:25)
+    at Module.require (internal/modules/cjs/loader.js:692:17)
+    at require (internal/modules/cjs/helpers.js:25:18)
+    at Object.<anonymous> (/home/zazalu/blog/zazaluMonster.github.io/node_modules/cheerio/lib/cheerio.js:6:22)
+    at Module._compile (internal/modules/cjs/loader.js:778:30)
+    at Object.Module._extensions..js (internal/modules/cjs/loader.js:789:10)
+    at Module.load (internal/modules/cjs/loader.js:653:32)
+    at tryModuleLoad (internal/modules/cjs/loader.js:593:12)
+    at Function.Module._load (internal/modules/cjs/loader.js:585:3)
+
+```
+
+直接删除整个`node_modules`文件夹,重新执行`npm install`解决,我猜测是node模块构建问题
+---
+
+如果切换环境调用github api, token需要重新生成, 请注意
