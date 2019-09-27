@@ -22,6 +22,7 @@
     "hexo-renderer-stylus": "^0.3.3",
     "hexo-server": "^0.3.3",
     "md5": "^2.2.1",
+    "parse5": "^5.1.0",
     "request": "^2.88.0",
     "xml-parser": "^1.2.1",
     "yamljs": "^0.3.0"

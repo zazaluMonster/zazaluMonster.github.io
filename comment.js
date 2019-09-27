@@ -9,7 +9,8 @@ const md5 = require("md5");
 // 根据自己的情况进行配置
 const config = {
     username: "zazaluMonster", // GitHub 用户名
-    token: "d234d6a7234f3b547975f59c81adc879353189ac",  // GitHub Token
+    // token: "d234d6a7234f3b547975f59c81adc879353189ac",  // GitHub Token
+    token: "0adf76944dd463795f3b6a38c784f318cf4546c3",  // GitHub Token
     repo: "zazaluMonster.github.io",  // 存放 issues的git仓库
     // sitemap.xml的路径，commit.js放置在根目录下，无需修改，其他情况自行处理
     sitemapUrl: path.resolve(__dirname, "./public/sitemap.xml"),
@@ -44,6 +45,7 @@ console.log("开始初始化评论...");
         console.log(`共检索到${urls.length}个链接`);
         
         console.log("开始获取已经初始化的issues:");
+        console.log(requestGetOpt)
         let issues = await send(requestGetOpt);
         console.log(`已经存在${issues.length}个issues`);
         
