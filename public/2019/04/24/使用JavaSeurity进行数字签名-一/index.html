@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang=en>
-<!-- 引入视差滚动css -->
-<!-- <link rel="stylesheet" href="/parallax/parallaxCss.css"> -->
-<head><meta name="generator" content="Hexo 3.8.0">
+  <!-- 引入视差滚动css -->
+  <!-- <link rel="stylesheet" href="/parallax/parallaxCss.css"> -->
+  <head><meta name="generator" content="Hexo 3.8.0">
     <!-- so meta -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Zazalu&#39;s Blog">
 <meta property="og:description" content="Hello,my blog.好久不见.由于最近项目有些地方有涉及到数字签名,RSA加解密,数字证书等东西.虽然对其不太了解,也没有过多的影响到自己的开发,但是抱着一颗好奇的心,对其相关知识进行了网上冲浪,现在对自己所看到的相关资料,进行自我整理以及消化.在这一章,你将了解到[什么是数字签名] [什么是公钥私钥] [JAVA如何生成公钥私钥进行数字签名] 数字签名 数字签名何时诞生?   1976年">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-05-02T02:23:54.949Z">
+<meta property="og:updated_time" content="2019-09-29T04:02:40.438Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用JavaSeurity进行数字签名(一)">
 <meta name="twitter:description" content="Hello,my blog.好久不见.由于最近项目有些地方有涉及到数字签名,RSA加解密,数字证书等东西.虽然对其不太了解,也没有过多的影响到自己的开发,但是抱着一颗好奇的心,对其相关知识进行了网上冲浪,现在对自己所看到的相关资料,进行自我整理以及消化.在这一章,你将了解到[什么是数字签名] [什么是公钥私钥] [JAVA如何生成公钥私钥进行数字签名] 数字签名 数字签名何时诞生?   1976年">
@@ -51,9 +51,10 @@
     
 </head>
 
-<body class="max-width mx-auto px3 ltr">
-  <!-- 添加视差滚动容器 -->
-  <!-- <ul id="scene" class="scene unselectable" data-friction-x="0.1" data-friction-y="0.1" data-scalar-x="25" data-scalar-y="15" style="width: 100%; height: 769px; transform: translate3d(0px, 0px, 0px); transform-style: preserve-3d; backface-visibility: hidden;">
+
+  <body class="max-width mx-auto px3 ltr">
+    <!-- 添加视差滚动容器 -->
+    <!-- <ul id="scene" class="scene unselectable" data-friction-x="0.1" data-friction-y="0.1" data-scalar-x="25" data-scalar-y="15" style="width: 100%; height: 769px; transform: translate3d(0px, 0px, 0px); transform-style: preserve-3d; backface-visibility: hidden;">
       <li class="layer" data-depth="0.00" style="position: relative; display: block; left: 0px; top: 0px; transform: translate3d(0px, 0px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
       <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="background"></div></li>
       <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light orange b phase-4"></div></li>
@@ -71,7 +72,7 @@
       <li class="layer" data-depth="1.00" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(290.5px, 98.25px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
   </ul> -->
     
-      <div id="header-post">
+    <div id="header-post">
   <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
   <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
   <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
@@ -134,8 +135,8 @@
 
     
     <div class="content index py4">
-        
-        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+      
+      <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
   <header>
     
     <h1 class="posttitle" itemprop="name headline">
@@ -225,14 +226,31 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">signFile</span><span class="params">()</span> <span class="keyword">throws</span> NoSuchAlgorithmException, InvalidKeyException, IOException, SignatureException </span>&#123;</span><br><span class="line">    MyRsaDsaUtil rsaDsaUtil = <span class="keyword">new</span> MyRsaDsaUtil();</span><br><span class="line">    <span class="comment">//获取密钥对</span></span><br><span class="line">    KeyPair keyPair = rsaDsaUtil.getRSAKeyPair();</span><br><span class="line">    <span class="comment">//获取文件签名(请先预创建自己的rsaSigndFile文件)</span></span><br><span class="line">    String signFilePath = URLDecoder.decode(MyRsaDsaUtil.class.getResource(<span class="string">"../resource/rsaSignFile"</span>)</span><br><span class="line">            .getFile(),<span class="string">"utf-8"</span>) ;</span><br><span class="line">    Signature signature = rsaDsaUtil.getFileSignature(<span class="keyword">new</span> File(signFilePath),keyPair);</span><br><span class="line">    <span class="comment">//保存文件签名 保存后才能发送给别人哦</span></span><br><span class="line">    String signDataFileUrl = <span class="string">"src/test/resource/signData"</span> ;</span><br><span class="line">    String pubKeyDataFileUrl = <span class="string">"src/test/resource/pubKeyData"</span>;</span><br><span class="line">    rsaDsaUtil.saveSignature(<span class="keyword">new</span> File(signDataFileUrl),signature);</span><br><span class="line">    rsaDsaUtil.savePublicKey(<span class="keyword">new</span> File(pubKeyDataFileUrl),keyPair.getPublic());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="小节"><a href="#小节" class="headerlink" title="小节"></a>小节</h2><p>本章我们先从数字签名的基础知识讲起，随后用了实际代码例子进行了练习，现在我们应该都已经学会了使用java生成某个文件的数字签名！</p>
 <p>在下一章中，我们将作为文件接收者，去验证这个数字签名是否正确，从而完成一整个使用数字签名验证发件人有效性的整个流程。</p>
-
+<div id="donationPoint">
+</div>
   </div>
-</article>
+
+    <div id="donationWrap">
+        <p style="
+      text-align: center;
+      border-top: gold;
+      border-top-style: solid;
+      border-top-width: 1px;
+      color: #eee;
+      font-weight: bold;
+      font-size: 1rem;
+      padding-top: 15px;
+      margin-top: 70px;
+  ">感谢作者</p>
+        <img src="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/tmpImage/blog_donation_zfb.png"
+          style="margin-left: auto;margin-right: auto;display: block;width: 30%;padding-bottom: 30px;">
+      </div>
+      </article>
 
 
 
-        
-          <div id="footer-post-container">
+      
+      <div id="footer-post-container">
   <div id="footer-post">
 
     <div id="nav-footer" style="display: none">
@@ -282,8 +300,8 @@
   </div>
 </div>
 
-        
-        <!-- 不蒜子统计 -->
+      
+      <!-- 不蒜子统计 -->
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
 </script>
 <footer id="footer">
@@ -358,37 +376,38 @@
     
 
 
-<!-- 药水制作师live2d -->
-  <!-- 引入css -->
-  <link rel="stylesheet" href="/live2d/css/font-awesome/css/font-awesome.min.css"/>
-  <link href="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/css/waifu.css" rel="stylesheet" type="text/css" />
-  <!-- html -->
-  
-  <div class="waifu-switch">Live2d</div>
-  <div class="waifu">
-    <div class="waifu-tips"></div>
-    <canvas id="live2d" width="252" height="225" class="live2d"></canvas>
-    <div class="waifu-tool">
-      <i class="fa-times waifu-closed"></i>
-    </div>
-  </div>
-  <!-- 引入js -->
-  <script src="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/live2d.js"></script>
-  <script async src="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/waifu-tips.js"></script>
-  <script type="text/javascript">
-    loadlive2d("live2d", "/live2d/Pio/model.json");
-  </script>
-<!-- 药水制作师live2d插件结束 -->
+    <!-- 药水制作师live2d -->
+    <!-- 引入css -->
+    <link rel="stylesheet" href="/live2d/css/font-awesome/css/font-awesome.min.css" />
+    <link href="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/css/waifu.css" rel="stylesheet" type="text/css" />
+    <!-- html -->
 
-<!-- 引入视差滚动特效js -->
-<!-- <script src="/parallax/parallax.min.js"></script>
+    <div class="waifu-switch">Live2d</div>
+    <div class="waifu">
+      <div class="waifu-tips"></div>
+      <canvas id="live2d" width="252" height="225" class="live2d"></canvas>
+      <div class="waifu-tool">
+        <i class="fa-times waifu-closed"></i>
+      </div>
+    </div>
+    <!-- 引入js -->
+    <script src="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/live2d.js"></script>
+    <script async src="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/waifu-tips.js"></script>
+    <script type="text/javascript">
+      loadlive2d("live2d", "/live2d/Pio/model.json");
+    </script>
+    <!-- 药水制作师live2d插件结束 -->
+
+    <!-- 引入视差滚动特效js -->
+    <!-- <script src="/parallax/parallax.min.js"></script>
 <script src="/parallax/parallaxController.js"></script> -->
 
-<!-- 不蒜子统计请见footer.ejs -->
+    <!-- 不蒜子统计请见footer.ejs -->
 
+  
     <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
     <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
-    <script src="/js/md5.min.js"></script>
+    <script src="https://he_jia_jun.gitee.io/zazalumonster.github.io//js/md5.min.js"></script>
     <div id="gitalk-container"></div>
     <script>
     if(location.pathname == '/'){
@@ -407,4 +426,5 @@
     }
     </script>
     </body>
-</html>
+
+  </html>

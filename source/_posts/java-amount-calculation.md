@@ -308,3 +308,5 @@ System.out.println(Long.toBinaryString(Double.doubleToLongBits(0.1d)))
 ## 未完待续
 
 本章主要讲解了java层面上如何做好高精度计算, 下一章我们会继续讨论数据库层面上以及前端层面上如何正确的进行展示
+
+<div id="donationPoint">

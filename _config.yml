@@ -106,3 +106,8 @@ sitemap:
 
 baidusitemap:
   path: baidusitemap.xml
+
+# js,css,png等静态资源国内托管地址BaseUrl(目的是为了加快静态资源的下载)
+Trusteeship:
+  baseUrl: https://he_jia_jun.gitee.io/zazalumonster.github.io/
+

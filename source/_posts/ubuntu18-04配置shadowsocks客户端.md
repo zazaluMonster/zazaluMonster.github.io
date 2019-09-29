@@ -160,3 +160,4 @@ WantedBy=multi-user.target
 
 3. 启动（关闭）service服务，使用指令`systemctl start(stop) shadowsocks.service` 
 
+<div id="donationPoint">

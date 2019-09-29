@@ -75,4 +75,6 @@ sudo ./dkms-install.sh
 
 信号弱，使用关键字`weak signal`去google上搜查答案吧
 
+<div id="donationPoint">
+
 

@@ -9,7 +9,6 @@ const md5 = require("md5");
 // 根据自己的情况进行配置
 const config = {
     username: "zazaluMonster", // GitHub 用户名
-    // token: "d234d6a7234f3b547975f59c81adc879353189ac",  // GitHub Token
     token: "d237c8241f425f01d81bc620208ead690e8b250a",  // GitHub Token
     repo: "zazaluMonster.github.io",  // 存放 issues的git仓库
     // sitemap.xml的路径，commit.js放置在根目录下，无需修改，其他情况自行处理

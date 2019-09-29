@@ -158,3 +158,5 @@ public void signFile() throws NoSuchAlgorithmException, InvalidKeyException, IOE
 本章我们先从数字签名的基础知识讲起，随后用了实际代码例子进行了练习，现在我们应该都已经学会了使用java生成某个文件的数字签名！
 
 在下一章中，我们将作为文件接收者，去验证这个数字签名是否正确，从而完成一整个使用数字签名验证发件人有效性的整个流程。
+
+<div id="donationPoint">

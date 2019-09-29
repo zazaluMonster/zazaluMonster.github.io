@@ -117,3 +117,5 @@ if(config.enabled){
 ## 大功告成
 
 试试`hexo g`,`hexo d`然后看看效果吧
+
+<div id="donationPoint">

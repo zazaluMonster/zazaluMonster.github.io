@@ -176,3 +176,5 @@ Error: Cannot find module './options'
 ---
 
 如果切换环境调用github api, token需要重新生成, 请注意
+
+<div id="donationPoint">

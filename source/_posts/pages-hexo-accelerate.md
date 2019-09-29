@@ -63,3 +63,5 @@ CDN加速等我完成备案再搞
 
 暂时就总结这些，有事先闪了！！
 
+<div id="donationPoint">
+
