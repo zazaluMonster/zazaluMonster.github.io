@@ -37,8 +37,13 @@ if(config.enabled){
     `;
     let newHtmlContent = htmlContent;
     if ((/([\n\r\s\t]*<\/body>)/i).test(htmlContent)) {
-
-      const lastIndex = htmlContent.lastIndexOf('</body>');
+      
+      //检索gitalk设置点, 在layout.ejs文件中设置
+      const lastIndex = htmlContent.lastIndexOf('<!-- gitalk -->');
+      //如果设置点不存在, 则将gitalk默认插入至底部
+      if(lastIndex == -1){
+        lastIndex = htmlContent.lastIndexOf('</body>');
+      }
       newHtmlContent = `${htmlContent.substring(0, lastIndex)}${contentToInject}${htmlContent.substring(lastIndex, htmlContent.length)}`; // eslint-disable-line no-magic-numbers
 
     }
