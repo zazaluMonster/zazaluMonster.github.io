@@ -389,9 +389,31 @@
 </div>
 
       
-      <!-- 不蒜子统计 -->
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
-</script>
+      
+
+
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script src="https://he_jia_jun.gitee.io/zazalumonster.github.io//js/md5.min.js"></script>
+    <div id="gitalk-container"></div>
+    <script>
+    if(location.pathname == '/'){
+      //首页不需要评论系统
+    }else{
+      var gitalk = new Gitalk({
+        clientID: '73a23fdac799d4edb132',
+        clientSecret: '8200d919660d513fdd8629a7c45c13d7d13d9b6f',
+        repo: 'zazaluMonster.github.io',
+        owner: 'zazaluMonster',
+        admin: 'zazaluMonster',
+        id: md5(location.origin + "/" +location.pathname),
+        distractionFreeMode: false
+      });
+      gitalk.render('gitalk-container');
+    }
+    </script>
+    <!-- gitalk -->
+
 <footer id="footer">
   <div class="footer-left">
     Copyright &copy; 2019 zazalu
@@ -416,6 +438,7 @@
     </nav>
   </div>
   <!-- 不蒜子统计 -->
+ <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
   <div>
     <span id="busuanzi_container_site_pv">
       本站总访问量<span id="busuanzi_value_site_pv"></span>次
@@ -491,29 +514,7 @@
 <script src="/parallax/parallaxController.js"></script> -->
 
     <!-- 不蒜子统计请见footer.ejs -->
-    
-    
-    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
-    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
-    <script src="https://he_jia_jun.gitee.io/zazalumonster.github.io//js/md5.min.js"></script>
-    <div id="gitalk-container"></div>
-    <script>
-    if(location.pathname == '/'){
-      //首页不需要评论系统
-    }else{
-      var gitalk = new Gitalk({
-        clientID: '73a23fdac799d4edb132',
-        clientSecret: '8200d919660d513fdd8629a7c45c13d7d13d9b6f',
-        repo: 'zazaluMonster.github.io',
-        owner: 'zazaluMonster',
-        admin: 'zazaluMonster',
-        id: md5(location.origin + "/" +location.pathname),
-        distractionFreeMode: false
-      });
-      gitalk.render('gitalk-container');
-    }
-    </script>
-    <!-- gitalk -->
+
 
   </body>
 

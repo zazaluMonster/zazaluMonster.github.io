@@ -38,7 +38,7 @@ if(config.enabled){
     let newHtmlContent = htmlContent;
     if ((/([\n\r\s\t]*<\/body>)/i).test(htmlContent)) {
       
-      //检索gitalk设置点, 在layout.ejs文件中设置
+      //检索gitalk设置点, 我在footer.ejs文件中设置了, 因为我希望gitalk的出现位置在footer上方
       const lastIndex = htmlContent.lastIndexOf('<!-- gitalk -->');
       //如果设置点不存在, 则将gitalk默认插入至底部
       if(lastIndex == -1){
