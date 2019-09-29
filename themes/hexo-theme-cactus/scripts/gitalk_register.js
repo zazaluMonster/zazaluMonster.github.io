@@ -9,7 +9,6 @@ const _ = require('lodash');
 let config = _.defaultsDeep({
 }, hexo.config.gitalk, hexo.config.Trusteeship);
 
-console.log(config);
 
 if(config.enabled){
   hexo.extend.filter.register('after_render:html', (htmlContent) => {
