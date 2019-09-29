@@ -403,10 +403,9 @@
         repo: 'zazaluMonster.github.io',
         owner: 'zazaluMonster',
         admin: 'zazaluMonster',
-        id: md5(location.pathname),
+        id: md5(location.origin + "/" +location.pathname),
         distractionFreeMode: false
       });
-      
       gitalk.render('gitalk-container');
     }
     </script>

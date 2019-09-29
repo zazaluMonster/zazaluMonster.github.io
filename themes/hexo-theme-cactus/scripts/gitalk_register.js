@@ -21,10 +21,9 @@ if(config.enabled){
         repo: '${config.repo}',
         owner: '${config.owner}',
         admin: '${config.admin}',
-        id: md5(location.pathname),
+        id: md5(location.origin + "/" +location.pathname),
         distractionFreeMode: ${config.distractionFreeMode}
       });
-      
       gitalk.render('gitalk-container');
     }
     `;

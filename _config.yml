@@ -2,6 +2,9 @@
 ## Docs: https://hexo.io/docs/configuration.html
 ## Source: https://github.com/hexojs/hexo/
 
+# 编写好新文章后输入以下指令做上传更新备份操作
+# hexo g;hexo d;node ./comment.js;git add .;git commit -m "backup";git push origin hexo;git push gitee hexo
+
 # Site
 title: Zazalu's Blog
 subtitle: My own diary, My own friend.

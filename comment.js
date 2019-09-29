@@ -10,7 +10,7 @@ const md5 = require("md5");
 const config = {
     username: "zazaluMonster", // GitHub 用户名
     // token: "d234d6a7234f3b547975f59c81adc879353189ac",  // GitHub Token
-    token: "c7d3c8020bec80f7d20e6d22b24f4e08aa9ec171",  // GitHub Token
+    token: "d237c8241f425f01d81bc620208ead690e8b250a",  // GitHub Token
     repo: "zazaluMonster.github.io",  // 存放 issues的git仓库
     // sitemap.xml的路径，commit.js放置在根目录下，无需修改，其他情况自行处理
     sitemapUrl: path.resolve(__dirname, "./public/sitemap.xml"),
@@ -55,6 +55,8 @@ console.log("开始初始化评论...");
                 return item.body.includes(link);
             });
         });
+
+
         if (notInitIssueLinks.length > 0) {
             console.log(`本次有${notInitIssueLinks.length}个链接需要初始化issue：`);
             console.log(notInitIssueLinks);
@@ -68,9 +70,14 @@ console.log("开始初始化评论...");
                     let html = await send({ ...requestGetOpt, url: item });
                     let title = cheerio.load(html)("title").text();
                     let pathLabel = url.parse(item).path;
+                    console.log("pathLabel:" + pathLabel);
+                    console.log("url2md5:" + (config.baseUrl + pathLabel));
                     pathLabel = md5(config.baseUrl + pathLabel);//中文过长所以要md5
+                    console.log("md5:" + pathLabel);
                     let body = `${item}<br><br>${websiteConfig.description}`;
                     let form = JSON.stringify({ body, labels: [config.kind, pathLabel], title });
+                    console.log("item:" + item);
+                    console.log("form:" + form);
                     return send({ ...requestPostOpt, form });
                 });
                 console.log(`已完成${initRet.length}个！`);
