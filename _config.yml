@@ -100,7 +100,7 @@ gitalk:
   admin: ['zazaluMonster']
   distractionFreeMode: false
 
-  # hexo sitemap网站地图
+# hexo sitemap网站地图
 sitemap:
   path: sitemap.xml
 
