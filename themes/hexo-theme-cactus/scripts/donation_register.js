@@ -23,7 +23,7 @@ hexo.extend.filter.register('after_render:html', (htmlContent) => {
       padding-top: 15px;
       margin-top: 70px;
   ">感谢作者</p>
-        <img src="/images/tmpImage/blog_donation_zfb.png"
+        <img src="${config.baseUrl}/images/tmpImage/blog_donation_zfb.png"
           style="margin-left: auto;margin-right: auto;display: block;width: 30%;padding-bottom: 30px;">
       </div>
       `;
