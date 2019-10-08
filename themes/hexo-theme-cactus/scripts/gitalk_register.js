@@ -23,7 +23,8 @@ if(config.enabled){
         owner: '${config.owner}',
         admin: '${config.admin}',
         id: md5(location.origin + "/" +location.pathname),
-        distractionFreeMode: ${config.distractionFreeMode}
+        distractionFreeMode: ${config.distractionFreeMode},
+        pagerDirection: '${config.pagerDirection}'
       });
       gitalk.render('gitalk-container');
     }

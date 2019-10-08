@@ -99,6 +99,7 @@ gitalk:
   owner: 'zazaluMonster'
   admin: ['zazaluMonster']
   distractionFreeMode: false
+  pagerDirection: 'first'
 
 # hexo sitemap网站地图
 sitemap:
