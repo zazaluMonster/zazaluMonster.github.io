@@ -88,3 +88,5 @@ OK，接下来我按`selects`->`inserts`->`selects`的顺序来执行，我们�
 通过cache-ref可以间接的实现全局缓存实例的效果，从而解决目前常常遇到的一类缓存数据脏读问题而不得不抛弃mybatis二级缓存功能的现象
 
 <div id="donationPoint">
+
+<div id="licensePoint">

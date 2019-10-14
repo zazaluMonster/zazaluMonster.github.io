@@ -122,3 +122,5 @@ mysql的安装程序真的越来越傻瓜了！因为它不仅在安装完后自
 可以写个shell脚本，把这些东西捆绑，一键执行！那就是真的超傻瓜式安装包了，我以后来填
 
 <div id="donationPoint">
+
+<div id="licensePoint">

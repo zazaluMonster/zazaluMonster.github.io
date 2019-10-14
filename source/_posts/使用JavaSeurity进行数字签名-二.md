@@ -94,3 +94,5 @@ private boolean verifySignature(PublicKey publicKey,File dataFile,byte[] sigToVe
 java的数字签名练习就到此结束了。本来我还想着写一下RSA加解密，但是发现其实在流程本质上和数字签名是一致的，所以就不浪费时间重新赘述了
 
 <div id="donationPoint">
+
+<div id="licensePoint">

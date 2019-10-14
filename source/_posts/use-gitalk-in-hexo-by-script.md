@@ -119,3 +119,5 @@ if(config.enabled){
 试试`hexo g`,`hexo d`然后看看效果吧
 
 <div id="donationPoint">
+
+<div id="licensePoint">

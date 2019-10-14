@@ -68,3 +68,4 @@ CDN加速等我完成备案再搞
 
 <div id="donationPoint">
 
+<div id="licensePoint">

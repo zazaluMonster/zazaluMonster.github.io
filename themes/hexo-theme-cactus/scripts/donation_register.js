@@ -31,7 +31,7 @@ hexo.extend.filter.register('after_render:html', (htmlContent) => {
   if ((/([\n\r\s\t]*<\/body>)/i).test(htmlContent)) {
     const showDonation = htmlContent.lastIndexOf('<div id="donationPoint">');
     if (showDonation >= 0) {
-      const lastIndex = htmlContent.lastIndexOf('</article>');
+      const lastIndex = htmlContent.lastIndexOf('<div id="donationPoint">');
       newHtmlContent = `${htmlContent.substring(0, lastIndex)}${contentToInject}${htmlContent.substring(lastIndex, htmlContent.length)}`; // eslint-disable-line no-magic-numbers
     }
 

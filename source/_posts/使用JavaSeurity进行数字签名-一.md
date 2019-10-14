@@ -160,3 +160,5 @@ public void signFile() throws NoSuchAlgorithmException, InvalidKeyException, IOE
 在下一章中，我们将作为文件接收者，去验证这个数字签名是否正确，从而完成一整个使用数字签名验证发件人有效性的整个流程。
 
 <div id="donationPoint">
+
+<div id="licensePoint">

@@ -77,4 +77,6 @@ sudo ./dkms-install.sh
 
 <div id="donationPoint">
 
+<div id="licensePoint">
+
 

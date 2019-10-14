@@ -346,3 +346,5 @@ https://zhuanlan.zhihu.com/p/25634935
 https://www.zhihu.com/question/39990490/answer/369690291
 
 <div id="donationPoint">
+
+<div id="licensePoint">

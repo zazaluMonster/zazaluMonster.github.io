@@ -176,3 +176,5 @@ I    a    m    锟   斤   拷   山
 
 
 <div id="donationPoint">
+
+<div id="licensePoint">
