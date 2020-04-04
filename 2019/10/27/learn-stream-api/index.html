@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang=en>
+  <!-- 引入视差滚动css -->
+  <!-- <link rel="stylesheet" href="/parallax/parallaxCss.css"> -->
+  <head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="前言Java流式编程, 指的是是使用java8新增的一个StreamAPI进行编程 StreamAPI天然契合了函数式编程, 在使用StreamAPI的过程中, 你就已经无时无刻的拥抱着函数式编程 前段时间我对Java函数式编程进行了归纳总结, 所以接下来的任务便是将流式编程也一网打尽. 初识StreamAPI其实在我工作的第一年期间, 我的所有接触的项目, 它们的jdk版本都不超过1.7, 大多">
+<meta name="keywords" content="流式编程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java流式编程-第一章">
+<meta property="og:url" content="https://zazalu.space/2019/10/27/learn-stream-api/index.html">
+<meta property="og:site_name" content="Zazalu&#39;s Blog">
+<meta property="og:description" content="前言Java流式编程, 指的是是使用java8新增的一个StreamAPI进行编程 StreamAPI天然契合了函数式编程, 在使用StreamAPI的过程中, 你就已经无时无刻的拥抱着函数式编程 前段时间我对Java函数式编程进行了归纳总结, 所以接下来的任务便是将流式编程也一网打尽. 初识StreamAPI其实在我工作的第一年期间, 我的所有接触的项目, 它们的jdk版本都不超过1.7, 大多">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2020-04-04T01:13:08.393Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java流式编程-第一章">
+<meta name="twitter:description" content="前言Java流式编程, 指的是是使用java8新增的一个StreamAPI进行编程 StreamAPI天然契合了函数式编程, 在使用StreamAPI的过程中, 你就已经无时无刻的拥抱着函数式编程 前段时间我对Java函数式编程进行了归纳总结, 所以接下来的任务便是将流式编程也一网打尽. 初识StreamAPI其实在我工作的第一年期间, 我的所有接触的项目, 它们的jdk版本都不超过1.7, 大多">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Java流式编程-第一章</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+
+  <body class="max-width mx-auto px3 ltr">
+    <!-- 添加视差滚动容器 -->
+    <!-- <ul id="scene" class="scene unselectable" data-friction-x="0.1" data-friction-y="0.1" data-scalar-x="25" data-scalar-y="15" style="width: 100%; height: 769px; transform: translate3d(0px, 0px, 0px); transform-style: preserve-3d; backface-visibility: hidden;">
+      <li class="layer" data-depth="0.00" style="position: relative; display: block; left: 0px; top: 0px; transform: translate3d(0px, 0px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="background"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light orange b phase-4"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light purple c phase-5"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light orange d phase-3"></div></li>
+      <li class="layer" data-depth="0.15" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(43.575px, 14.7375px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.30" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(87.15px, 29.475px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.30" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(87.15px, 29.475px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.40" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(116.2px, 39.3px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.50" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(145.25px, 49.125px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="lighthouse depth-60"></div></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.80" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(232.4px, 78.6px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="1.00" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(290.5px, 98.25px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+  </ul> -->
+    
+    <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2019/10/28/learn-stream-api-2/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2019/10/26/learn-FP-5/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://zazalu.space/2019/10/27/learn-stream-api/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://zazalu.space/2019/10/27/learn-stream-api/&text=Java流式编程-第一章"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://zazalu.space/2019/10/27/learn-stream-api/&title=Java流式编程-第一章"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zazalu.space/2019/10/27/learn-stream-api/&is_video=false&description=Java流式编程-第一章"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Java流式编程-第一章&body=Check out this article: https://zazalu.space/2019/10/27/learn-stream-api/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://zazalu.space/2019/10/27/learn-stream-api/&title=Java流式编程-第一章"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://zazalu.space/2019/10/27/learn-stream-api/&title=Java流式编程-第一章"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://zazalu.space/2019/10/27/learn-stream-api/&title=Java流式编程-第一章"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://zazalu.space/2019/10/27/learn-stream-api/&title=Java流式编程-第一章"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://zazalu.space/2019/10/27/learn-stream-api/&name=Java流式编程-第一章&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#初识StreamAPI"><span class="toc-number">2.</span> <span class="toc-text">初识StreamAPI</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Stream的特点"><span class="toc-number">3.</span> <span class="toc-text">Stream的特点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#天然结合函数式编程"><span class="toc-number">3.1.</span> <span class="toc-text">天然结合函数式编程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#内部迭代"><span class="toc-number">3.2.</span> <span class="toc-text">内部迭代</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#流是懒加载的"><span class="toc-number">3.3.</span> <span class="toc-text">流是懒加载的</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#StreamAPI的性能到底如何"><span class="toc-number">4.</span> <span class="toc-text">StreamAPI的性能到底如何</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+      
+      <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Java流式编程-第一章
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Zazalu's Blog</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-10-27T08:51:32.000Z" itemprop="datePublished">2019-10-27</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/IT/">IT</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/流式编程/">流式编程</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Java流式编程, 指的是是使用java8新增的一个StreamAPI进行编程</p>
+<p>StreamAPI天然契合了函数式编程, 在使用StreamAPI的过程中, 你就已经无时无刻的拥抱着函数式编程</p>
+<p>前段时间我对Java函数式编程进行了归纳总结, 所以接下来的任务便是将流式编程也一网打尽.</p>
+<h2 id="初识StreamAPI"><a href="#初识StreamAPI" class="headerlink" title="初识StreamAPI"></a>初识StreamAPI</h2><p>其实在我工作的第一年期间, 我的所有接触的项目, 它们的jdk版本都不超过1.7, 大多是1.6版本和1.7版本</p>
+<p>所以在我工作的第一年期间, 我完全不知道StreamAPI的存在.</p>
+<p>一次偶然的契机, 我更换了自己的个人电脑, 所以在新系统上(ubuntu18.04)重新安装jdk的时候, 我率先下载的是jdk1.8</p>
+<p>当时正处在换工作期间, 在阅读各种面经的同时, 我也阅读了一些jdk源码.</p>
+<p>当我第一次认真阅读Java集合的源码的时候, Collection类的<code>stream()</code>方法进入我的实现.</p>
+<p>在软件开发中, stream这个单词, 也就是流这个概念是很常见的, 流在我的印象里通常意味着一个管道, 我们可以对其进行操作, 进行数据处理, 而数据处理是我们平时工作开发最容易遇到的情况, 所以流对于提高我们的代码开发效率是有很大的帮助的.</p>
+<p>所以StreamAPI是个值得我们去学习的一个模块.</p>
+<p>StreamAPI的底层具体是如何实现的, 我以后也会一一进行探究, 但是本章内容主要还是以学习API, 编写实例为主, 不去探究StreamAPI底层原理是什么</p>
+<h2 id="Stream的特点"><a href="#Stream的特点" class="headerlink" title="Stream的特点"></a>Stream的特点</h2><h3 id="天然结合函数式编程"><a href="#天然结合函数式编程" class="headerlink" title="天然结合函数式编程"></a>天然结合函数式编程</h3><p>Stream的语法就是基于函数式编程做的, 我可以大胆的这么说. 为了证明这一点, 下面的一个实例程序(随机输出7个有序的int数)可以帮助你初步认识StreamAPI</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"><span class="keyword">new</span> Random(<span class="number">47</span>)</span><br><span class="line">    .ints(<span class="number">5</span>, <span class="number">20</span>) <span class="comment">// 产生一个5-20区间的int流</span></span><br><span class="line">    .distinct() <span class="comment">// 去掉流中重复的int</span></span><br><span class="line">    .limit(<span class="number">7</span>)   <span class="comment">// 限制只要前7个</span></span><br><span class="line">    .sorted()   <span class="comment">// 将7个元素进行排序, 当然这个排序默认是递增</span></span><br><span class="line">    .forEach(System.out::println); <span class="comment">// 对每个元素依次执行System.out::println</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的代码中, 全程透露了一股函数式编程的味道, 因为它看上去特别简洁, 而且用到了高阶函数和方法引用的语法, 并且每个方法都会返回之前的流给下一个方法使用<br>, 这看上去就像数据从头”流”到了尾</p>
+<p>这个程序用传统的写法应该是这样的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    Random rand = <span class="keyword">new</span> Random(<span class="number">47</span>);</span><br><span class="line">    SortedSet&lt;Integer&gt; rints = <span class="keyword">new</span> TreeSet&lt;&gt;();</span><br><span class="line">    <span class="keyword">while</span>(rints.size() &lt; <span class="number">7</span>) &#123;</span><br><span class="line">        <span class="keyword">int</span> r = rand.nextint(<span class="number">20</span>);</span><br><span class="line">        <span class="keyword">if</span>(r &lt; <span class="number">5</span>) <span class="keyword">continue</span>;</span><br><span class="line">        rints.add(r);</span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println(rints);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>对于工作过几年但是对函数式编程没有一点接触的的java程序员来说, 传统的写法更加的亲切, 但是结果是毋庸置疑的, StreamAPI的写法更加的易阅读和简洁</p>
+<h3 id="内部迭代"><a href="#内部迭代" class="headerlink" title="内部迭代"></a>内部迭代</h3><p>细心的同学肯定也会发现, 在上面的例子中, <code>forEach</code>方法会自动的替我们完成循环迭代的过程, 而不需要我们编写while循环或者for循环.</p>
+<p>我们编写的while循环和for循环是一种外部迭代, 也就是说, 如何迭代的控制权是在我们手上的.</p>
+<p>但是在操作集合的数据进行循环迭代的时候, 我们编写的for循环和while循环是千篇一律的, 无非就是从一个index位置的数据循环迭代到另一个index位置的数据.</p>
+<p>所以为什么不将这些代码封装起来呢, <code>forEach</code>方法就体现了这一点, 这种循环, 叫<code>内部迭代</code></p>
+<p>内部迭代有好有坏, 坏处是我们没法做更细致化的循环控制, 使用<code>forEach</code>也就是意味着控制权交给了计算机, 由它的底层实现来代替我们自己编写循环逻辑</p>
+<p>带来的好处是内部迭代可以利用多核处理器的优势, 通过放弃对迭代过程的控制，我们把控制权交给并行化机制, 而并行往往以为了循环的效率变得更高的.</p>
+<h3 id="流是懒加载的"><a href="#流是懒加载的" class="headerlink" title="流是懒加载的"></a>流是懒加载的</h3><p>懒加载是软件开发的又一个不错的思想, 流对数据的加载也是懒加载的, 你可以想象所有数据只有在真正使用的使用, 才会从流的开头”流”向结尾</p>
+<h2 id="StreamAPI的性能到底如何"><a href="#StreamAPI的性能到底如何" class="headerlink" title="StreamAPI的性能到底如何"></a>StreamAPI的性能到底如何</h2><p>这已经有很多前辈进行了测试, Stream在做简单的循环操作时候, 其性能其实比我们自己写迭代要慢, 但是我前面也说了, Stream的内部迭代是可以利用多核处理器的, 所以StreamAPI再进行并行操作的时候, 其速度会远超我们自己手动实现的代码</p>
+<p>所以我用<a href="https://www.cnblogs.com/carpenterlee/p/6675568.html" target="_blank" rel="noopener">此文</a> 的结论:</p>
+<ul>
+<li>对于简单操作，比如最简单的遍历，Stream串行API性能明显差于显示迭代，但并行的Stream API能够发挥多核特性。</li>
+<li>对于复杂操作，Stream串行API性能可以和手动实现的效果匹敌，在并行执行时Stream API效果远超手动实现。</li>
+<li>如果出于性能考虑，1. 对于简单操作推荐使用外部迭代手动实现，2. 对于复杂操作，推荐使用Stream API， 3. 在多核情况下，推荐使用并行Stream API来发挥多核优势，4.单核情况下不建议使用并行Stream API。</li>
+<li>出于代码简洁性考虑，使用Stream API能够写出更短的代码</li>
+</ul>
+<p>至于为什么Stream在做简单循环操作反而变慢, 这可能和JVM执行函数式编程代码上存在一定的效率问题, 导致简单的循环操作在转义函数式风格代码的时间消费比做真正的逻辑操作还长, 下面是最开始我给出的Random例子在编译后class文件的内容:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    IntStream var10000 = (<span class="keyword">new</span> Random(<span class="number">47L</span>)).ints(<span class="number">5</span>, <span class="number">20</span>).distinct().limit(<span class="number">7L</span>).sorted();</span><br><span class="line">    PrintStream var10001 = System.out;</span><br><span class="line">    var10000.forEach(var10001::println);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从内容可以看出函数式编程的语法被保留, 那么JVM是如何去执行它们就是性能问题产生的其中一个要素把(纯属猜测)</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本章简单的讲了下StreamAPI的概念, 并没有深入讲解API的内容, 但是本章对于后续的学习是非常重要的一环, 本章阐述了StreamAPI的重要性, 这是我们为什么要学习它们的前提</p>
+<!-- 在此处插入License模块，若不需要请删除 -->
+
+  <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img style="margin-left: auto;margin-right: auto;display: block;" alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a>
+  <p style="
+  text-align: center;
+  color: #eee;
+  font-weight: bold;
+  font-size: 1rem;">本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>进行许可。</p>
+  <div id="licensePoint"></div>
+  </div>
+</article>
+
+
+
+      
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#初识StreamAPI"><span class="toc-number">2.</span> <span class="toc-text">初识StreamAPI</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Stream的特点"><span class="toc-number">3.</span> <span class="toc-text">Stream的特点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#天然结合函数式编程"><span class="toc-number">3.1.</span> <span class="toc-text">天然结合函数式编程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#内部迭代"><span class="toc-number">3.2.</span> <span class="toc-text">内部迭代</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#流是懒加载的"><span class="toc-number">3.3.</span> <span class="toc-text">流是懒加载的</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#StreamAPI的性能到底如何"><span class="toc-number">4.</span> <span class="toc-text">StreamAPI的性能到底如何</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://zazalu.space/2019/10/27/learn-stream-api/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://zazalu.space/2019/10/27/learn-stream-api/&text=Java流式编程-第一章"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://zazalu.space/2019/10/27/learn-stream-api/&title=Java流式编程-第一章"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zazalu.space/2019/10/27/learn-stream-api/&is_video=false&description=Java流式编程-第一章"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Java流式编程-第一章&body=Check out this article: https://zazalu.space/2019/10/27/learn-stream-api/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://zazalu.space/2019/10/27/learn-stream-api/&title=Java流式编程-第一章"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://zazalu.space/2019/10/27/learn-stream-api/&title=Java流式编程-第一章"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://zazalu.space/2019/10/27/learn-stream-api/&title=Java流式编程-第一章"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://zazalu.space/2019/10/27/learn-stream-api/&title=Java流式编程-第一章"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://zazalu.space/2019/10/27/learn-stream-api/&name=Java流式编程-第一章&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+  </div>
+</div>
+
+      
+      
+
+
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script src="https://he_jia_jun.gitee.io/zazalumonster.github.io//js/md5.min.js"></script>
+    <div id="gitalk-container"></div>
+    <script>
+    if(location.pathname == '/'){
+      //首页不需要评论系统
+    }else{
+      var gitalk = new Gitalk({
+        clientID: '73a23fdac799d4edb132',
+        clientSecret: '8200d919660d513fdd8629a7c45c13d7d13d9b6f',
+        repo: 'zazaluMonster.github.io',
+        owner: 'zazaluMonster',
+        admin: 'zazaluMonster',
+        id: md5(location.origin + "/" +location.pathname),
+        distractionFreeMode: false,
+        pagerDirection: 'first'
+      });
+      gitalk.render('gitalk-container');
+    }
+    </script>
+    <!-- gitalk -->
+
+<footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 zazalu
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+  <!-- 不蒜子统计 -->
+ <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <div>
+    <span id="busuanzi_container_site_pv">
+      本站总访问量<span id="busuanzi_value_site_pv"></span>次
+    </span>
+    <span id="busuanzi_container_site_uv">
+      本站访客数<span id="busuanzi_value_site_uv"></span>人次
+    </span>
+  </div>
+ 
+</footer>
+
+
+
+
+    </div>
+    <!-- styles -->
+<!-- <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/justified-gallery/css/justifiedGallery.min.css"> -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+    <!-- jquery -->
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/jquery/jquery.min.js"></script>
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+    <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?15ccc3aa9c18bcd901435b78b3c09e78";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+<!-- Disqus Comments -->
+
+
+
+    
+
+
+    <!-- 药水制作师live2d -->
+    <!-- 引入css -->
+    <link rel="stylesheet" href="/live2d/css/font-awesome/css/font-awesome.min.css" />
+    <link href="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/css/waifu.css" rel="stylesheet" type="text/css" />
+    <!-- html -->
+
+    <div class="waifu-switch">Live2d</div>
+    <div class="waifu">
+      <div class="waifu-tips"></div>
+      <canvas id="live2d" width="252" height="225" class="live2d"></canvas>
+      <div class="waifu-tool">
+        <i class="fa-times waifu-closed"></i>
+      </div>
+    </div>
+    <!-- 引入js -->
+    <script src="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/live2d.js"></script>
+    <script async src="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/waifu-tips.js"></script>
+    <script type="text/javascript">
+      loadlive2d("live2d", "/live2d/Pio/model.json");
+    </script>
+    <!-- 药水制作师live2d插件结束 -->
+
+    <!-- 引入视差滚动特效js -->
+    <!-- <script src="/parallax/parallax.min.js"></script>
+<script src="/parallax/parallaxController.js"></script> -->
+
+    <!-- 不蒜子统计请见footer.ejs -->
+
+  </body>
+
+  </html>

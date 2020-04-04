@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang=en>
+  <!-- 引入视差滚动css -->
+  <!-- <link rel="stylesheet" href="/parallax/parallaxCss.css"> -->
+  <head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="前言用ubuntu18.04有一段时间了, 最近发现开机越来越慢了, 而且系统有很明显的一段预热期, 是时候对ubuntu开工优化了, 把Java的流式编程搞定后就开工. 这对于我来说一定是一个艰巨的任务, 因为我几乎对ubuntu系统没有任何了解, 安装也是按照网上的各种攻略配合自己的一点拙见知识, 所以这是一个挑战, 我希望我不会因太麻烦而半途而废 今天继续梳理Java流式编程的知识. 上一章">
+<meta name="keywords" content="流式编程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java流式编程-第二章">
+<meta property="og:url" content="https://zazalu.space/2019/10/28/learn-stream-api-2/index.html">
+<meta property="og:site_name" content="Zazalu&#39;s Blog">
+<meta property="og:description" content="前言用ubuntu18.04有一段时间了, 最近发现开机越来越慢了, 而且系统有很明显的一段预热期, 是时候对ubuntu开工优化了, 把Java的流式编程搞定后就开工. 这对于我来说一定是一个艰巨的任务, 因为我几乎对ubuntu系统没有任何了解, 安装也是按照网上的各种攻略配合自己的一点拙见知识, 所以这是一个挑战, 我希望我不会因太麻烦而半途而废 今天继续梳理Java流式编程的知识. 上一章">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2020-04-04T01:13:08.393Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java流式编程-第二章">
+<meta name="twitter:description" content="前言用ubuntu18.04有一段时间了, 最近发现开机越来越慢了, 而且系统有很明显的一段预热期, 是时候对ubuntu开工优化了, 把Java的流式编程搞定后就开工. 这对于我来说一定是一个艰巨的任务, 因为我几乎对ubuntu系统没有任何了解, 安装也是按照网上的各种攻略配合自己的一点拙见知识, 所以这是一个挑战, 我希望我不会因太麻烦而半途而废 今天继续梳理Java流式编程的知识. 上一章">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Java流式编程-第二章</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+
+  <body class="max-width mx-auto px3 ltr">
+    <!-- 添加视差滚动容器 -->
+    <!-- <ul id="scene" class="scene unselectable" data-friction-x="0.1" data-friction-y="0.1" data-scalar-x="25" data-scalar-y="15" style="width: 100%; height: 769px; transform: translate3d(0px, 0px, 0px); transform-style: preserve-3d; backface-visibility: hidden;">
+      <li class="layer" data-depth="0.00" style="position: relative; display: block; left: 0px; top: 0px; transform: translate3d(0px, 0px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="background"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light orange b phase-4"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light purple c phase-5"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light orange d phase-3"></div></li>
+      <li class="layer" data-depth="0.15" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(43.575px, 14.7375px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.30" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(87.15px, 29.475px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.30" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(87.15px, 29.475px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.40" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(116.2px, 39.3px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.50" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(145.25px, 49.125px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="lighthouse depth-60"></div></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.80" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(232.4px, 78.6px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="1.00" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(290.5px, 98.25px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+  </ul> -->
+    
+    <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2019/11/06/learn-stream-api-3-md/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2019/10/27/learn-stream-api/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://zazalu.space/2019/10/28/learn-stream-api-2/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://zazalu.space/2019/10/28/learn-stream-api-2/&text=Java流式编程-第二章"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://zazalu.space/2019/10/28/learn-stream-api-2/&title=Java流式编程-第二章"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zazalu.space/2019/10/28/learn-stream-api-2/&is_video=false&description=Java流式编程-第二章"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Java流式编程-第二章&body=Check out this article: https://zazalu.space/2019/10/28/learn-stream-api-2/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://zazalu.space/2019/10/28/learn-stream-api-2/&title=Java流式编程-第二章"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://zazalu.space/2019/10/28/learn-stream-api-2/&title=Java流式编程-第二章"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://zazalu.space/2019/10/28/learn-stream-api-2/&title=Java流式编程-第二章"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://zazalu.space/2019/10/28/learn-stream-api-2/&title=Java流式编程-第二章"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://zazalu.space/2019/10/28/learn-stream-api-2/&name=Java流式编程-第二章&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#StreamAPI的语法结构"><span class="toc-number">2.</span> <span class="toc-text">StreamAPI的语法结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#流创建"><span class="toc-number">3.</span> <span class="toc-text">流创建</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Stream-of-创建一个流"><span class="toc-number">3.1.</span> <span class="toc-text">Stream.of()创建一个流</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#从Random类获取随机数流"><span class="toc-number">3.2.</span> <span class="toc-text">从Random类获取随机数流</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Arrays工具类的stream-方法"><span class="toc-number">3.3.</span> <span class="toc-text">Arrays工具类的stream()方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#正则表达式的splitAsStream-方法"><span class="toc-number">3.4.</span> <span class="toc-text">正则表达式的splitAsStream()方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XXXStream的generate-方法"><span class="toc-number">3.5.</span> <span class="toc-text">XXXStream的generate()方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XXXStream的iterate-方法"><span class="toc-number">3.6.</span> <span class="toc-text">XXXStream的iterate()方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#builder-方法"><span class="toc-number">3.7.</span> <span class="toc-text">builder()方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#流处理-中间操作"><span class="toc-number">4.</span> <span class="toc-text">流处理(中间操作)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+      
+      <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Java流式编程-第二章
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Zazalu's Blog</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-10-28T12:38:38.000Z" itemprop="datePublished">2019-10-28</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/IT/">IT</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/流式编程/">流式编程</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>用ubuntu18.04有一段时间了, 最近发现开机越来越慢了, 而且系统有很明显的一段预热期, 是时候对ubuntu开工优化了, 把Java的流式编程搞定后就开工.</p>
+<p>这对于我来说一定是一个艰巨的任务, 因为我几乎对ubuntu系统没有任何了解, 安装也是按照网上的各种攻略配合自己的一点拙见知识, 所以这是一个挑战, 我希望我不会因太麻烦而半途而废</p>
+<p>今天继续梳理Java流式编程的知识.</p>
+<p>上一章, 我主要回答了为什么要掌握流式编程.</p>
+<p>今天开始, 我们就抛开所有的为什么要吃掉流式编程(利益驱动), 把重点放到StreamAPI本身的语法学习上来(语法学习完后我还会写一篇研究底层实现的文章, 来专门讲解Stream的底层是怎么实现的, 比如你一定好奇foreach的底层是怎么搞的, 其实foreach底层是用到了while循环哦, 只不过写法比较神奇, 循环的主体逻辑代码是在while条件里的!而while本身的循环主体是空的!黑人问号!)</p>
+<h2 id="StreamAPI的语法结构"><a href="#StreamAPI的语法结构" class="headerlink" title="StreamAPI的语法结构"></a>StreamAPI的语法结构</h2><p>StreamAPI有一个非常明确的语法结构, 这结构简单来说就是分为三个部分, 或者说三个阶段, 或者说三个操作类型</p>
+<ol>
+<li><p>流创建</p>
+</li>
+<li><p>流处理(中间处理, 会将流数据进行各种改造并向下传递)</p>
+</li>
+<li><p>流终端处理(结束操作, 使用流数据进行各类操作, 不再传递流数据)</p>
+</li>
+</ol>
+<h2 id="流创建"><a href="#流创建" class="headerlink" title="流创建"></a>流创建</h2><p>接下来列举jdk给我们封装好的所有的流创建案例:</p>
+<h3 id="Stream-of-创建一个流"><a href="#Stream-of-创建一个流" class="headerlink" title="Stream.of()创建一个流"></a>Stream.of()创建一个流</h3><p>of方法接受任意数量的类, 然后返回一个以这些类为数据的流</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.stream.*;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StreamOf</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Stream.of(<span class="keyword">new</span> Bubble(<span class="number">1</span>), <span class="keyword">new</span> Bubble(<span class="number">2</span>), <span class="keyword">new</span> Bubble(<span class="number">3</span>))</span><br><span class="line">            .forEach(System.out::println);</span><br><span class="line">        Stream.of(<span class="string">"It's "</span>, <span class="string">"a "</span>, <span class="string">"wonderful "</span>, <span class="string">"day "</span>, <span class="string">"for "</span>, <span class="string">"pie!"</span>)</span><br><span class="line">            .forEach(System.out::print);</span><br><span class="line">        System.out.println();</span><br><span class="line">        Stream.of(<span class="number">3.14159</span>, <span class="number">2.718</span>, <span class="number">1.618</span>)</span><br><span class="line">            .forEach(System.out::println);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="从Random类获取随机数流"><a href="#从Random类获取随机数流" class="headerlink" title="从Random类获取随机数流"></a>从Random类获取随机数流</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Random rand = <span class="keyword">new</span> Random(<span class="number">47</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//创建一个含2个数的int流, 然后forEach循环打印一下</span></span><br><span class="line">        rand.ints(<span class="number">2</span>).forEach(System.out::println);</span><br><span class="line">        <span class="comment">//创建一个含无数个数的int流(因为我们没有做数量控制), 然后forEach打印一下, 该行代码会使程序一直运行, 所以我注释掉了, 这里只是为了展示</span></span><br><span class="line">        <span class="comment">// rand.ints().forEach(System.out::println); </span></span><br><span class="line">        <span class="comment">//创建一个含2个数的long流</span></span><br><span class="line">        rand.longs(<span class="number">2</span>).forEach(System.out::println);</span><br><span class="line">        <span class="comment">//创建一个含2个数的double流</span></span><br><span class="line">        rand.doubles(<span class="number">2</span>).forEach(System.out::println);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 输出(由于是随机数所以你得到的结果和我是不同的)</span></span><br><span class="line"><span class="comment">         * -1172028779</span></span><br><span class="line"><span class="comment">         * 1717241110</span></span><br><span class="line"><span class="comment">         * -8652529054300476342</span></span><br><span class="line"><span class="comment">         * 2955289354441303771</span></span><br><span class="line"><span class="comment">         * 0.18847866977771732</span></span><br><span class="line"><span class="comment">         * 0.5166020801268457</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在上面的代码中, 我提前使用了<code>forEach</code>方法, 这个方法属于<code>流终端操作</code>方法, 由于其太过于常用, 以至于我提前就拿出来使用了. forEach方法的用法很好理解, 它接受一个函数式接口方法, 比如我们这里传入的是System.out的println方法, 所以流中的每个函数都会执行一次System.out.println(x), 这么说我想再笨的你也应该能理解了.</p>
+<p>回到正题上, 上面阐述了4个创建随机流的方式, 随机流的创建就只有这些, 其余的顶多只是一些重载函数, 我在下面也一一列出:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">// 控制上限和下限：</span></span><br><span class="line">rand.ints(<span class="number">10</span>, <span class="number">20</span>);</span><br><span class="line">rand.longs(<span class="number">50</span>, <span class="number">100</span>);</span><br><span class="line">rand.doubles(<span class="number">20</span>, <span class="number">30</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 控制流的大小和界限</span></span><br><span class="line">rand.ints(<span class="number">3</span>, <span class="number">3</span>, <span class="number">9</span>);</span><br><span class="line">rand.longs(<span class="number">3</span>, <span class="number">12</span>, <span class="number">22</span>);</span><br><span class="line">rand.doubles(<span class="number">3</span>, <span class="number">11.5</span>, <span class="number">12.3</span>);</span><br></pre></td></tr></table></figure>
+<p>几乎没有什么难度! 非常好理解!</p>
+<p>不过这里有一个点我可以讲一下, 那就是比如<code>rand.ints();</code>, 这行代码我也说了是创建包含无数int值的随机int流, 按正常来说这里编译器应该会报错, 因为无限意味着内存溢出. </p>
+<p>但是编译器非常老实的允许我们这么做, 这是因为这一切都是懒加载的, 我们在这只是声明了流, 流并没有真正把数据”流”出来.</p>
+<p><strong>[注意]</strong>: 也许每次记忆这种API会让我觉得无聊和无趣, 甚至觉得会陷入学习的误区. 所以我现在喜欢往深入看看. 这次我发现Random的这些方法的都是用StreamSupport这个类的相关API来支持的. 比如产生int流, 就是 StreamSupport.intStream</p>
+<h3 id="Arrays工具类的stream-方法"><a href="#Arrays工具类的stream-方法" class="headerlink" title="Arrays工具类的stream()方法"></a>Arrays工具类的stream()方法</h3><p>Arrays工具类新增了stream方法, 用于将一个数组转化为一个Stream,</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Arrays.stream(<span class="keyword">new</span> <span class="keyword">int</span>[] &#123; <span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span> &#125;)</span><br><span class="line">    .forEach(System.out::println);</span><br></pre></td></tr></table></figure>
+<p>很简单, 就不谈了!(虽然这个我估计会很常用, 但是真的没什么好讲的)</p>
+<h3 id="正则表达式的splitAsStream-方法"><a href="#正则表达式的splitAsStream-方法" class="headerlink" title="正则表达式的splitAsStream()方法"></a>正则表达式的splitAsStream()方法</h3><p>这个也很简单, 看代码你就理解了</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Pattern.compile(<span class="string">"[ .,?]+"</span>).splitAsStream(<span class="string">"awdawdjald, wdaawd, dwadadw,!dwad 1"</span>);</span><br></pre></td></tr></table></figure>
+<p>splitAsStream就会根据正则控制返回一个流</p>
+<p>###　XXXStream的range()和concat()</p>
+<p>记忆API总让人无趣和感觉愚蠢, 所以Stream的API方法的都几乎采用了非常易于理解的API名字, 比如range和concat.</p>
+<p>有一定开发经验的开发人员, 一般凭感觉就可以猜到, range会产生范围的流, concat应该是拼接两个流的内容</p>
+<p>而答案确实也是这样的, 我们还是拿最熟悉的IntStream类来说明</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用流:</span></span><br><span class="line">System.out.println(IntStream.range(<span class="number">10</span>, <span class="number">20</span>).sum());<span class="comment">//输出145, 也就是10~20之间所有int值的总和</span></span><br></pre></td></tr></table></figure>
+<p>这里提前介绍了sum方法, 不过我们并不介意这些, 我们要知道的是range这个方法, 它也是一种<code>流创建</code>函数</p>
+<p>我们继续稍微深入下底层, 我们发现底层依旧是StreamSupport.intStream方法再产生int流, 看来我们未来探究底层实现, 是少不了分析这个方法了, 不过今天我们只是普通的学习了API, 不进行深入</p>
+<p>接下来是演示下concat的用法,也比较简单, 比如</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">System.out.println(IntStream.concat(IntStream.range(<span class="number">1</span>,<span class="number">3</span>),IntStream.range(<span class="number">4</span>,<span class="number">6</span>)).sum()); <span class="comment">//12</span></span><br></pre></td></tr></table></figure>
+<p>concat接受两个流, 并且将其进行合并返回一个新流的操作, 至于是按照什么顺序组合的新流, 我觉得这个你自己用的试试使用.forEach(System.out::println)将流的内容打印一下, 应该就知道了, 就不谈了</p>
+<p>我这里都在使用IntStream进行介绍, 你也可以自己尝试LongStream, DoubleStream等, 你也可以直接使用Stream<t>, 只不过由于没有具体到某个类型, 所以Stream类是泛型类</t></p>
+<p><strong>[注意]</strong>: 我列举的永远是比较常用的, 其他的API的使用是我们必须举一反三自己去探索的, 本文起到的作用是让你快速上手, 不会因API的说明文档突如其来的一些单词而一脸懵逼.</p>
+<h3 id="XXXStream的generate-方法"><a href="#XXXStream的generate-方法" class="headerlink" title="XXXStream的generate()方法"></a>XXXStream的generate()方法</h3><p>刚刚我们上面讲了一大堆产生流的方法, 但是都是局限于数字类型的. 在现实的开发项目中, 这显然是不够用的. </p>
+<p>generate方法为我们提供了产生自定义类型的流的方式.</p>
+<p>下面的代码, 我们就源源不断的产生Dog类, 并不停的打印Dog.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"汪!"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Stream.generate(() -&gt; <span class="keyword">new</span> Dog()).forEach(System.out::println);<span class="comment">// Dog类源源不断的产生(注意自行阻断程序哦)</span></span><br><span class="line">        <span class="comment">//汪!汪!汪!汪!汪!汪!汪!汪!汪!汪!汪!汪!汪!汪!汪!汪!汪!汪!汪!汪!汪!汪!汪!汪!汪!汪!汪!汪!汪!汪!汪!汪!汪!汪!汪!汪!....</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>generate方法接受一个Supplier函数(如果你在java中对于参数接受一个函数的说法感到十分陌生, 那么说明你应该去补一下我写的Java函数式编程系列), Supplier函数的特点就是返回一个类T, 在这里我使用Lmabda表达式快速的传递了Supplier的实现类, <code>() -&gt; new Dog()</code>就是Supplier的实现, 在这里我直接调用Dog的构造器并返回, 所以传递给generate方法的就是一个个Dog类, 所以最终在流中的数据都是Dog类, 所以forEach方法不停的打印Dog类, 而Dog类的toString方法被我重写成打印一个”汪”, 所以最终控制台会不停的输出”汪”</p>
+<h3 id="XXXStream的iterate-方法"><a href="#XXXStream的iterate-方法" class="headerlink" title="XXXStream的iterate()方法"></a>XXXStream的iterate()方法</h3><p>接下来我们说说iterate方法, 顾名思义, 这是一个迭代方法, 那么它到底迭代什么? 答案是迭代流中的数据, 下面的例子就不停的迭代流中的数字, 每次+1, 只要代码一执行, 流中就会不停的存储1,2,3,4,5,6,7,8,9,10,11,12….不停的增长下去.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Stream.iterate(<span class="number">0</span>, i -&gt; ++i).forEach(System.out::println);<span class="comment">//注意自己阻断函数执行</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>iterate的第一个参数是种子, 它会被传入第二个参数函数, 作为第一个数开始迭代, 第二次函数触发时候会传入上一次函数return的结果. 在这个例子中每次都会return比上次大1的数, 所以整体效果就是不停的产生1,2,3,4,5,6,7,8,9,10,11,12….这样的流</p>
+<h3 id="builder-方法"><a href="#builder-方法" class="headerlink" title="builder()方法"></a>builder()方法</h3><p>在builder方法面前, 前面的方法创建流都只能说是弱爆了!</p>
+<p>builder()方法会返回一个Builder, 然后我们就可以通过add()方法给这个流传入各种各样你喜欢的东西! 并且由于Builder抽象出来了, 所以可以把它传到不同的地方, 收集不同的数据, 想想就觉得很不错!</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//1 你也可以写一长串, 因为</span></span><br><span class="line">        Stream.builder().add(<span class="number">1</span>).add(<span class="number">2</span>).add(<span class="number">3.0</span>).add(<span class="number">4.22</span>).build().forEach(System.out::println);</span><br><span class="line">        <span class="comment">//2 你可以像下面这样先得到Builder, 然后到处add!</span></span><br><span class="line">        Stream.Builder sb = Stream.builder();</span><br><span class="line">        sb.add(<span class="keyword">new</span> Dog());</span><br><span class="line">        sb.add(<span class="string">"ddd"</span>);</span><br><span class="line">        sb.add(<span class="string">"dddd"</span>).add(<span class="string">"wdwd"</span>);</span><br><span class="line">        Stream stream = sb.build();<span class="comment">//最后通过build方法产生一个stream</span></span><br><span class="line">        stream.forEach(System.out::println);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="流处理-中间操作"><a href="#流处理-中间操作" class="headerlink" title="流处理(中间操作)"></a>流处理(中间操作)</h2><p>在上面一个阶段中, 我们已经知道了流创建的大部分API, 但是我们上面的例子中, 流只是产生然后循环打印, 并没有做一些中处理, 这一节我就来说明一下大部分的处理API, 流也正是因为这些处理API的存在才体现出它真正的价值</p>
+<p>由于中间操作的API很容易理解, 它们的总体逻辑都是, 将流中数据做某中处理然后返回新的流, 有些处理不会影响原来的流的数据, 而有些会改变原有流的数据</p>
+<p>下面我列举了所有常用的中间操作! 每个方法的使用都写了注释说明!<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Stream.iterate(<span class="number">0</span>,i -&gt; ++i)</span><br><span class="line">                .skip(<span class="number">10</span>) <span class="comment">// 越过前10个数据</span></span><br><span class="line">                .limit(<span class="number">10</span>) <span class="comment">//限制只取前10个数据</span></span><br><span class="line">                .map(w -&gt; w + <span class="string">""</span>) <span class="comment">//map将流中数据做处理转换</span></span><br><span class="line">                .peek(System.out::print) <span class="comment">//查看流中数据, 不进行任何其他操作</span></span><br><span class="line">                .sorted(Comparator.reverseOrder()) <span class="comment">//对流中数据继续排序</span></span><br><span class="line">                .distinct() <span class="comment">//排除重复数据</span></span><br><span class="line">                .filter(i -&gt; &#123;</span><br><span class="line">                    <span class="keyword">if</span>(!i.equals(<span class="string">""</span>)) &#123;</span><br><span class="line">                        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">                    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;) <span class="comment">// 过滤掉等于""的字符串</span></span><br><span class="line">                .flatMap(i -&gt; Stream.of(<span class="string">"Gonzo"</span>, <span class="string">"Fozzie"</span>, <span class="string">"Beaker"</span>)) <span class="comment">//将"Gonzo", "Fozzie", "Beaker"组合到新的流中, 注意原来的流的数据由于我没用到所以就这么没了, 全部变成了"Gonzo", "Fozzie", "Beaker"</span></span><br><span class="line">                <span class="comment">//.mapToInt(Integer::parseInt) //转换成IntStream, 类似的还有mapToDouble, mapToLong, 不过由于我这个流的数据已经无法解析成int了, 所以这行有运行时错误, 我先注释掉了</span></span><br><span class="line">                .forEach(System.out::println);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这章主要学习了流创建和流处理的中间操作!</p>
+<p>由于时间不够啦, 所以今天就先到这里</p>
+<!-- 在此处插入License模块，若不需要请删除 -->
+
+  <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img style="margin-left: auto;margin-right: auto;display: block;" alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a>
+  <p style="
+  text-align: center;
+  color: #eee;
+  font-weight: bold;
+  font-size: 1rem;">本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>进行许可。</p>
+  <div id="licensePoint"></div>
+  </div>
+</article>
+
+
+
+      
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#StreamAPI的语法结构"><span class="toc-number">2.</span> <span class="toc-text">StreamAPI的语法结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#流创建"><span class="toc-number">3.</span> <span class="toc-text">流创建</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Stream-of-创建一个流"><span class="toc-number">3.1.</span> <span class="toc-text">Stream.of()创建一个流</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#从Random类获取随机数流"><span class="toc-number">3.2.</span> <span class="toc-text">从Random类获取随机数流</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Arrays工具类的stream-方法"><span class="toc-number">3.3.</span> <span class="toc-text">Arrays工具类的stream()方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#正则表达式的splitAsStream-方法"><span class="toc-number">3.4.</span> <span class="toc-text">正则表达式的splitAsStream()方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XXXStream的generate-方法"><span class="toc-number">3.5.</span> <span class="toc-text">XXXStream的generate()方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XXXStream的iterate-方法"><span class="toc-number">3.6.</span> <span class="toc-text">XXXStream的iterate()方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#builder-方法"><span class="toc-number">3.7.</span> <span class="toc-text">builder()方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#流处理-中间操作"><span class="toc-number">4.</span> <span class="toc-text">流处理(中间操作)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://zazalu.space/2019/10/28/learn-stream-api-2/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://zazalu.space/2019/10/28/learn-stream-api-2/&text=Java流式编程-第二章"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://zazalu.space/2019/10/28/learn-stream-api-2/&title=Java流式编程-第二章"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zazalu.space/2019/10/28/learn-stream-api-2/&is_video=false&description=Java流式编程-第二章"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Java流式编程-第二章&body=Check out this article: https://zazalu.space/2019/10/28/learn-stream-api-2/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://zazalu.space/2019/10/28/learn-stream-api-2/&title=Java流式编程-第二章"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://zazalu.space/2019/10/28/learn-stream-api-2/&title=Java流式编程-第二章"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://zazalu.space/2019/10/28/learn-stream-api-2/&title=Java流式编程-第二章"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://zazalu.space/2019/10/28/learn-stream-api-2/&title=Java流式编程-第二章"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://zazalu.space/2019/10/28/learn-stream-api-2/&name=Java流式编程-第二章&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+  </div>
+</div>
+
+      
+      
+
+
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script src="https://he_jia_jun.gitee.io/zazalumonster.github.io//js/md5.min.js"></script>
+    <div id="gitalk-container"></div>
+    <script>
+    if(location.pathname == '/'){
+      //首页不需要评论系统
+    }else{
+      var gitalk = new Gitalk({
+        clientID: '73a23fdac799d4edb132',
+        clientSecret: '8200d919660d513fdd8629a7c45c13d7d13d9b6f',
+        repo: 'zazaluMonster.github.io',
+        owner: 'zazaluMonster',
+        admin: 'zazaluMonster',
+        id: md5(location.origin + "/" +location.pathname),
+        distractionFreeMode: false,
+        pagerDirection: 'first'
+      });
+      gitalk.render('gitalk-container');
+    }
+    </script>
+    <!-- gitalk -->
+
+<footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 zazalu
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+  <!-- 不蒜子统计 -->
+ <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <div>
+    <span id="busuanzi_container_site_pv">
+      本站总访问量<span id="busuanzi_value_site_pv"></span>次
+    </span>
+    <span id="busuanzi_container_site_uv">
+      本站访客数<span id="busuanzi_value_site_uv"></span>人次
+    </span>
+  </div>
+ 
+</footer>
+
+
+
+
+    </div>
+    <!-- styles -->
+<!-- <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/justified-gallery/css/justifiedGallery.min.css"> -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+    <!-- jquery -->
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/jquery/jquery.min.js"></script>
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+    <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?15ccc3aa9c18bcd901435b78b3c09e78";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+<!-- Disqus Comments -->
+
+
+
+    
+
+
+    <!-- 药水制作师live2d -->
+    <!-- 引入css -->
+    <link rel="stylesheet" href="/live2d/css/font-awesome/css/font-awesome.min.css" />
+    <link href="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/css/waifu.css" rel="stylesheet" type="text/css" />
+    <!-- html -->
+
+    <div class="waifu-switch">Live2d</div>
+    <div class="waifu">
+      <div class="waifu-tips"></div>
+      <canvas id="live2d" width="252" height="225" class="live2d"></canvas>
+      <div class="waifu-tool">
+        <i class="fa-times waifu-closed"></i>
+      </div>
+    </div>
+    <!-- 引入js -->
+    <script src="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/live2d.js"></script>
+    <script async src="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/waifu-tips.js"></script>
+    <script type="text/javascript">
+      loadlive2d("live2d", "/live2d/Pio/model.json");
+    </script>
+    <!-- 药水制作师live2d插件结束 -->
+
+    <!-- 引入视差滚动特效js -->
+    <!-- <script src="/parallax/parallax.min.js"></script>
+<script src="/parallax/parallaxController.js"></script> -->
+
+    <!-- 不蒜子统计请见footer.ejs -->
+
+  </body>
+
+  </html>

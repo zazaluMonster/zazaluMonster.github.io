@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang=en>
+  <!-- 引入视差滚动css -->
+  <!-- <link rel="stylesheet" href="/parallax/parallaxCss.css"> -->
+  <head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="前言刚下班, 挺疲劳和悲催的, 今天上班遇到几个不爽的问题, 最终导致本来今天能完成的事, 没完成, 本来想着早点完成可以摸摸鱼, 现在在担心明天能不能做完(要求是周五必须完成) 上班的问题归上班, 现在下班了, 继续我们的函数式编程学习 上一回我记录了Lambda表达式的相关知识, 接下来来聊聊另一个东西, 叫MethodReferences-方法引用 MethodReferences-方法引用">
+<meta name="keywords" content="FunctionalProgramming">
+<meta property="og:type" content="article">
+<meta property="og:title" content="函数式编程范式初探-Java-第三天">
+<meta property="og:url" content="https://zazalu.space/2019/10/23/learn-FP-3/index.html">
+<meta property="og:site_name" content="Zazalu&#39;s Blog">
+<meta property="og:description" content="前言刚下班, 挺疲劳和悲催的, 今天上班遇到几个不爽的问题, 最终导致本来今天能完成的事, 没完成, 本来想着早点完成可以摸摸鱼, 现在在担心明天能不能做完(要求是周五必须完成) 上班的问题归上班, 现在下班了, 继续我们的函数式编程学习 上一回我记录了Lambda表达式的相关知识, 接下来来聊聊另一个东西, 叫MethodReferences-方法引用 MethodReferences-方法引用">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2020-04-04T01:13:08.391Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="函数式编程范式初探-Java-第三天">
+<meta name="twitter:description" content="前言刚下班, 挺疲劳和悲催的, 今天上班遇到几个不爽的问题, 最终导致本来今天能完成的事, 没完成, 本来想着早点完成可以摸摸鱼, 现在在担心明天能不能做完(要求是周五必须完成) 上班的问题归上班, 现在下班了, 继续我们的函数式编程学习 上一回我记录了Lambda表达式的相关知识, 接下来来聊聊另一个东西, 叫MethodReferences-方法引用 MethodReferences-方法引用">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>函数式编程范式初探-Java-第三天</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+
+  <body class="max-width mx-auto px3 ltr">
+    <!-- 添加视差滚动容器 -->
+    <!-- <ul id="scene" class="scene unselectable" data-friction-x="0.1" data-friction-y="0.1" data-scalar-x="25" data-scalar-y="15" style="width: 100%; height: 769px; transform: translate3d(0px, 0px, 0px); transform-style: preserve-3d; backface-visibility: hidden;">
+      <li class="layer" data-depth="0.00" style="position: relative; display: block; left: 0px; top: 0px; transform: translate3d(0px, 0px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="background"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light orange b phase-4"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light purple c phase-5"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light orange d phase-3"></div></li>
+      <li class="layer" data-depth="0.15" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(43.575px, 14.7375px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.30" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(87.15px, 29.475px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.30" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(87.15px, 29.475px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.40" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(116.2px, 39.3px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.50" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(145.25px, 49.125px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="lighthouse depth-60"></div></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.80" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(232.4px, 78.6px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="1.00" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(290.5px, 98.25px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+  </ul> -->
+    
+    <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2019/10/25/learn-FP-4/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2019/10/21/learn-FP-2/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://zazalu.space/2019/10/23/learn-FP-3/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://zazalu.space/2019/10/23/learn-FP-3/&text=函数式编程范式初探-Java-第三天"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://zazalu.space/2019/10/23/learn-FP-3/&title=函数式编程范式初探-Java-第三天"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zazalu.space/2019/10/23/learn-FP-3/&is_video=false&description=函数式编程范式初探-Java-第三天"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=函数式编程范式初探-Java-第三天&body=Check out this article: https://zazalu.space/2019/10/23/learn-FP-3/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://zazalu.space/2019/10/23/learn-FP-3/&title=函数式编程范式初探-Java-第三天"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://zazalu.space/2019/10/23/learn-FP-3/&title=函数式编程范式初探-Java-第三天"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://zazalu.space/2019/10/23/learn-FP-3/&title=函数式编程范式初探-Java-第三天"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://zazalu.space/2019/10/23/learn-FP-3/&title=函数式编程范式初探-Java-第三天"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://zazalu.space/2019/10/23/learn-FP-3/&name=函数式编程范式初探-Java-第三天&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MethodReferences-方法引用"><span class="toc-number">2.</span> <span class="toc-text">MethodReferences-方法引用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#传统方法实现方法引用"><span class="toc-number">2.1.</span> <span class="toc-text">传统方法实现方法引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#方法引用的威力"><span class="toc-number">2.2.</span> <span class="toc-text">方法引用的威力</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#未实例化的方法引用"><span class="toc-number">2.3.</span> <span class="toc-text">未实例化的方法引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构造函数的方法引用"><span class="toc-number">2.4.</span> <span class="toc-text">构造函数的方法引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#方法引用总结"><span class="toc-number">2.5.</span> <span class="toc-text">方法引用总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#高阶函数"><span class="toc-number">3.</span> <span class="toc-text">高阶函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#什么是高阶函数"><span class="toc-number">3.1.</span> <span class="toc-text">什么是高阶函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+      
+      <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        函数式编程范式初探-Java-第三天
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Zazalu's Blog</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-10-23T11:41:41.000Z" itemprop="datePublished">2019-10-23</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/IT/">IT</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/FunctionalProgramming/">FunctionalProgramming</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>刚下班, 挺疲劳和悲催的, 今天上班遇到几个不爽的问题, 最终导致本来今天能完成的事, 没完成, 本来想着早点完成可以摸摸鱼, 现在在担心明天能不能做完(要求是周五必须完成)</p>
+<p>上班的问题归上班, 现在下班了, 继续我们的函数式编程学习</p>
+<p>上一回我记录了Lambda表达式的相关知识, 接下来来聊聊另一个东西, 叫<code>MethodReferences-方法引用</code></p>
+<h2 id="MethodReferences-方法引用"><a href="#MethodReferences-方法引用" class="headerlink" title="MethodReferences-方法引用"></a>MethodReferences-方法引用</h2><p>同样的, 方法引用的最终效果和Lambda一样, 可以极大的简化我们的代码.</p>
+<p>顾名思义, 方法引用, 意思就是我们可以直接引用一个方法, 这在面向对象编程思想里是没有的概念, 在面向对象概念里, 引用的一般都是对象</p>
+<h3 id="传统方法实现方法引用"><a href="#传统方法实现方法引用" class="headerlink" title="传统方法实现方法引用"></a>传统方法实现方法引用</h3><p>假设我们现在有一个接口<code>MyCall</code>,</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">MyCall</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">call</span><span class="params">(<span class="keyword">int</span> arg)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后我们现在如果要面向接口编程的话, 必须赋予一个实现类引用给他, 比如下面这样</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyCallImpl</span> <span class="keyword">implements</span> <span class="title">MyCall</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">call</span><span class="params">(<span class="keyword">int</span> arg)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        MyCall myCall = <span class="keyword">new</span> MyCallImpl();</span><br><span class="line">        myCall.call();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>总结一下就是, 传统方式我们要用一个接口去使用的时候, 是必须再编写一个实现类(或者编写匿名实现类)的, 你没办法直接引用其他和call方法签名一样的方法的, 什么意思?</p>
+<p>我继续举例子, 比方说我们的项目里就有一个类叫<code>MyCallClone</code>, 它本身就已经实现了一个和<code>MyCall</code>的call的签名一模一样的方法, 如下:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyCallClone</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">call</span><span class="params">(<span class="keyword">int</span> arg)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到<code>MyCallClone</code>的call方法的方法签名和<code>MyCall</code>的call方法是一致的, 都接收一个int参数, 返回一个int值.</p>
+<p>所以对于我们来说, MyCallClone的call方法我们如果可以直接拿来用就好了, 而不是再写一个实现类去做重复劳作(这里假设MyCallClone由于项目要求, 不能实现MyCall接口,或者说MyCallClone是lib包里的一个类, 你没法直接进行改动)</p>
+<p><code>方法引用</code>就可以在这里大显神威了</p>
+<h3 id="方法引用的威力"><a href="#方法引用的威力" class="headerlink" title="方法引用的威力"></a>方法引用的威力</h3><p>我们现在将上面的例子, 用方法引用的方式去改写后, 代码会像下面这样, 我们此时已经不再需要MyCallImpl():</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        MyCallClone myCallClone = <span class="keyword">new</span> MyCallClone();<span class="comment">//必须实例化一个MyCallClone</span></span><br><span class="line">        MyCall myCall = myCallClone::call;</span><br><span class="line">        myCall.call(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到我们省去了MyCallImpl, 直接使用方法引用, 将MyCallClone的call方法, 引用给了MyCall</p>
+<p>这就是方法引用最基本的用法</p>
+<h3 id="未实例化的方法引用"><a href="#未实例化的方法引用" class="headerlink" title="未实例化的方法引用"></a>未实例化的方法引用</h3><p>细心朋友应该发现, 前面的例子, 用方法引用必须先实例化一个MyCallClone出来才能使用, 那么能不能直接使用呢?</p>
+<p>答案是能, 但是与此同时, MyCallClone的call方法必须是静态方法才行</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyCallClone</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">call</span><span class="params">(<span class="keyword">int</span> arg)</span> </span>&#123; <span class="comment">//加了static修饰</span></span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        MyCall myCall = MyCallClone::call;</span><br><span class="line">        myCall.call(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果你已经理解了静态方法, 那么这里你也应该能够理解为什么, 我就不多费口舌了</p>
+<h3 id="构造函数的方法引用"><a href="#构造函数的方法引用" class="headerlink" title="构造函数的方法引用"></a>构造函数的方法引用</h3><p>我们知道构造函数也是一个方法, 只不过是一种特殊的方法</p>
+<p>所以构造函数也能够使用到方法引用:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span> </span>&#123;</span><br><span class="line">  String name;</span><br><span class="line">  Dog() &#123; name = <span class="string">"stray"</span>; &#125;</span><br><span class="line">  Dog(String nm) &#123; name = nm; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">MakeNoArgs</span> </span>&#123;</span><br><span class="line">  <span class="function">Dog <span class="title">make</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Make1Arg</span> </span>&#123;</span><br><span class="line">  <span class="function">Dog <span class="title">make</span><span class="params">(String nm)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CtorReference</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    MakeNoArgs mna = Dog::<span class="keyword">new</span>; <span class="comment">// [1]</span></span><br><span class="line">    Make1Arg m1a = Dog::<span class="keyword">new</span>;   <span class="comment">// [2]</span></span><br><span class="line"></span><br><span class="line">    Dog dn = mna.make();</span><br><span class="line">    Dog d1 = m1a.make(<span class="string">"Comet"</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这个例子中, 由于Dog的构造函数的方法签名与另两个接口的make方法的方法前面可以匹配上, 所以我们可以用这种方式神奇的实例一个Dog类</p>
+<h3 id="方法引用总结"><a href="#方法引用总结" class="headerlink" title="方法引用总结"></a>方法引用总结</h3><p>方法引用是一个非常不错的功能, 如果你现在云里雾里, 没关系, 多看几遍例子, 自己敲敲, 这里面的奥妙就会很快融会贯通了</p>
+<h2 id="高阶函数"><a href="#高阶函数" class="headerlink" title="高阶函数"></a>高阶函数</h2><p>其实lambda表达式, 函数式接口, 方法引用就是Java函数式编程的全部语法了, 不过我们说过函数式编程的一个核心概念就是函数, 我们可以将函数作为参数传来传去, 达到最大的重复利用, 提高开发效率, 所以我们不得不讲一下, <code>高阶函数</code></p>
+<h3 id="什么是高阶函数"><a href="#什么是高阶函数" class="headerlink" title="什么是高阶函数"></a>什么是高阶函数</h3><p>高阶函数（Higher-order Function）只是一个消费或产生函数的函数。</p>
+<p>比如我们写一个消费一个函数的函数, 我使用java和js各写一份!(因为我不喜欢java的写法, 所以我在这里刻意提供一份js的写法)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@FunctionalInterface</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">DingDong</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">dingdong</span><span class="params">(String s)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">consume</span><span class="params">(DingDong d)</span></span>&#123;</span><br><span class="line">        d.dingdong(<span class="string">"zazalu"</span>);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        consume(n -&gt;System.out.println(<span class="string">"dingdong, "</span> + n));<span class="comment">//dingdong, zazalu</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我先来说说, 这些代码在做什么.</p>
+<p>首先我们有一个DingDong的函数式接口类(注意这里必须是函数式接口才行, 由于java不像js那样可以单独指定一个函数, java是必须用函数式接口作为介质来表达我是一个函数! 不得不说这是一种遗憾的设计, 待会我写js版本的时候你就会和我有一样的感触了), </p>
+<p>然后我们有一个consume方法, 这个方法接收一个DingDong函数式接口, 随后在方法体中调用dingdong方法! </p>
+<p>这里最神奇的魔法就是, 编译器允许我们在没有实现dingdong方法的情况下, 就可以编写调用dingdong方法的代码, 这一切都是函数式接口的作用.</p>
+<p>最后我们调用consume方法, 使用lambda表达式传入一个函数, 这个函数<code>n -&gt;System.out.println(&quot;dingdong, &quot; + n)</code>就是dingdong方法的实现.</p>
+<p>最终控制台打印<code>dingdong, zazalu</code></p>
+<p>总体来说, 这一切都非常的简单轻松, 用函数式语法来完成这个任务比传统的方式要简洁的多</p>
+<p>接来下我们来看看js的写法(对js不感兴趣可以跳过)</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">dingdong</span>(<span class="params">n</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"dingdong, "</span> + n);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">consume</span>(<span class="params">dingdong</span>)</span>&#123;</span><br><span class="line">    dingdong(<span class="string">"zazalu"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">consume(dingdong);<span class="comment">// dingdong, zazalu</span></span><br></pre></td></tr></table></figure>
+<p>我们可以看到js写起来是多么的简单! 毕竟在js的世界里, 函数本来就是一种对象!</p>
+<p>从这里我们可以知道js天生就拥有对函数式编程的支持!</p>
+<p>语言设计真的有太多意外了!</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>今天我们讲了函数式编程的方法引用和高阶函数! </p>
+<p>不过在java的函数式编程世界里, 我们还不得不知道以下<code>闭包</code>和<code>函数组合</code>, 这些我下次下班后再总结!</p>
+
+  </div>
+</article>
+
+
+
+      
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MethodReferences-方法引用"><span class="toc-number">2.</span> <span class="toc-text">MethodReferences-方法引用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#传统方法实现方法引用"><span class="toc-number">2.1.</span> <span class="toc-text">传统方法实现方法引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#方法引用的威力"><span class="toc-number">2.2.</span> <span class="toc-text">方法引用的威力</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#未实例化的方法引用"><span class="toc-number">2.3.</span> <span class="toc-text">未实例化的方法引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构造函数的方法引用"><span class="toc-number">2.4.</span> <span class="toc-text">构造函数的方法引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#方法引用总结"><span class="toc-number">2.5.</span> <span class="toc-text">方法引用总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#高阶函数"><span class="toc-number">3.</span> <span class="toc-text">高阶函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#什么是高阶函数"><span class="toc-number">3.1.</span> <span class="toc-text">什么是高阶函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://zazalu.space/2019/10/23/learn-FP-3/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://zazalu.space/2019/10/23/learn-FP-3/&text=函数式编程范式初探-Java-第三天"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://zazalu.space/2019/10/23/learn-FP-3/&title=函数式编程范式初探-Java-第三天"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zazalu.space/2019/10/23/learn-FP-3/&is_video=false&description=函数式编程范式初探-Java-第三天"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=函数式编程范式初探-Java-第三天&body=Check out this article: https://zazalu.space/2019/10/23/learn-FP-3/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://zazalu.space/2019/10/23/learn-FP-3/&title=函数式编程范式初探-Java-第三天"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://zazalu.space/2019/10/23/learn-FP-3/&title=函数式编程范式初探-Java-第三天"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://zazalu.space/2019/10/23/learn-FP-3/&title=函数式编程范式初探-Java-第三天"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://zazalu.space/2019/10/23/learn-FP-3/&title=函数式编程范式初探-Java-第三天"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://zazalu.space/2019/10/23/learn-FP-3/&name=函数式编程范式初探-Java-第三天&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+  </div>
+</div>
+
+      
+      
+
+
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script src="https://he_jia_jun.gitee.io/zazalumonster.github.io//js/md5.min.js"></script>
+    <div id="gitalk-container"></div>
+    <script>
+    if(location.pathname == '/'){
+      //首页不需要评论系统
+    }else{
+      var gitalk = new Gitalk({
+        clientID: '73a23fdac799d4edb132',
+        clientSecret: '8200d919660d513fdd8629a7c45c13d7d13d9b6f',
+        repo: 'zazaluMonster.github.io',
+        owner: 'zazaluMonster',
+        admin: 'zazaluMonster',
+        id: md5(location.origin + "/" +location.pathname),
+        distractionFreeMode: false,
+        pagerDirection: 'first'
+      });
+      gitalk.render('gitalk-container');
+    }
+    </script>
+    <!-- gitalk -->
+
+<footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 zazalu
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+  <!-- 不蒜子统计 -->
+ <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <div>
+    <span id="busuanzi_container_site_pv">
+      本站总访问量<span id="busuanzi_value_site_pv"></span>次
+    </span>
+    <span id="busuanzi_container_site_uv">
+      本站访客数<span id="busuanzi_value_site_uv"></span>人次
+    </span>
+  </div>
+ 
+</footer>
+
+
+
+
+    </div>
+    <!-- styles -->
+<!-- <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/justified-gallery/css/justifiedGallery.min.css"> -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+    <!-- jquery -->
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/jquery/jquery.min.js"></script>
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+    <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?15ccc3aa9c18bcd901435b78b3c09e78";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+<!-- Disqus Comments -->
+
+
+
+    
+
+
+    <!-- 药水制作师live2d -->
+    <!-- 引入css -->
+    <link rel="stylesheet" href="/live2d/css/font-awesome/css/font-awesome.min.css" />
+    <link href="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/css/waifu.css" rel="stylesheet" type="text/css" />
+    <!-- html -->
+
+    <div class="waifu-switch">Live2d</div>
+    <div class="waifu">
+      <div class="waifu-tips"></div>
+      <canvas id="live2d" width="252" height="225" class="live2d"></canvas>
+      <div class="waifu-tool">
+        <i class="fa-times waifu-closed"></i>
+      </div>
+    </div>
+    <!-- 引入js -->
+    <script src="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/live2d.js"></script>
+    <script async src="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/waifu-tips.js"></script>
+    <script type="text/javascript">
+      loadlive2d("live2d", "/live2d/Pio/model.json");
+    </script>
+    <!-- 药水制作师live2d插件结束 -->
+
+    <!-- 引入视差滚动特效js -->
+    <!-- <script src="/parallax/parallax.min.js"></script>
+<script src="/parallax/parallaxController.js"></script> -->
+
+    <!-- 不蒜子统计请见footer.ejs -->
+
+  </body>
+
+  </html>

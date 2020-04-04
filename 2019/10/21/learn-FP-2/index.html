@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang=en>
+  <!-- 引入视差滚动css -->
+  <!-- <link rel="stylesheet" href="/parallax/parallaxCss.css"> -->
+  <head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="前言昨天, 我花了一点时间, 从各种函数式编程的教学资料和各类函数式编程相关的出版书籍中吸取精华, 编写了函数式编程范式初探-第一天 很幸运, 今天没有加班, 所以今天早点回家编写第二篇有关函数式编程的文章! 第二章的内容主要是围绕Java8的函数式编程的相关语法  Lambda FunctionalInterface(函数式接口) MethodReferences(方法引用) Closure(闭">
+<meta name="keywords" content="FunctionalProgramming">
+<meta property="og:type" content="article">
+<meta property="og:title" content="函数式编程范式初探-Java-第二天">
+<meta property="og:url" content="https://zazalu.space/2019/10/21/learn-FP-2/index.html">
+<meta property="og:site_name" content="Zazalu&#39;s Blog">
+<meta property="og:description" content="前言昨天, 我花了一点时间, 从各种函数式编程的教学资料和各类函数式编程相关的出版书籍中吸取精华, 编写了函数式编程范式初探-第一天 很幸运, 今天没有加班, 所以今天早点回家编写第二篇有关函数式编程的文章! 第二章的内容主要是围绕Java8的函数式编程的相关语法  Lambda FunctionalInterface(函数式接口) MethodReferences(方法引用) Closure(闭">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://zazalu.space/images/tmpImage/lambda.png">
+<meta property="og:image" content="https://zazalu.space/images/tmpImage/FunctionInterface_1.png">
+<meta property="og:image" content="https://zazalu.space/images/tmpImage/FunctionInterface_2.png">
+<meta property="og:updated_time" content="2020-04-04T01:13:08.391Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="函数式编程范式初探-Java-第二天">
+<meta name="twitter:description" content="前言昨天, 我花了一点时间, 从各种函数式编程的教学资料和各类函数式编程相关的出版书籍中吸取精华, 编写了函数式编程范式初探-第一天 很幸运, 今天没有加班, 所以今天早点回家编写第二篇有关函数式编程的文章! 第二章的内容主要是围绕Java8的函数式编程的相关语法  Lambda FunctionalInterface(函数式接口) MethodReferences(方法引用) Closure(闭">
+<meta name="twitter:image" content="https://zazalu.space/images/tmpImage/lambda.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>函数式编程范式初探-Java-第二天</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+
+  <body class="max-width mx-auto px3 ltr">
+    <!-- 添加视差滚动容器 -->
+    <!-- <ul id="scene" class="scene unselectable" data-friction-x="0.1" data-friction-y="0.1" data-scalar-x="25" data-scalar-y="15" style="width: 100%; height: 769px; transform: translate3d(0px, 0px, 0px); transform-style: preserve-3d; backface-visibility: hidden;">
+      <li class="layer" data-depth="0.00" style="position: relative; display: block; left: 0px; top: 0px; transform: translate3d(0px, 0px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="background"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light orange b phase-4"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light purple c phase-5"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light orange d phase-3"></div></li>
+      <li class="layer" data-depth="0.15" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(43.575px, 14.7375px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.30" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(87.15px, 29.475px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.30" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(87.15px, 29.475px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.40" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(116.2px, 39.3px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.50" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(145.25px, 49.125px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="lighthouse depth-60"></div></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.80" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(232.4px, 78.6px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="1.00" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(290.5px, 98.25px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+  </ul> -->
+    
+    <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2019/10/23/learn-FP-3/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2019/10/20/learn-FP/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://zazalu.space/2019/10/21/learn-FP-2/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://zazalu.space/2019/10/21/learn-FP-2/&text=函数式编程范式初探-Java-第二天"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://zazalu.space/2019/10/21/learn-FP-2/&title=函数式编程范式初探-Java-第二天"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zazalu.space/2019/10/21/learn-FP-2/&is_video=false&description=函数式编程范式初探-Java-第二天"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=函数式编程范式初探-Java-第二天&body=Check out this article: https://zazalu.space/2019/10/21/learn-FP-2/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://zazalu.space/2019/10/21/learn-FP-2/&title=函数式编程范式初探-Java-第二天"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://zazalu.space/2019/10/21/learn-FP-2/&title=函数式编程范式初探-Java-第二天"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://zazalu.space/2019/10/21/learn-FP-2/&title=函数式编程范式初探-Java-第二天"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://zazalu.space/2019/10/21/learn-FP-2/&title=函数式编程范式初探-Java-第二天"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://zazalu.space/2019/10/21/learn-FP-2/&name=函数式编程范式初探-Java-第二天&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Lambda"><span class="toc-number">2.</span> <span class="toc-text">Lambda</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#从我们熟悉的Runnable接口说起"><span class="toc-number">2.1.</span> <span class="toc-text">从我们熟悉的Runnable接口说起</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Lambda表达式的魔法"><span class="toc-number">2.2.</span> <span class="toc-text">Lambda表达式的魔法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#函数式接口"><span class="toc-number">2.3.</span> <span class="toc-text">函数式接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自定义函数式接口"><span class="toc-number">2.4.</span> <span class="toc-text">自定义函数式接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Lambda表达式例子"><span class="toc-number">2.5.</span> <span class="toc-text">Lambda表达式例子</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Lambda表达式的递归"><span class="toc-number">2.6.</span> <span class="toc-text">Lambda表达式的递归</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+      
+      <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        函数式编程范式初探-Java-第二天
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Zazalu's Blog</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-10-21T11:52:49.000Z" itemprop="datePublished">2019-10-21</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/IT/">IT</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/FunctionalProgramming/">FunctionalProgramming</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>昨天, 我花了一点时间, 从各种函数式编程的教学资料和各类函数式编程相关的出版书籍中吸取精华, 编写了<a href="https://zazalu.space/2019/10/20/learn-FP/">函数式编程范式初探-第一天</a></p>
+<p>很幸运, 今天没有加班, 所以今天早点回家编写第二篇有关函数式编程的文章!</p>
+<p>第二章的内容主要是围绕Java8的函数式编程的相关语法</p>
+<ul>
+<li>Lambda</li>
+<li>FunctionalInterface(函数式接口)</li>
+<li>MethodReferences(方法引用)</li>
+<li>Closure(闭包)</li>
+</ul>
+<p>以上就是本章的主要内容, 同样的, 本文的内容为个人总结, 不保证全部正确.</p>
+<h2 id="Lambda"><a href="#Lambda" class="headerlink" title="Lambda"></a>Lambda</h2><p>Lambda表达式提供了一种简洁的方式去表示单方法接口(只有一个方法的接口)的实现函数</p>
+<p>They provide a clear and concise way to represent one method interface using an expression. </p>
+<h3 id="从我们熟悉的Runnable接口说起"><a href="#从我们熟悉的Runnable接口说起" class="headerlink" title="从我们熟悉的Runnable接口说起"></a>从我们熟悉的Runnable接口说起</h3><p>Runnable接口是我们进行多线程编程的一个常用接口, 并且它是一个<code>单方法接口</code>, 只有一个run方法</p>
+<p>我相信大家或多或少的写过如下的Runnable代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Runnable r = <span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"hello"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>在这几行代码里, 有多处代码其实在每次编写类似功能的时候, 都是必须带上的, 比如 <code>@Override</code>, <code>public void run()</code>, 甚至<code>new Runnable</code></p>
+<p>这些重复代码, 在以前的java项目代码中是随处可见的, java的coder们也已经早已习惯了这种语法(包括我)</p>
+<p>不过作为开发人员来说, 要有一颗, 从不做重复劳作的心.</p>
+<p>在这里 <code>@Override</code>, <code>public void run()</code>, 甚至<code>new Runnable</code>是重复的, 我们就可以使用Lambda表达式来去除这种重复性, 请看下面的代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Runnable r = () -&gt; System.out.println(<span class="string">"hello"</span>);</span><br></pre></td></tr></table></figure>
+<p>可以看到, 使用Lambda表达式, 我们将代码缩减到了一行, 并且每一个字符都有它的意义, 我们没有做任何重复劳作 , fantastic!</p>
+<p>当然Lambda表达式的存在除了能够去除重复性代码外, 还有一个比较有趣的说法</p>
+<p>Lambda表达式的起源是<code>λ演算</code>, 而λ演算中, 就用常常用到一个类似<code>-&gt;</code>符号, 所以Lambda表达式使用了这个符号, 下面是Lambda表达式写法的一个简单总结图</p>
+<p><img src="/images/tmpImage/lambda.png"></p>
+<p>Lambda的语法非常简单, 我会在下面展示各类Lambda表达式写法, 你要做的只是多看, 多看, 就会记住了</p>
+<h3 id="Lambda表达式的魔法"><a href="#Lambda表达式的魔法" class="headerlink" title="Lambda表达式的魔法"></a>Lambda表达式的魔法</h3><p>刚刚我们看到了Runnable的实现代码通过Lambda表达式改写后, 代码非常精简, 那么其中到底发生了什么魔法呢? </p>
+<p>可以肯定的是, 上面的例子中, <code>() -&gt; System.out.println(&quot;hello&quot;)</code>的写法替代了整个匿名实现类的写法</p>
+<p>但是Java并不是简单的通过语法控制来使得这种写法不会报错, Java通过引入一种叫<code>FunctionalInterface(函数式接口)</code>的模式, 来支持Lambda表达式的语法</p>
+<p>前面我说的<code>单方法接口</code>, 其实就是<code>函数式接口</code>, 接下来为了统一, 我就都用函数式接口来说明</p>
+<h3 id="函数式接口"><a href="#函数式接口" class="headerlink" title="函数式接口"></a>函数式接口</h3><p>函数式接口的概念很简单, 就是一个单方法的接口实例, 比如Runnable, 就是一个典型的函数式接口</p>
+<p>java的设计者还专门提供了一个注释类来标注函数式接口, <code>@FunctionalInterface</code>, 我们打开Runnable的实现代码就能发现它:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//↓↓↓ 对函数式接口的特殊标注</span></span><br><span class="line"><span class="meta">@FunctionalInterface</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * When an object implementing interface &lt;code&gt;Runnable&lt;/code&gt; is used</span></span><br><span class="line"><span class="comment">     * to create a thread, starting the thread causes the object's</span></span><br><span class="line"><span class="comment">     * &lt;code&gt;run&lt;/code&gt; method to be called in that separately executing</span></span><br><span class="line"><span class="comment">     * thread.</span></span><br><span class="line"><span class="comment">     * &lt;p&gt;</span></span><br><span class="line"><span class="comment">     * The general contract of the method &lt;code&gt;run&lt;/code&gt; is that it may</span></span><br><span class="line"><span class="comment">     * take any action whatsoever.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@see</span>     java.lang.Thread#run()</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>不仅如此, java设计者还给我们提供了一个叫<code>java.util.function</code>的包, 这个包中内置了大量的函数式接口, 如果我要在这里全部介绍它们, 就或许有点费时费力, 不过幸运的是, 有人对其进行了一定的总结, 我先把它贴出来, 大家可以看看就好, 不需要自己去记, 需要的时候检索下即可</p>
+<p><img src="/images/tmpImage/FunctionInterface_1.png"><br><img src="/images/tmpImage/FunctionInterface_2.png"></p>
+<p>想必看到这一堆东西, 大家已经开始头疼了, FP是为了简洁而生的, 怎么感觉还是一大堆设定呢? </p>
+<p>先别急, 因为我上面只是列类似API的东西, 所以肯定一次性列的比较全</p>
+<p>事实上, 我们平时用的时候, 就只用到里面的其中一种, 而且常用的就那么几个.</p>
+<p>我们拿Function&lt;T,R&gt;举例, 下面是它的实现(源自jdk8, 为了节省篇幅, 我去掉了注释):</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@FunctionalInterface</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Function</span>&lt;<span class="title">T</span>, <span class="title">R</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function">R <span class="title">apply</span><span class="params">(T t)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//default关键字是jdk8的新关键字, 被它修饰的方法可以不需要实现类进行实现</span></span><br><span class="line">    <span class="keyword">default</span> &lt;V&gt; <span class="function">Function&lt;V, R&gt; <span class="title">compose</span><span class="params">(Function&lt;? <span class="keyword">super</span> V, ? extends T&gt; before)</span> </span>&#123;</span><br><span class="line">        Objects.requireNonNull(before);</span><br><span class="line">        <span class="keyword">return</span> (V v) -&gt; apply(before.apply(v));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">default</span> &lt;V&gt; <span class="function">Function&lt;T, V&gt; <span class="title">andThen</span><span class="params">(Function&lt;? <span class="keyword">super</span> R, ? extends V&gt; after)</span> </span>&#123;</span><br><span class="line">        Objects.requireNonNull(after);</span><br><span class="line">        <span class="keyword">return</span> (T t) -&gt; after.apply(apply(t));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//静态方法</span></span><br><span class="line">    <span class="keyword">static</span> &lt;T&gt; <span class="function">Function&lt;T, T&gt; <span class="title">identity</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> t -&gt; t;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>也许你开始产生疑问, 不是说函数式接口是单方法接口吗, 这个Function怎么拥有那么多方法.</p>
+<p>其实函数式接口只要求只有一个强制要求实现的方法就行了, 在这里唯一一个强制实现类必须实现的方法是<code>apply</code>方法</p>
+<p>接下来说说我们怎么直接利用这个Function&lt;T, R&gt;函数式接口</p>
+<p>通过研究方法签名, 我们知道了apply方法接收一个泛型T, 返回另一个泛型R, 所以我们可以写出如下这样的代码去直接用它</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Function function = a -&gt; <span class="string">"Hello, "</span> + a;  <span class="comment">//a -&gt; "Hello, " + a这个Lambda表达式就是apply方法的实现</span></span><br><span class="line">System.out.println(function.apply(<span class="string">"zazlau"</span>)); <span class="comment">//打印Hello, zazlau</span></span><br></pre></td></tr></table></figure>
+<p>在这里我们使用Lambda表达式结合函数式接口, 做了一次简单的配合, 写出了一个非常小巧的程序</p>
+<p>而如果按照原本的写法, 我们需要写下面这样的代码:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//我们需要先自己定义一个接口</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">MyFunction</span>&lt;<span class="title">T</span>, <span class="title">R</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function">R <span class="title">myApply</span><span class="params">(T t)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//然后使用匿名内部类进行实现</span></span><br><span class="line"> MyFunction function = <span class="keyword">new</span> MyFunction() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">myApply</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Hello, "</span> + o;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">System.out.println(function.myApply(<span class="string">"zazlau"</span>)); <span class="comment">//打印Hello, zazlau</span></span><br></pre></td></tr></table></figure></p>
+<p>我的天呐! 人生短暂, 我选择函数式编程….</p>
+<p>函数式接口的内容就暂时介绍到这里, 对于学习来说, 已经足够了, 但是<code>java.util.function</code>包中还有许多东西可以拿出来聊聊, 我会以后的文章中继续完善它.</p>
+<h3 id="自定义函数式接口"><a href="#自定义函数式接口" class="headerlink" title="自定义函数式接口"></a>自定义函数式接口</h3><p>自定义函数式接口非常的简单, 其实我们刚刚已经不知不觉完成了, 我们把上面MyFunction接口稍微加点点缀</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@FunctionalInterface</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">MyFunction</span>&lt;<span class="title">T</span>, <span class="title">R</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function">R <span class="title">myApply</span><span class="params">(T t)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>大功告成! 这就是自定义函数式接口, 真没什么好说的!</p>
+<p>为什么要有自定义函数式接口? 那肯定是因为<code>java.util.function</code>包提供给你的不够用造成的!</p>
+<h3 id="Lambda表达式例子"><a href="#Lambda表达式例子" class="headerlink" title="Lambda表达式例子"></a>Lambda表达式例子</h3><p>通过前面的学习, 我们已经掌握了不少Lambda表达式的语法, 不过也还有一些需要我们学习的, 下面列出的代码中全部进行了列出</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// [1] h, 代表入参, 名字可以随意取, 这里省略了括号, </span></span><br><span class="line"><span class="comment">// h + " No Parens!"是返回内容, 注意这里省略了return, 实际上是&#123;return h + " No Parens!"&#125;</span></span><br><span class="line">h -&gt; h + <span class="string">" No Parens!"</span>; </span><br><span class="line"></span><br><span class="line"><span class="comment">// [2]和第一点的区别是这里括号没有省略</span></span><br><span class="line">(h) -&gt; h + <span class="string">" More details"</span>; </span><br><span class="line"></span><br><span class="line"><span class="comment">// [3]无入参的情况</span></span><br><span class="line">() -&gt; <span class="string">"Short info"</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// [4]两个入参的情况, 必须加括号</span></span><br><span class="line">(h, n) -&gt; h + n;</span><br><span class="line"></span><br><span class="line"><span class="comment">// [5]当方法体有多行的时候, 则必须加上花括号, 不能省略了.</span></span><br><span class="line">h -&gt; &#123;</span><br><span class="line">    <span class="keyword">int</span> i = <span class="number">1</span>;</span><br><span class="line">    i++;</span><br><span class="line">    <span class="keyword">return</span> h + <span class="string">" No Parens!"</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// [6]当你不想省略return的时候, 也必须加上花括号</span></span><br><span class="line">h -&gt; &#123;<span class="keyword">return</span> h + <span class="string">" No Parens!"</span>;&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Lambda表达式的递归"><a href="#Lambda表达式的递归" class="headerlink" title="Lambda表达式的递归"></a>Lambda表达式的递归</h3><p>其实正常来说Lambda表达式是不能递归的, 因为Lambda表达式没有函数名, 但是java是个神奇的语言:), 请看下面例子:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">IntCall</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">int</span> <span class="title">call</span><span class="params">(<span class="keyword">int</span> arg)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RecursiveFactorial</span> </span>&#123;</span><br><span class="line">  <span class="keyword">static</span> IntCall fact;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    fact = n -&gt; n == <span class="number">0</span> ? <span class="number">1</span> : n * fact.call(n - <span class="number">1</span>); <span class="comment">//递归!</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= <span class="number">10</span>; i++)</span><br><span class="line">      System.out.println(fact.call(i));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>好吧! 上面的写法确实通过定义一个域fact, 给我们的Lambda表达式间接的附上了一个名称! </p>
+<p>我自己试了下, 要写递归代码, 则必须按照上面这样写, 十分苛刻! fact必须是static的!</p>
+<p><strong>[注意]</strong>: 大家还可以关注下尾递归这玩意.</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这一章, 我仔细说明了Java的函数式编程中的Lambda和FunctionalInterface, 由于时间不早了, 明天要加班, 后天继续来填坑!</p>
+
+  </div>
+</article>
+
+
+
+      
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Lambda"><span class="toc-number">2.</span> <span class="toc-text">Lambda</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#从我们熟悉的Runnable接口说起"><span class="toc-number">2.1.</span> <span class="toc-text">从我们熟悉的Runnable接口说起</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Lambda表达式的魔法"><span class="toc-number">2.2.</span> <span class="toc-text">Lambda表达式的魔法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#函数式接口"><span class="toc-number">2.3.</span> <span class="toc-text">函数式接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自定义函数式接口"><span class="toc-number">2.4.</span> <span class="toc-text">自定义函数式接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Lambda表达式例子"><span class="toc-number">2.5.</span> <span class="toc-text">Lambda表达式例子</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Lambda表达式的递归"><span class="toc-number">2.6.</span> <span class="toc-text">Lambda表达式的递归</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://zazalu.space/2019/10/21/learn-FP-2/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://zazalu.space/2019/10/21/learn-FP-2/&text=函数式编程范式初探-Java-第二天"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://zazalu.space/2019/10/21/learn-FP-2/&title=函数式编程范式初探-Java-第二天"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zazalu.space/2019/10/21/learn-FP-2/&is_video=false&description=函数式编程范式初探-Java-第二天"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=函数式编程范式初探-Java-第二天&body=Check out this article: https://zazalu.space/2019/10/21/learn-FP-2/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://zazalu.space/2019/10/21/learn-FP-2/&title=函数式编程范式初探-Java-第二天"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://zazalu.space/2019/10/21/learn-FP-2/&title=函数式编程范式初探-Java-第二天"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://zazalu.space/2019/10/21/learn-FP-2/&title=函数式编程范式初探-Java-第二天"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://zazalu.space/2019/10/21/learn-FP-2/&title=函数式编程范式初探-Java-第二天"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://zazalu.space/2019/10/21/learn-FP-2/&name=函数式编程范式初探-Java-第二天&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+  </div>
+</div>
+
+      
+      
+
+
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script src="https://he_jia_jun.gitee.io/zazalumonster.github.io//js/md5.min.js"></script>
+    <div id="gitalk-container"></div>
+    <script>
+    if(location.pathname == '/'){
+      //首页不需要评论系统
+    }else{
+      var gitalk = new Gitalk({
+        clientID: '73a23fdac799d4edb132',
+        clientSecret: '8200d919660d513fdd8629a7c45c13d7d13d9b6f',
+        repo: 'zazaluMonster.github.io',
+        owner: 'zazaluMonster',
+        admin: 'zazaluMonster',
+        id: md5(location.origin + "/" +location.pathname),
+        distractionFreeMode: false,
+        pagerDirection: 'first'
+      });
+      gitalk.render('gitalk-container');
+    }
+    </script>
+    <!-- gitalk -->
+
+<footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 zazalu
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+  <!-- 不蒜子统计 -->
+ <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <div>
+    <span id="busuanzi_container_site_pv">
+      本站总访问量<span id="busuanzi_value_site_pv"></span>次
+    </span>
+    <span id="busuanzi_container_site_uv">
+      本站访客数<span id="busuanzi_value_site_uv"></span>人次
+    </span>
+  </div>
+ 
+</footer>
+
+
+
+
+    </div>
+    <!-- styles -->
+<!-- <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/justified-gallery/css/justifiedGallery.min.css"> -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+    <!-- jquery -->
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/jquery/jquery.min.js"></script>
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+    <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?15ccc3aa9c18bcd901435b78b3c09e78";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+<!-- Disqus Comments -->
+
+
+
+    
+
+
+    <!-- 药水制作师live2d -->
+    <!-- 引入css -->
+    <link rel="stylesheet" href="/live2d/css/font-awesome/css/font-awesome.min.css" />
+    <link href="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/css/waifu.css" rel="stylesheet" type="text/css" />
+    <!-- html -->
+
+    <div class="waifu-switch">Live2d</div>
+    <div class="waifu">
+      <div class="waifu-tips"></div>
+      <canvas id="live2d" width="252" height="225" class="live2d"></canvas>
+      <div class="waifu-tool">
+        <i class="fa-times waifu-closed"></i>
+      </div>
+    </div>
+    <!-- 引入js -->
+    <script src="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/live2d.js"></script>
+    <script async src="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/waifu-tips.js"></script>
+    <script type="text/javascript">
+      loadlive2d("live2d", "/live2d/Pio/model.json");
+    </script>
+    <!-- 药水制作师live2d插件结束 -->
+
+    <!-- 引入视差滚动特效js -->
+    <!-- <script src="/parallax/parallax.min.js"></script>
+<script src="/parallax/parallaxController.js"></script> -->
+
+    <!-- 不蒜子统计请见footer.ejs -->
+
+  </body>
+
+  </html>

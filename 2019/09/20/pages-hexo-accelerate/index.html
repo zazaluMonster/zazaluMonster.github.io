@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang=en>
+  <!-- 引入视差滚动css -->
+  <!-- <link rel="stylesheet" href="/parallax/parallaxCss.css"> -->
+  <head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="情况分析国内往GithubPages发送GET请求，很慢，第一次访问的速度在我这边透过浏览器F12工具解析大概是 建立连接（初始化，SSL等等）好几s等待响应（TTFB）好几s下载速度倒还行几毫秒 下载到index.html后，浏览器对html进行解析，继续请求html内的各种js，css，字体库等等等等静态资源！ 然后我的网页才开始展示！ 如何解决 访问github很慢，是由于国外网站，而我在国">
+<meta name="keywords" content="Hexo魔改">
+<meta property="og:type" content="article">
+<meta property="og:title" content="加快Github Pages服务+Hexo博客的首次加载速度解决方案">
+<meta property="og:url" content="https://zazalu.space/2019/09/20/pages-hexo-accelerate/index.html">
+<meta property="og:site_name" content="Zazalu&#39;s Blog">
+<meta property="og:description" content="情况分析国内往GithubPages发送GET请求，很慢，第一次访问的速度在我这边透过浏览器F12工具解析大概是 建立连接（初始化，SSL等等）好几s等待响应（TTFB）好几s下载速度倒还行几毫秒 下载到index.html后，浏览器对html进行解析，继续请求html内的各种js，css，字体库等等等等静态资源！ 然后我的网页才开始展示！ 如何解决 访问github很慢，是由于国外网站，而我在国">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2020-04-04T01:13:08.395Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="加快Github Pages服务+Hexo博客的首次加载速度解决方案">
+<meta name="twitter:description" content="情况分析国内往GithubPages发送GET请求，很慢，第一次访问的速度在我这边透过浏览器F12工具解析大概是 建立连接（初始化，SSL等等）好几s等待响应（TTFB）好几s下载速度倒还行几毫秒 下载到index.html后，浏览器对html进行解析，继续请求html内的各种js，css，字体库等等等等静态资源！ 然后我的网页才开始展示！ 如何解决 访问github很慢，是由于国外网站，而我在国">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>加快Github Pages服务+Hexo博客的首次加载速度解决方案</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+
+  <body class="max-width mx-auto px3 ltr">
+    <!-- 添加视差滚动容器 -->
+    <!-- <ul id="scene" class="scene unselectable" data-friction-x="0.1" data-friction-y="0.1" data-scalar-x="25" data-scalar-y="15" style="width: 100%; height: 769px; transform: translate3d(0px, 0px, 0px); transform-style: preserve-3d; backface-visibility: hidden;">
+      <li class="layer" data-depth="0.00" style="position: relative; display: block; left: 0px; top: 0px; transform: translate3d(0px, 0px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="background"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light orange b phase-4"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light purple c phase-5"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light orange d phase-3"></div></li>
+      <li class="layer" data-depth="0.15" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(43.575px, 14.7375px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.30" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(87.15px, 29.475px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.30" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(87.15px, 29.475px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.40" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(116.2px, 39.3px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.50" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(145.25px, 49.125px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="lighthouse depth-60"></div></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.80" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(232.4px, 78.6px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="1.00" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(290.5px, 98.25px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+  </ul> -->
+    
+    <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2019/09/24/gitalk-issue-automatic-create/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2019/09/19/use-gitalk-in-hexo-by-script/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://zazalu.space/2019/09/20/pages-hexo-accelerate/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://zazalu.space/2019/09/20/pages-hexo-accelerate/&text=加快Github Pages服务+Hexo博客的首次加载速度解决方案"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://zazalu.space/2019/09/20/pages-hexo-accelerate/&title=加快Github Pages服务+Hexo博客的首次加载速度解决方案"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zazalu.space/2019/09/20/pages-hexo-accelerate/&is_video=false&description=加快Github Pages服务+Hexo博客的首次加载速度解决方案"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=加快Github Pages服务+Hexo博客的首次加载速度解决方案&body=Check out this article: https://zazalu.space/2019/09/20/pages-hexo-accelerate/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://zazalu.space/2019/09/20/pages-hexo-accelerate/&title=加快Github Pages服务+Hexo博客的首次加载速度解决方案"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://zazalu.space/2019/09/20/pages-hexo-accelerate/&title=加快Github Pages服务+Hexo博客的首次加载速度解决方案"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://zazalu.space/2019/09/20/pages-hexo-accelerate/&title=加快Github Pages服务+Hexo博客的首次加载速度解决方案"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://zazalu.space/2019/09/20/pages-hexo-accelerate/&title=加快Github Pages服务+Hexo博客的首次加载速度解决方案"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://zazalu.space/2019/09/20/pages-hexo-accelerate/&name=加快Github Pages服务+Hexo博客的首次加载速度解决方案&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#情况分析"><span class="toc-number">1.</span> <span class="toc-text">情况分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#如何解决"><span class="toc-number">2.</span> <span class="toc-text">如何解决</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#说说为啥我要这么做"><span class="toc-number">3.</span> <span class="toc-text">说说为啥我要这么做</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#存在的坑"><span class="toc-number">4.</span> <span class="toc-text">存在的坑</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+      
+      <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        加快Github Pages服务+Hexo博客的首次加载速度解决方案
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Zazalu's Blog</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-09-20T07:57:04.000Z" itemprop="datePublished">2019-09-20</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/IT/">IT</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/Hexo魔改/">Hexo魔改</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="情况分析"><a href="#情况分析" class="headerlink" title="情况分析"></a>情况分析</h1><p>国内往GithubPages发送GET请求，很慢，第一次访问的速度在我这边透过浏览器F12工具解析大概是</p>
+<p>建立连接（初始化，SSL等等）好几s<br>等待响应（TTFB）好几s<br>下载速度倒还行几毫秒</p>
+<p>下载到index.html后，浏览器对html进行解析，继续请求html内的各种js，css，字体库等等等等静态资源！</p>
+<p>然后我的网页才开始展示！</p>
+<h1 id="如何解决"><a href="#如何解决" class="headerlink" title="如何解决"></a>如何解决</h1><ol>
+<li><p>访问github很慢，是由于国外网站，而我在国内，不开代理情况下，肯定慢。所以解决方法是让网站备案然后加入CDN，但是好的CDN要钱（万一一个DDOS攻击呵呵），作为一个垃圾个人博客，没必要，暂时先不搞</p>
+</li>
+<li><p>将所有静态资源托管到国内服务器上，这里有两种选择：</p>
+<ul>
+<li><p>白嫖国内免费pages服务（我自己的骚操作）: 我发现gitee的pages支持跨域访问（目前发现只支持css,js,image资源，不支持字体库，json文件），于是可以在gitee上上传一份hexo的文件，然后在_config.yml中配置一个<code>baseUrl</code>，然后在各类模板文件中加上这个<code>baseUrl</code>配置，比如我现在是这样的：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Trusteeship:</span></span><br><span class="line"><span class="attr">    baseUrl:</span> <span class="attr">https://your.gitee.io/your.gitee.repo/</span></span><br></pre></td></tr></table></figure>
+<p>然后在模板文档里这样搞一下(需要的地方加上前缀))：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">%-</span> <span class="attr">css</span>(<span class="attr">theme.Trusteeship.baseUrl</span> + '<span class="attr">css</span>/<span class="attr">style</span>') %&gt;</span></span><br></pre></td></tr></table></figure>
+<p>这个方法总体来看很不错，唯一缺点就是字体库，json文件没法跨域访问，导致加载失败，最后只能把这些加载失败的文件单独重新转到github pages上或者转到你别的托管服务器上了。。这过程中由于我对hexo整体代码架构也不是很熟悉，所以为了一时爽，我直接硬编码了！</p>
+<p>最后在hexo配置文件中加入gitee的git库配置就行了，这样<code>hexo d</code>就会依次推到这两个pages上了，然后github page上的部分静态资源从gitee pages上去获取！ xswl。</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line"><span class="attr">- type:</span> <span class="string">git</span></span><br><span class="line"><span class="attr">  repository:</span> <span class="string">'your github repo'</span></span><br><span class="line"><span class="attr">  branch:</span> <span class="string">master</span></span><br><span class="line"><span class="attr">- type:</span> <span class="string">git</span></span><br><span class="line"><span class="attr">  repository:</span> <span class="string">'your gitee repo'</span></span><br><span class="line"><span class="attr">  branch:</span> <span class="string">master</span></span><br></pre></td></tr></table></figure>
+<p>注意先git remote ‘gitee repo’</p>
+</li>
+</ul>
+</li>
+</ol>
+<pre><code>- 托管到自己的服务器上：比如你搞个阿里云轻量服务器，专门搞个后台负责管理静态资源，由于服务器在国内，所以访问肯定不慢。 不过这个方法是个伪命题，你既然都有自己的服务器了，那就直接把hexo也搬过来不就好了。由于服务器花钱，我暂时不考虑。
+</code></pre><h1 id="说说为啥我要这么做"><a href="#说说为啥我要这么做" class="headerlink" title="说说为啥我要这么做"></a>说说为啥我要这么做</h1><p>其实回过头来看我觉得肯定有人会说我这样搞折腾，麻烦，既然用了gitee了，那就直接全部搬家搬到gitee就好了。 </p>
+<p>但是那样的话域名的跳转，CNAME，这些东西都要改QAQ， 我想了想算了，不改已经搞定的东西了，毕竟完全没必要，而且github pages更稳定</p>
+<p>CDN加速等我完成备案再搞</p>
+<h1 id="存在的坑"><a href="#存在的坑" class="headerlink" title="存在的坑"></a>存在的坑</h1><ol>
+<li><p>如果采用上面的第二种方法，当你想换主题的时候，额外的工作量会很比较大，因为你换个主题后，这个主题内的配置你要转移到新主题上，重新配！</p>
+</li>
+<li><p>gitee pages需要重新部署才能访问你新加的静态资源，比如访问新加入的图片，新加的css，js文件，不然直接404！ 除非你开通gitee pages pro， 不然都需要在网页上手动重新部署！ 对gitee的这种行为我只能竖一个中指.. 毕竟网站也要盈利…</p>
+</li>
+</ol>
+<p>暂时就总结这些，有事先闪了！！</p>
+
+    <div id="donationWrap">
+        <p style="
+      text-align: center;
+      border-top: gold;
+      border-top-style: solid;
+      border-top-width: 1px;
+      color: #eee;
+      font-weight: bold;
+      font-size: 1rem;
+      padding-top: 15px;
+      margin-top: 70px;
+  ">感谢作者</p>
+        <img src="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/tmpImage/blog_donation_zfb.png"
+          style="margin-left: auto;margin-right: auto;display: block;width: 30%;padding-bottom: 30px;">
+      </div>
+      <div id="donationPoint">
+
+
+  <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img style="margin-left: auto;margin-right: auto;display: block;" alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a>
+  <p style="
+  text-align: center;
+  color: #eee;
+  font-weight: bold;
+  font-size: 1rem;">本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>进行许可。</p>
+  <div id="licensePoint"></div></div>
+  </div>
+</article>
+
+
+
+      
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#情况分析"><span class="toc-number">1.</span> <span class="toc-text">情况分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#如何解决"><span class="toc-number">2.</span> <span class="toc-text">如何解决</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#说说为啥我要这么做"><span class="toc-number">3.</span> <span class="toc-text">说说为啥我要这么做</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#存在的坑"><span class="toc-number">4.</span> <span class="toc-text">存在的坑</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://zazalu.space/2019/09/20/pages-hexo-accelerate/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://zazalu.space/2019/09/20/pages-hexo-accelerate/&text=加快Github Pages服务+Hexo博客的首次加载速度解决方案"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://zazalu.space/2019/09/20/pages-hexo-accelerate/&title=加快Github Pages服务+Hexo博客的首次加载速度解决方案"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zazalu.space/2019/09/20/pages-hexo-accelerate/&is_video=false&description=加快Github Pages服务+Hexo博客的首次加载速度解决方案"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=加快Github Pages服务+Hexo博客的首次加载速度解决方案&body=Check out this article: https://zazalu.space/2019/09/20/pages-hexo-accelerate/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://zazalu.space/2019/09/20/pages-hexo-accelerate/&title=加快Github Pages服务+Hexo博客的首次加载速度解决方案"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://zazalu.space/2019/09/20/pages-hexo-accelerate/&title=加快Github Pages服务+Hexo博客的首次加载速度解决方案"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://zazalu.space/2019/09/20/pages-hexo-accelerate/&title=加快Github Pages服务+Hexo博客的首次加载速度解决方案"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://zazalu.space/2019/09/20/pages-hexo-accelerate/&title=加快Github Pages服务+Hexo博客的首次加载速度解决方案"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://zazalu.space/2019/09/20/pages-hexo-accelerate/&name=加快Github Pages服务+Hexo博客的首次加载速度解决方案&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+  </div>
+</div>
+
+      
+      
+
+
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script src="https://he_jia_jun.gitee.io/zazalumonster.github.io//js/md5.min.js"></script>
+    <div id="gitalk-container"></div>
+    <script>
+    if(location.pathname == '/'){
+      //首页不需要评论系统
+    }else{
+      var gitalk = new Gitalk({
+        clientID: '73a23fdac799d4edb132',
+        clientSecret: '8200d919660d513fdd8629a7c45c13d7d13d9b6f',
+        repo: 'zazaluMonster.github.io',
+        owner: 'zazaluMonster',
+        admin: 'zazaluMonster',
+        id: md5(location.origin + "/" +location.pathname),
+        distractionFreeMode: false,
+        pagerDirection: 'first'
+      });
+      gitalk.render('gitalk-container');
+    }
+    </script>
+    <!-- gitalk -->
+
+<footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 zazalu
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+  <!-- 不蒜子统计 -->
+ <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <div>
+    <span id="busuanzi_container_site_pv">
+      本站总访问量<span id="busuanzi_value_site_pv"></span>次
+    </span>
+    <span id="busuanzi_container_site_uv">
+      本站访客数<span id="busuanzi_value_site_uv"></span>人次
+    </span>
+  </div>
+ 
+</footer>
+
+
+
+
+    </div>
+    <!-- styles -->
+<!-- <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/justified-gallery/css/justifiedGallery.min.css"> -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+    <!-- jquery -->
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/jquery/jquery.min.js"></script>
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+    <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?15ccc3aa9c18bcd901435b78b3c09e78";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+<!-- Disqus Comments -->
+
+
+
+    
+
+
+    <!-- 药水制作师live2d -->
+    <!-- 引入css -->
+    <link rel="stylesheet" href="/live2d/css/font-awesome/css/font-awesome.min.css" />
+    <link href="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/css/waifu.css" rel="stylesheet" type="text/css" />
+    <!-- html -->
+
+    <div class="waifu-switch">Live2d</div>
+    <div class="waifu">
+      <div class="waifu-tips"></div>
+      <canvas id="live2d" width="252" height="225" class="live2d"></canvas>
+      <div class="waifu-tool">
+        <i class="fa-times waifu-closed"></i>
+      </div>
+    </div>
+    <!-- 引入js -->
+    <script src="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/live2d.js"></script>
+    <script async src="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/waifu-tips.js"></script>
+    <script type="text/javascript">
+      loadlive2d("live2d", "/live2d/Pio/model.json");
+    </script>
+    <!-- 药水制作师live2d插件结束 -->
+
+    <!-- 引入视差滚动特效js -->
+    <!-- <script src="/parallax/parallax.min.js"></script>
+<script src="/parallax/parallaxController.js"></script> -->
+
+    <!-- 不蒜子统计请见footer.ejs -->
+
+  </body>
+
+  </html>

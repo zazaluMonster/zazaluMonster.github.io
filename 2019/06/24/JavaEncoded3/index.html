@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang=en>
+  <!-- 引入视差滚动css -->
+  <!-- <link rel="stylesheet" href="/parallax/parallaxCss.css"> -->
+  <head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="导言关于编码，我曾经写过了2篇文章。在我个人运用来看，前两篇分享的知识已经足以去理解所有编码问题发生的根源问题。 那么为什么我今天又写了这篇文章呢？ 接触过Web项目的同学，肯定对URLEncoder和URLDecoder，我们常常用这两个类来处理部分遇到的问题。 在早些时候，我个人还没理解透这块知识的时候，我以为下面的2句java表达式的背后机制是差不多的 12345//1String enco">
+<meta name="keywords" content="编码">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java乱码问题之URLEncoder和URLDecoder">
+<meta property="og:url" content="https://zazalu.space/2019/06/24/JavaEncoded3/index.html">
+<meta property="og:site_name" content="Zazalu&#39;s Blog">
+<meta property="og:description" content="导言关于编码，我曾经写过了2篇文章。在我个人运用来看，前两篇分享的知识已经足以去理解所有编码问题发生的根源问题。 那么为什么我今天又写了这篇文章呢？ 接触过Web项目的同学，肯定对URLEncoder和URLDecoder，我们常常用这两个类来处理部分遇到的问题。 在早些时候，我个人还没理解透这块知识的时候，我以为下面的2句java表达式的背后机制是差不多的 12345//1String enco">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2020-04-04T01:13:08.379Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java乱码问题之URLEncoder和URLDecoder">
+<meta name="twitter:description" content="导言关于编码，我曾经写过了2篇文章。在我个人运用来看，前两篇分享的知识已经足以去理解所有编码问题发生的根源问题。 那么为什么我今天又写了这篇文章呢？ 接触过Web项目的同学，肯定对URLEncoder和URLDecoder，我们常常用这两个类来处理部分遇到的问题。 在早些时候，我个人还没理解透这块知识的时候，我以为下面的2句java表达式的背后机制是差不多的 12345//1String enco">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Java乱码问题之URLEncoder和URLDecoder</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+
+  <body class="max-width mx-auto px3 ltr">
+    <!-- 添加视差滚动容器 -->
+    <!-- <ul id="scene" class="scene unselectable" data-friction-x="0.1" data-friction-y="0.1" data-scalar-x="25" data-scalar-y="15" style="width: 100%; height: 769px; transform: translate3d(0px, 0px, 0px); transform-style: preserve-3d; backface-visibility: hidden;">
+      <li class="layer" data-depth="0.00" style="position: relative; display: block; left: 0px; top: 0px; transform: translate3d(0px, 0px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="background"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light orange b phase-4"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light purple c phase-5"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light orange d phase-3"></div></li>
+      <li class="layer" data-depth="0.15" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(43.575px, 14.7375px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.30" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(87.15px, 29.475px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.30" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(87.15px, 29.475px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.40" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(116.2px, 39.3px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.50" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(145.25px, 49.125px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="lighthouse depth-60"></div></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.80" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(232.4px, 78.6px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="1.00" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(290.5px, 98.25px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+  </ul> -->
+    
+    <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2019/06/30/CORS-question-and-curl-use-in-web-test/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2019/06/16/ToFather/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://zazalu.space/2019/06/24/JavaEncoded3/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://zazalu.space/2019/06/24/JavaEncoded3/&text=Java乱码问题之URLEncoder和URLDecoder"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://zazalu.space/2019/06/24/JavaEncoded3/&title=Java乱码问题之URLEncoder和URLDecoder"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zazalu.space/2019/06/24/JavaEncoded3/&is_video=false&description=Java乱码问题之URLEncoder和URLDecoder"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Java乱码问题之URLEncoder和URLDecoder&body=Check out this article: https://zazalu.space/2019/06/24/JavaEncoded3/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://zazalu.space/2019/06/24/JavaEncoded3/&title=Java乱码问题之URLEncoder和URLDecoder"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://zazalu.space/2019/06/24/JavaEncoded3/&title=Java乱码问题之URLEncoder和URLDecoder"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://zazalu.space/2019/06/24/JavaEncoded3/&title=Java乱码问题之URLEncoder和URLDecoder"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://zazalu.space/2019/06/24/JavaEncoded3/&title=Java乱码问题之URLEncoder和URLDecoder"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://zazalu.space/2019/06/24/JavaEncoded3/&name=Java乱码问题之URLEncoder和URLDecoder&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#导言"><span class="toc-number">1.</span> <span class="toc-text">导言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#URLEncoder和URLDecoder"><span class="toc-number">2.</span> <span class="toc-text">URLEncoder和URLDecoder</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾"><span class="toc-number">3.</span> <span class="toc-text">尾</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+      
+      <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Java乱码问题之URLEncoder和URLDecoder
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Zazalu's Blog</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-06-24T04:56:25.000Z" itemprop="datePublished">2019-06-24</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/IT/">IT</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/编码/">编码</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="导言"><a href="#导言" class="headerlink" title="导言"></a>导言</h1><p>关于编码，我曾经写过了2篇文章。在我个人运用来看，前两篇分享的知识已经足以去理解所有编码问题发生的根源问题。</p>
+<p>那么为什么我今天又写了这篇文章呢？</p>
+<p>接触过Web项目的同学，肯定对URLEncoder和URLDecoder，我们常常用这两个类来处理部分遇到的问题。</p>
+<p>在早些时候，我个人还没理解透这块知识的时候，我以为下面的2句java表达式的背后机制是差不多的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//1</span></span><br><span class="line">String encodeUrl = URLEncoder.encode(url,<span class="string">"utf-8"</span>);</span><br><span class="line">String decoderUrl = URLDecoder.decode(encodeUrl,<span class="string">"utf-8"</span>);</span><br><span class="line"><span class="comment">//2</span></span><br><span class="line"><span class="keyword">new</span> String(s.getBytes(<span class="string">"gbk"</span>),<span class="string">"utf-8"</span>)</span><br></pre></td></tr></table></figure>
+<p>后来，我分享了 <a href="https://zazalu.space/2019/06/15/Java%E7%9A%84%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E9%97%AE%E9%A2%98%E4%B8%80%E8%AF%AD%E9%81%93%E7%A0%B4-GBK-UTF%E7%AD%89%E5%B8%B8%E7%94%A8%E7%BC%96%E7%A0%81/">我编码的第二篇文章</a><br>后我懂得了Stirng的那个表达式是做了如下的转换逻辑：<br>Unicode String  -&gt;  根据传入的编码规则将Unicode转换为了Bytes[]  -&gt;  使用utf-8的编码规则去将Bytes[]变成Unicode字符</p>
+<p>总的来说String的这种方式是字符到字节再到字符的转换，其内部的Unicode字符的内容是会根据你的编码规则使用是否正确会改变的，使用的不当，结果还是乱码XS</p>
+<p>但是在URLEncoder和URLDecoder的应用领域，它们干的事情和我对“编码”的一般理解是有区别的，下面我来细讲</p>
+<h1 id="URLEncoder和URLDecoder"><a href="#URLEncoder和URLDecoder" class="headerlink" title="URLEncoder和URLDecoder"></a>URLEncoder和URLDecoder</h1><blockquote>
+<p>我更愿意说URLEncoder和URLDecoder做的事情叫“字符转换”而不是“编码”，其内部包含了“编码”的操作，但不仅仅只有“编码”操作</p>
+</blockquote>
+<p><strong>我们先拿URLEncoder说事</strong></p>
+<p>假设你收到一个URL数据如下<br><code>String url = &#39;http://localhost:8080/examples/servlets/servlet/镓钧?author=镓钧&#39;</code></p>
+<p>但是带中文的URL在不同的程序解析下容易出现乱码问题最终导致数据丢失，所以为了不出现此类问题，URL规范使用utf-8（实际上不同地方规范不同，只不过现如今我们更推荐只使用utf-8）将这些中文字符转换为16进制表示的字符<br>如下所以：</p>
+<p><code>Stirng encodeUrl = &#39;http://localhost:8080/examples/servlets/servlet/%E9%95%93%E9%92%A7?author=%E9%95%93%E9%92%A7&#39;</code></p>
+<p>这个过程有2个要点：</p>
+<ol>
+<li><code>镓钧</code>二字变成了<code>%E9%95%93%E9%92%A7</code>，说明String的内容有目的的被URLEncoder转换为了其他字符</li>
+<li><code>%E9%95%93%E9%92%A7</code>中将百分号去掉，其实就是<code>E995 93E9 92A7</code>这是<code>镓钧</code>的UTF-8的16进制表示形式</li>
+</ol>
+<p>所以URLEncoder做的事情按顺序可以归类为下面2点：</p>
+<ol>
+<li>使用类似<code>s.getBytes(&quot;utf-8&quot;)</code>的机制，将<code>镓钧</code>这个Unicode字符使用utf8解码成Bytes[]，</li>
+<li>将Bytes[]按照每16位为单位，提升为了char[ ]，并且开头会附加上<code>%</code>，最后把这些char字符组装为新的Stirng返回</li>
+</ol>
+<p>就这样其实URLEncoder把你的中文字符变成了英文字符！</p>
+<p><strong>有关URLDecoder在有了前面的介绍后就更好解释了</strong></p>
+<p>url在送达目的地后被解码，使用URLDecoder解码，因为URLDecoder它懂得规则，所以它会把这一串URL字符中的16位进制数据去挨个匹配utf-8的码表，找到对应的字符，最后达到得到了想要的数据</p>
+<h1 id="尾"><a href="#尾" class="headerlink" title="尾"></a>尾</h1><p>总结：URLEncoder和URLDecoder的encode方法内部包含了我们一般说的编码操作，但是实际上这个方法本身可以算是使用了String的编码API来执行的一个上层程序。我们自己也可以实现一个简单的URLEnocder。所以我以前认为的URLEncoder本身也是一种编解码API的思想是错误的！ 故特写此文进行纠正</p>
+
+  </div>
+</article>
+
+
+
+      
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#导言"><span class="toc-number">1.</span> <span class="toc-text">导言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#URLEncoder和URLDecoder"><span class="toc-number">2.</span> <span class="toc-text">URLEncoder和URLDecoder</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#尾"><span class="toc-number">3.</span> <span class="toc-text">尾</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://zazalu.space/2019/06/24/JavaEncoded3/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://zazalu.space/2019/06/24/JavaEncoded3/&text=Java乱码问题之URLEncoder和URLDecoder"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://zazalu.space/2019/06/24/JavaEncoded3/&title=Java乱码问题之URLEncoder和URLDecoder"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zazalu.space/2019/06/24/JavaEncoded3/&is_video=false&description=Java乱码问题之URLEncoder和URLDecoder"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Java乱码问题之URLEncoder和URLDecoder&body=Check out this article: https://zazalu.space/2019/06/24/JavaEncoded3/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://zazalu.space/2019/06/24/JavaEncoded3/&title=Java乱码问题之URLEncoder和URLDecoder"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://zazalu.space/2019/06/24/JavaEncoded3/&title=Java乱码问题之URLEncoder和URLDecoder"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://zazalu.space/2019/06/24/JavaEncoded3/&title=Java乱码问题之URLEncoder和URLDecoder"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://zazalu.space/2019/06/24/JavaEncoded3/&title=Java乱码问题之URLEncoder和URLDecoder"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://zazalu.space/2019/06/24/JavaEncoded3/&name=Java乱码问题之URLEncoder和URLDecoder&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+  </div>
+</div>
+
+      
+      
+
+
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script src="https://he_jia_jun.gitee.io/zazalumonster.github.io//js/md5.min.js"></script>
+    <div id="gitalk-container"></div>
+    <script>
+    if(location.pathname == '/'){
+      //首页不需要评论系统
+    }else{
+      var gitalk = new Gitalk({
+        clientID: '73a23fdac799d4edb132',
+        clientSecret: '8200d919660d513fdd8629a7c45c13d7d13d9b6f',
+        repo: 'zazaluMonster.github.io',
+        owner: 'zazaluMonster',
+        admin: 'zazaluMonster',
+        id: md5(location.origin + "/" +location.pathname),
+        distractionFreeMode: false,
+        pagerDirection: 'first'
+      });
+      gitalk.render('gitalk-container');
+    }
+    </script>
+    <!-- gitalk -->
+
+<footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 zazalu
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+  <!-- 不蒜子统计 -->
+ <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <div>
+    <span id="busuanzi_container_site_pv">
+      本站总访问量<span id="busuanzi_value_site_pv"></span>次
+    </span>
+    <span id="busuanzi_container_site_uv">
+      本站访客数<span id="busuanzi_value_site_uv"></span>人次
+    </span>
+  </div>
+ 
+</footer>
+
+
+
+
+    </div>
+    <!-- styles -->
+<!-- <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/justified-gallery/css/justifiedGallery.min.css"> -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+    <!-- jquery -->
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/jquery/jquery.min.js"></script>
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+    <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?15ccc3aa9c18bcd901435b78b3c09e78";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+<!-- Disqus Comments -->
+
+
+
+    
+
+
+    <!-- 药水制作师live2d -->
+    <!-- 引入css -->
+    <link rel="stylesheet" href="/live2d/css/font-awesome/css/font-awesome.min.css" />
+    <link href="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/css/waifu.css" rel="stylesheet" type="text/css" />
+    <!-- html -->
+
+    <div class="waifu-switch">Live2d</div>
+    <div class="waifu">
+      <div class="waifu-tips"></div>
+      <canvas id="live2d" width="252" height="225" class="live2d"></canvas>
+      <div class="waifu-tool">
+        <i class="fa-times waifu-closed"></i>
+      </div>
+    </div>
+    <!-- 引入js -->
+    <script src="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/live2d.js"></script>
+    <script async src="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/waifu-tips.js"></script>
+    <script type="text/javascript">
+      loadlive2d("live2d", "/live2d/Pio/model.json");
+    </script>
+    <!-- 药水制作师live2d插件结束 -->
+
+    <!-- 引入视差滚动特效js -->
+    <!-- <script src="/parallax/parallax.min.js"></script>
+<script src="/parallax/parallaxController.js"></script> -->
+
+    <!-- 不蒜子统计请见footer.ejs -->
+
+  </body>
+
+  </html>

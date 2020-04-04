@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang=en>
+  <!-- 引入视差滚动css -->
+  <!-- <link rel="stylesheet" href="/parallax/parallaxCss.css"> -->
+  <head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="0首先mysql已经不是以前的mysql了，自从加入oracle旗下后，各类付费mysql产品已经陆续上线了。目前最新的付费企业mysql版中，居然已经支持了nosql！但是非常遗憾！这个功能在社区版（也就是免费开源版）中是不支持的！╮(╯▽╰)╭ 好吧，想白嫖nosql还是老老实实用别的把！Oracel爸爸不收钱是不可能的 今天记录安装的是使用ubuntu18.04安装MySQL Communi">
+<meta name="keywords" content="mysql">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ubuntu18.04安装mysql8.0.16(Community)，内附详细说明适合小白学习哦">
+<meta property="og:url" content="https://zazalu.space/2019/06/14/ubuntu18-04安装mysql8-0-16-Community/index.html">
+<meta property="og:site_name" content="Zazalu&#39;s Blog">
+<meta property="og:description" content="0首先mysql已经不是以前的mysql了，自从加入oracle旗下后，各类付费mysql产品已经陆续上线了。目前最新的付费企业mysql版中，居然已经支持了nosql！但是非常遗憾！这个功能在社区版（也就是免费开源版）中是不支持的！╮(╯▽╰)╭ 好吧，想白嫖nosql还是老老实实用别的把！Oracel爸爸不收钱是不可能的 今天记录安装的是使用ubuntu18.04安装MySQL Communi">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://zazalu.space/images/tmpImage/mysql_1.png">
+<meta property="og:updated_time" content="2020-04-04T01:13:08.396Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ubuntu18.04安装mysql8.0.16(Community)，内附详细说明适合小白学习哦">
+<meta name="twitter:description" content="0首先mysql已经不是以前的mysql了，自从加入oracle旗下后，各类付费mysql产品已经陆续上线了。目前最新的付费企业mysql版中，居然已经支持了nosql！但是非常遗憾！这个功能在社区版（也就是免费开源版）中是不支持的！╮(╯▽╰)╭ 好吧，想白嫖nosql还是老老实实用别的把！Oracel爸爸不收钱是不可能的 今天记录安装的是使用ubuntu18.04安装MySQL Communi">
+<meta name="twitter:image" content="https://zazalu.space/images/tmpImage/mysql_1.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>ubuntu18.04安装mysql8.0.16(Community)，内附详细说明适合小白学习哦</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+
+  <body class="max-width mx-auto px3 ltr">
+    <!-- 添加视差滚动容器 -->
+    <!-- <ul id="scene" class="scene unselectable" data-friction-x="0.1" data-friction-y="0.1" data-scalar-x="25" data-scalar-y="15" style="width: 100%; height: 769px; transform: translate3d(0px, 0px, 0px); transform-style: preserve-3d; backface-visibility: hidden;">
+      <li class="layer" data-depth="0.00" style="position: relative; display: block; left: 0px; top: 0px; transform: translate3d(0px, 0px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="background"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light orange b phase-4"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light purple c phase-5"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light orange d phase-3"></div></li>
+      <li class="layer" data-depth="0.15" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(43.575px, 14.7375px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.30" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(87.15px, 29.475px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.30" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(87.15px, 29.475px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.40" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(116.2px, 39.3px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.50" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(145.25px, 49.125px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="lighthouse depth-60"></div></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.80" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(232.4px, 78.6px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="1.00" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(290.5px, 98.25px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+  </ul> -->
+    
+    <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2019/06/15/Java的字符编码问题一语道破-GBK-UTF等常用编码/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2019/06/11/并发编程中的原子性/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://zazalu.space/2019/06/14/ubuntu18-04安装mysql8-0-16-Community/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://zazalu.space/2019/06/14/ubuntu18-04安装mysql8-0-16-Community/&text=ubuntu18.04安装mysql8.0.16(Community)，内附详细说明适合小白学习哦"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://zazalu.space/2019/06/14/ubuntu18-04安装mysql8-0-16-Community/&title=ubuntu18.04安装mysql8.0.16(Community)，内附详细说明适合小白学习哦"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zazalu.space/2019/06/14/ubuntu18-04安装mysql8-0-16-Community/&is_video=false&description=ubuntu18.04安装mysql8.0.16(Community)，内附详细说明适合小白学习哦"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=ubuntu18.04安装mysql8.0.16(Community)，内附详细说明适合小白学习哦&body=Check out this article: https://zazalu.space/2019/06/14/ubuntu18-04安装mysql8-0-16-Community/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://zazalu.space/2019/06/14/ubuntu18-04安装mysql8-0-16-Community/&title=ubuntu18.04安装mysql8.0.16(Community)，内附详细说明适合小白学习哦"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://zazalu.space/2019/06/14/ubuntu18-04安装mysql8-0-16-Community/&title=ubuntu18.04安装mysql8.0.16(Community)，内附详细说明适合小白学习哦"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://zazalu.space/2019/06/14/ubuntu18-04安装mysql8-0-16-Community/&title=ubuntu18.04安装mysql8.0.16(Community)，内附详细说明适合小白学习哦"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://zazalu.space/2019/06/14/ubuntu18-04安装mysql8-0-16-Community/&title=ubuntu18.04安装mysql8.0.16(Community)，内附详细说明适合小白学习哦"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://zazalu.space/2019/06/14/ubuntu18-04安装mysql8-0-16-Community/&name=ubuntu18.04安装mysql8.0.16(Community)，内附详细说明适合小白学习哦&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#0"><span class="toc-number">1.</span> <span class="toc-text">0</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1"><span class="toc-number">2.</span> <span class="toc-text">1</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-开始安装"><span class="toc-number">3.</span> <span class="toc-text">2 开始安装</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-其他控制命令"><span class="toc-number">4.</span> <span class="toc-text">3 其他控制命令</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-卸载"><span class="toc-number">5.</span> <span class="toc-text">4 卸载</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-自动安装-超傻瓜式"><span class="toc-number">6.</span> <span class="toc-text">5 自动安装-超傻瓜式</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+      
+      <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        ubuntu18.04安装mysql8.0.16(Community)，内附详细说明适合小白学习哦
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Zazalu's Blog</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-06-14T02:14:12.000Z" itemprop="datePublished">2019-06-14</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/IT/">IT</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/mysql/">mysql</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="0"><a href="#0" class="headerlink" title="0"></a>0</h1><p>首先mysql已经不是以前的mysql了，自从加入oracle旗下后，各类付费mysql产品已经陆续上线了。目前最新的付费企业mysql版中，居然已经支持了nosql！但是非常遗憾！这个功能在社区版（也就是免费开源版）中是不支持的！╮(╯▽╰)╭ 好吧，想白嫖nosql还是老老实实用别的把！Oracel爸爸不收钱是不可能的</p>
+<p>今天记录安装的是使用<code>ubuntu18.04</code>安装<code>MySQL Community Edition 8.0.16</code></p>
+<p>MySQL Community Edition就是我们最熟知的mysql啦，可以白嫖的mysql啦！</p>
+<h1 id="1"><a href="#1" class="headerlink" title="1"></a>1</h1><p>打开mysql官方下载网页<br><a href="https://dev.mysql.com/downloads/" target="_blank" rel="noopener">https://dev.mysql.com/downloads/</a></p>
+<p>寻找如下的位置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">MySQL Community Server (GPL)</span><br><span class="line">(Current Generally Available Release: 8.0.16)</span><br><span class="line">MySQL Community Server is the world&apos;s most popular open source database.</span><br><span class="line">DOWNLOAD</span><br></pre></td></tr></table></figure></p>
+<p>随后我们来到了下载页面，先选择我们的操作系统版本，我是<code>ubuntu18.04 64-bit</code>，如下图所示</p>
+<p><img src="/images/tmpImage/mysql_1.png"></p>
+<p>我刻意没有截图下面的那些各种各样的软件包，那是因为选择安装最新的8.0x，官方已经强力推荐使用包管理工具来安装了！所以我们没必要去看那些名字复杂，乱七八糟的各种安装包了！</p>
+<p>点击推荐我们使用apt下载mysql的那个企鹅图片，我们会跳转到apt下载mysql的专栏网页。</p>
+<p>该网页分成三个部分，第一部分介绍apt安装mysql的优点和它目前支持的版本，第二部分是一个快速开始的操作文档会教你怎么用！，第三部分是一个deb下载包<code>mysql-apt-config_0.8.13-1_all.deb</code>，可以先下好保存在本地，待会要用</p>
+<p>下载好<code>mysql-apt-config_0.8.13-1_all.deb</code>后，你如果看不懂官方的操作文档，或者对其内部用到的东西感兴趣，那么看下面的内容是最好的！</p>
+<h1 id="2-开始安装"><a href="#2-开始安装" class="headerlink" title="2 开始安装"></a>2 开始安装</h1><ol>
+<li><p>为了文件摆放合理，请创建一个mysql-config-deb的文件夹，随后把你下载好的<code>mysql-apt-config_0.8.13-1_all.deb</code>移动过去，并在当前文件夹开启terminal</p>
+</li>
+<li><p>在terminal内输入<code>sudo dpkg -i mysql-apt-config_0.8.13-1_all.deb</code>，随后会弹出一个配置界面，除非你有特殊需求，不然直接选择<code>OK</code>即可，最后你会得到如下输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(Reading database ... 224799 files and directories currently installed.)</span><br><span class="line">Preparing to unpack mysql-apt-config_0.8.13-1_all.deb ...</span><br><span class="line">Unpacking mysql-apt-config (0.8.13-1) over (0.8.13-1) ...</span><br><span class="line">Setting up mysql-apt-config (0.8.13-1) ...</span><br><span class="line">Warning: apt-key should not be used in scripts (called from postinst maintainerscript of the package mysql-apt-config)</span><br><span class="line">OK</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p><strong>[讲解]</strong>: <code>sudo dpkg -i mysql-apt-config_0.8.13-1_all.deb</code> 这一步是使用dpkg工具运行我们的mysql-config的程序，dpkg是ubuntu这类linux系统的底层包管理工具，也负责管理.deb结果的程序包。 mysql-cofig弹出的配置界面用于选择你要安装的是什么版本的mysql以及想要安装哪些mysql插件，选择完毕后，这个工具会生成一个类似<code>source.list</code>的东西，内部记录了mysql的apt软件仓库的服务器地址，用于后续的apt工具可以正常的安装mysql，会告知apt工具应该去检索哪些软件仓库的软件包。当然这个步骤其实也可以手动来添加这些apt的相关配置，如果你对apt的软件仓库配置非常熟悉，那么可以自己尝试，或者从这篇文档开始<code>https://dev.mysql.com/doc/mysql-apt-repo-quick-guide/en/#repo-qg-apt-repo-manual-setup</code></p>
+<ol start="3">
+<li><p>输入<code>sudo apt-get update</code>，apt-get就开始重新更新软件仓库服务器内的所有包文件索引，在这里使用该命令的目的是，拉取mysql的apt软件仓库的服务器上的包索引列表。<br><strong>[讲解]</strong>: apt工具是dpkg工具的上层软件，它拥有更强的包管理功能；它是利用自身软件仓库（source.list）内指定的源服务器地址内包含的包索引列表来正常的安装我们要安装的软件应用。这一步骤也正是在更新这些包索引列表，目的是添加我们刚刚引入的mysql的源软件仓库服务器内包含的包索引列表。可以把这个操作类比成电脑管家的查看更新。完成这步骤后，apt工具就会知道如何去下载安装我们的mysql了！所以这个步骤是使用apt安装mysql的关键步骤，是必须执行的哦！</p>
+</li>
+<li><p>输入<code>sudo apt-get install mysql-server</code>，提示是否安装选<code>Y</code>，随后apt工具会根据本地的包索引列表去下载我们的mysql-server对应的包程序！为什么apt可以自我管理怎么去安装mysql-server，我们从这条命令也没有告知他安装啥版本，但是它就会去自行安装我们的8.0x版本。这一切都归功于我们前面对apt软件仓库的配置！</p>
+</li>
+<li><p>等待片刻后，会弹出mysql一个小的配置程序界面，要求你输入下root用户的密码（输入2次），并且选择加密方式，8.0x使用了新的加密方式，也是官方推荐的，所以选推荐的就完事了！</p>
+</li>
+<li><p>看到如下输出，恭喜你安装成功！（入坑成功！）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">emitting double-array: 100% |###########################################| </span><br><span class="line">reading /usr/share/mecab/dic/ipadic/matrix.def ... 1316x1316</span><br><span class="line">emitting matrix      : 100% |###########################################| </span><br><span class="line"></span><br><span class="line">done!</span><br><span class="line">update-alternatives: using /var/lib/mecab/dic/ipadic-utf8 to provide /var/lib/mecab/dic/debian (mecab-dictionary) in auto mode</span><br><span class="line">Setting up mysql-community-server (8.0.16-2ubuntu18.04) ...</span><br><span class="line">update-alternatives: using /etc/mysql/mysql.cnf to provide /etc/mysql/my.cnf (my.cnf) in auto mode</span><br><span class="line">Created symlink /etc/systemd/system/multi-user.target.wants/mysql.service → /lib/systemd/system/mysql.service.</span><br><span class="line">Setting up mysql-server (8.0.16-2ubuntu18.04) ...</span><br><span class="line">Processing triggers for libc-bin (2.27-3ubuntu1) ...</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用<code>sudo service mysql status</code>，查看mysql目前的状态，输出如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">● mysql.service - MySQL Community Server</span><br><span class="line">   Loaded: loaded (/lib/systemd/system/mysql.service; enabled; vendor preset: enabled)</span><br><span class="line">   Active: active (running) since Fri 2019-06-14 11:06:40 CST; 21s ago</span><br><span class="line">     Docs: man:mysqld(8)</span><br><span class="line">           http://dev.mysql.com/doc/refman/en/using-systemd.html</span><br><span class="line">  Process: 18991 ExecStartPre=/usr/share/mysql-8.0/mysql-systemd-start pre (code=exited, status=0/SUCCESS)</span><br><span class="line"> Main PID: 19030 (mysqld)</span><br><span class="line">   Status: &quot;SERVER_OPERATING&quot;</span><br><span class="line">    Tasks: 39 (limit: 4915)</span><br><span class="line">   CGroup: /system.slice/mysql.service</span><br><span class="line">           └─19030 /usr/sbin/mysqld</span><br><span class="line"></span><br><span class="line">6月 14 11:06:35 zazalu-ThinkPad-E480 systemd[1]: Starting MySQL Community Server...</span><br><span class="line">6月 14 11:06:40 zazalu-ThinkPad-E480 systemd[1]: Started MySQL Community Server.</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>mysql的安装程序真的越来越傻瓜了！因为它不仅在安装完后自动运行了mysql，同时它还把它搞成了一个service，这样就可以在开机的时候自启动了！</p>
+<h1 id="3-其他控制命令"><a href="#3-其他控制命令" class="headerlink" title="3 其他控制命令"></a>3 其他控制命令</h1><ol>
+<li><p>关闭mysql，这里推荐如下命令，也是官方推荐的，当然你kill进程也是莫得问题的<br><code>sudo service mysql stop</code></p>
+</li>
+<li><p>重启mysql<br><code>sudo service mysql start</code></p>
+</li>
+</ol>
+<h1 id="4-卸载"><a href="#4-卸载" class="headerlink" title="4 卸载"></a>4 卸载</h1><ol>
+<li><p>由于使用apt安装，所以卸载也会变得及其傻瓜式，使用如下命令即可<br><code>sudo apt-get remove mysql-server</code></p>
+</li>
+<li><p>有些人喜欢下一些mysql的插件来增强mysql的功能，使用如下命令卸载这些插件<br><code>sudo apt-get autoremove</code><br>或者指定包名<br><code>sudo apt-get remove package-name</code></p>
+</li>
+</ol>
+<p>不知道有哪些包，先用如下命令查看<br><code>dpkg -l | grep mysql | grep ii</code></p>
+<h1 id="5-自动安装-超傻瓜式"><a href="#5-自动安装-超傻瓜式" class="headerlink" title="5 自动安装-超傻瓜式"></a>5 自动安装-超傻瓜式</h1><p>可以写个shell脚本，把这些东西捆绑，一键执行！那就是真的超傻瓜式安装包了，我以后来填</p>
+
+    <div id="donationWrap">
+        <p style="
+      text-align: center;
+      border-top: gold;
+      border-top-style: solid;
+      border-top-width: 1px;
+      color: #eee;
+      font-weight: bold;
+      font-size: 1rem;
+      padding-top: 15px;
+      margin-top: 70px;
+  ">感谢作者</p>
+        <img src="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/tmpImage/blog_donation_zfb.png"
+          style="margin-left: auto;margin-right: auto;display: block;width: 30%;padding-bottom: 30px;">
+      </div>
+      <div id="donationPoint">
+
+
+  <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img style="margin-left: auto;margin-right: auto;display: block;" alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a>
+  <p style="
+  text-align: center;
+  color: #eee;
+  font-weight: bold;
+  font-size: 1rem;">本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>进行许可。</p>
+  <div id="licensePoint"></div></div>
+  </div>
+</article>
+
+
+
+      
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#0"><span class="toc-number">1.</span> <span class="toc-text">0</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1"><span class="toc-number">2.</span> <span class="toc-text">1</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-开始安装"><span class="toc-number">3.</span> <span class="toc-text">2 开始安装</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-其他控制命令"><span class="toc-number">4.</span> <span class="toc-text">3 其他控制命令</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-卸载"><span class="toc-number">5.</span> <span class="toc-text">4 卸载</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-自动安装-超傻瓜式"><span class="toc-number">6.</span> <span class="toc-text">5 自动安装-超傻瓜式</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://zazalu.space/2019/06/14/ubuntu18-04安装mysql8-0-16-Community/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://zazalu.space/2019/06/14/ubuntu18-04安装mysql8-0-16-Community/&text=ubuntu18.04安装mysql8.0.16(Community)，内附详细说明适合小白学习哦"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://zazalu.space/2019/06/14/ubuntu18-04安装mysql8-0-16-Community/&title=ubuntu18.04安装mysql8.0.16(Community)，内附详细说明适合小白学习哦"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zazalu.space/2019/06/14/ubuntu18-04安装mysql8-0-16-Community/&is_video=false&description=ubuntu18.04安装mysql8.0.16(Community)，内附详细说明适合小白学习哦"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=ubuntu18.04安装mysql8.0.16(Community)，内附详细说明适合小白学习哦&body=Check out this article: https://zazalu.space/2019/06/14/ubuntu18-04安装mysql8-0-16-Community/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://zazalu.space/2019/06/14/ubuntu18-04安装mysql8-0-16-Community/&title=ubuntu18.04安装mysql8.0.16(Community)，内附详细说明适合小白学习哦"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://zazalu.space/2019/06/14/ubuntu18-04安装mysql8-0-16-Community/&title=ubuntu18.04安装mysql8.0.16(Community)，内附详细说明适合小白学习哦"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://zazalu.space/2019/06/14/ubuntu18-04安装mysql8-0-16-Community/&title=ubuntu18.04安装mysql8.0.16(Community)，内附详细说明适合小白学习哦"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://zazalu.space/2019/06/14/ubuntu18-04安装mysql8-0-16-Community/&title=ubuntu18.04安装mysql8.0.16(Community)，内附详细说明适合小白学习哦"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://zazalu.space/2019/06/14/ubuntu18-04安装mysql8-0-16-Community/&name=ubuntu18.04安装mysql8.0.16(Community)，内附详细说明适合小白学习哦&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+  </div>
+</div>
+
+      
+      
+
+
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script src="https://he_jia_jun.gitee.io/zazalumonster.github.io//js/md5.min.js"></script>
+    <div id="gitalk-container"></div>
+    <script>
+    if(location.pathname == '/'){
+      //首页不需要评论系统
+    }else{
+      var gitalk = new Gitalk({
+        clientID: '73a23fdac799d4edb132',
+        clientSecret: '8200d919660d513fdd8629a7c45c13d7d13d9b6f',
+        repo: 'zazaluMonster.github.io',
+        owner: 'zazaluMonster',
+        admin: 'zazaluMonster',
+        id: md5(location.origin + "/" +location.pathname),
+        distractionFreeMode: false,
+        pagerDirection: 'first'
+      });
+      gitalk.render('gitalk-container');
+    }
+    </script>
+    <!-- gitalk -->
+
+<footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 zazalu
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+  <!-- 不蒜子统计 -->
+ <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <div>
+    <span id="busuanzi_container_site_pv">
+      本站总访问量<span id="busuanzi_value_site_pv"></span>次
+    </span>
+    <span id="busuanzi_container_site_uv">
+      本站访客数<span id="busuanzi_value_site_uv"></span>人次
+    </span>
+  </div>
+ 
+</footer>
+
+
+
+
+    </div>
+    <!-- styles -->
+<!-- <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/justified-gallery/css/justifiedGallery.min.css"> -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+    <!-- jquery -->
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/jquery/jquery.min.js"></script>
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+    <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?15ccc3aa9c18bcd901435b78b3c09e78";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+<!-- Disqus Comments -->
+
+
+
+    
+
+
+    <!-- 药水制作师live2d -->
+    <!-- 引入css -->
+    <link rel="stylesheet" href="/live2d/css/font-awesome/css/font-awesome.min.css" />
+    <link href="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/css/waifu.css" rel="stylesheet" type="text/css" />
+    <!-- html -->
+
+    <div class="waifu-switch">Live2d</div>
+    <div class="waifu">
+      <div class="waifu-tips"></div>
+      <canvas id="live2d" width="252" height="225" class="live2d"></canvas>
+      <div class="waifu-tool">
+        <i class="fa-times waifu-closed"></i>
+      </div>
+    </div>
+    <!-- 引入js -->
+    <script src="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/live2d.js"></script>
+    <script async src="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/waifu-tips.js"></script>
+    <script type="text/javascript">
+      loadlive2d("live2d", "/live2d/Pio/model.json");
+    </script>
+    <!-- 药水制作师live2d插件结束 -->
+
+    <!-- 引入视差滚动特效js -->
+    <!-- <script src="/parallax/parallax.min.js"></script>
+<script src="/parallax/parallaxController.js"></script> -->
+
+    <!-- 不蒜子统计请见footer.ejs -->
+
+  </body>
+
+  </html>

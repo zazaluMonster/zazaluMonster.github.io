@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang=en>
+  <!-- 引入视差滚动css -->
+  <!-- <link rel="stylesheet" href="/parallax/parallaxCss.css"> -->
+  <head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="前言最近在翻阅一些技术论坛的时候, 常常能看到有人提及函数式编程(FunctionalProgramming), 说他可以简化我们的代码, 提高我们的代码生产力以及降低出错的几率. 作为一个希望提高开发效率的半吊子程序员来说, 我觉得这应该是一个非常有利的’武器’, 值得去学习, 吸收其中的一些精华思想, 如果能看到可以开花结果的那一天, 那就再好不过了. 本文为自我学习总结文章, 正确性不保证,">
+<meta name="keywords" content="FunctionalProgramming">
+<meta property="og:type" content="article">
+<meta property="og:title" content="函数式编程范式初探-第一天">
+<meta property="og:url" content="https://zazalu.space/2019/10/20/learn-FP/index.html">
+<meta property="og:site_name" content="Zazalu&#39;s Blog">
+<meta property="og:description" content="前言最近在翻阅一些技术论坛的时候, 常常能看到有人提及函数式编程(FunctionalProgramming), 说他可以简化我们的代码, 提高我们的代码生产力以及降低出错的几率. 作为一个希望提高开发效率的半吊子程序员来说, 我觉得这应该是一个非常有利的’武器’, 值得去学习, 吸收其中的一些精华思想, 如果能看到可以开花结果的那一天, 那就再好不过了. 本文为自我学习总结文章, 正确性不保证,">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2020-04-04T01:13:08.392Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="函数式编程范式初探-第一天">
+<meta name="twitter:description" content="前言最近在翻阅一些技术论坛的时候, 常常能看到有人提及函数式编程(FunctionalProgramming), 说他可以简化我们的代码, 提高我们的代码生产力以及降低出错的几率. 作为一个希望提高开发效率的半吊子程序员来说, 我觉得这应该是一个非常有利的’武器’, 值得去学习, 吸收其中的一些精华思想, 如果能看到可以开花结果的那一天, 那就再好不过了. 本文为自我学习总结文章, 正确性不保证,">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>函数式编程范式初探-第一天</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+
+  <body class="max-width mx-auto px3 ltr">
+    <!-- 添加视差滚动容器 -->
+    <!-- <ul id="scene" class="scene unselectable" data-friction-x="0.1" data-friction-y="0.1" data-scalar-x="25" data-scalar-y="15" style="width: 100%; height: 769px; transform: translate3d(0px, 0px, 0px); transform-style: preserve-3d; backface-visibility: hidden;">
+      <li class="layer" data-depth="0.00" style="position: relative; display: block; left: 0px; top: 0px; transform: translate3d(0px, 0px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="background"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light orange b phase-4"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light purple c phase-5"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light orange d phase-3"></div></li>
+      <li class="layer" data-depth="0.15" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(43.575px, 14.7375px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.30" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(87.15px, 29.475px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.30" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(87.15px, 29.475px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.40" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(116.2px, 39.3px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.50" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(145.25px, 49.125px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="lighthouse depth-60"></div></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.80" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(232.4px, 78.6px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="1.00" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(290.5px, 98.25px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+  </ul> -->
+    
+    <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2019/10/21/learn-FP-2/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2019/10/02/2019-Happy-National-Day/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://zazalu.space/2019/10/20/learn-FP/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://zazalu.space/2019/10/20/learn-FP/&text=函数式编程范式初探-第一天"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://zazalu.space/2019/10/20/learn-FP/&title=函数式编程范式初探-第一天"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zazalu.space/2019/10/20/learn-FP/&is_video=false&description=函数式编程范式初探-第一天"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=函数式编程范式初探-第一天&body=Check out this article: https://zazalu.space/2019/10/20/learn-FP/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://zazalu.space/2019/10/20/learn-FP/&title=函数式编程范式初探-第一天"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://zazalu.space/2019/10/20/learn-FP/&title=函数式编程范式初探-第一天"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://zazalu.space/2019/10/20/learn-FP/&title=函数式编程范式初探-第一天"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://zazalu.space/2019/10/20/learn-FP/&title=函数式编程范式初探-第一天"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://zazalu.space/2019/10/20/learn-FP/&name=函数式编程范式初探-第一天&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#是什么为什么"><span class="toc-number">2.</span> <span class="toc-text">是什么为什么</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#以函数为抽象单元"><span class="toc-number">2.1.</span> <span class="toc-text">以函数为抽象单元</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#纯函数"><span class="toc-number">2.2.</span> <span class="toc-text">纯函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lambda表达式"><span class="toc-number">2.3.</span> <span class="toc-text">lambda表达式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Stream-amp-amp-将控制权交给语言-运行时"><span class="toc-number">2.4.</span> <span class="toc-text">Stream &amp;&amp; 将控制权交给语言/运行时</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+      
+      <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        函数式编程范式初探-第一天
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Zazalu's Blog</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-10-20T07:45:40.000Z" itemprop="datePublished">2019-10-20</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/IT/">IT</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/FunctionalProgramming/">FunctionalProgramming</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在翻阅一些技术论坛的时候, 常常能看到有人提及函数式编程(FunctionalProgramming), 说他可以简化我们的代码, 提高我们的代码生产力以及降低出错的几率.</p>
+<p>作为一个希望提高开发效率的半吊子程序员来说, 我觉得这应该是一个非常有利的’武器’, 值得去学习, 吸收其中的一些精华思想, 如果能看到可以开花结果的那一天, 那就再好不过了.</p>
+<p>本文为自我学习总结文章, 正确性不保证, 我更推荐您阅读<code>&lt;&lt;函数式编程思维&gt;&gt;[美]Neal Ford著</code>这种不错的书籍</p>
+<p>本文主要使用js和java来说明, 因为这两个是我目前工作的常用语言, 对我自己的好处最大. 如果你想享受更好的函数式编程体验, 可以试试<code>Clojure</code>或者<code>Scala</code></p>
+<h2 id="是什么为什么"><a href="#是什么为什么" class="headerlink" title="是什么为什么"></a>是什么为什么</h2><p>我这人对一个技术的起源不是非常感兴趣, 所以我不想多费时间减少函数式编程的历史, 我想直接从函数式编程最常用的技术点讲起, 来让我快速的了解它</p>
+<h3 id="以函数为抽象单元"><a href="#以函数为抽象单元" class="headerlink" title="以函数为抽象单元"></a>以函数为抽象单元</h3><p>我们在面向对象编程中, 一般都会认为一个类Object是一个抽象单元, 比如在Java中(一门完全以面向对象为基础的编程语言), 我们都要从编写类开始.</p>
+<p>而函数式编程的第一个特点就是, 它把函数视为抽象单元, 我们可以传递函数, 以函数作为参数, 大家看看下面的例子:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> input = [<span class="string">'1'</span>,<span class="string">'2'</span>,<span class="string">'3'</span>];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">listForEach</span>(<span class="params">list,operate</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> key <span class="keyword">in</span> list) &#123;</span><br><span class="line">        operate(key);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">consoleKey</span>(<span class="params">key</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//do something.</span></span><br><span class="line">    <span class="built_in">console</span>.log(key);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">listForEach(input, consoleKey);</span><br></pre></td></tr></table></figure>
+<p>这里我用Js实现了一段代码, 这段代码会依次打印数组中的值. 这里的最大特点就是consoleKey是个函数, 并且我们将其作为listForEach的参数传入了. 所以对于listForEach而言, for循环内部具体执行什么逻辑, 是可以由具体传入了什么函数决定的. 这里函数就是一个抽象的单元, 可以根据我们的需要进行任意的替换.</p>
+<p>我写完这个例子后产生了一些疑问, 因为在我看来, 这就是简单的一个抽象化调用而已, 在我还没学习函数式编程语言之前, 我也经常会写这样的代码, 并且我当时觉得这样的写法也并没有简化多少. 这个问题, 我也自己在不断的考虑, 最后我觉得这是一种比较主观的问题, 不同人对于代码复杂度有不同的判断, 有些人觉得几百行的crud代码一点也不复杂, 因为分解一下, 代码内容其实就只有crud罢了; 而可能有些人则会觉得, 这些代码就像屎山一样, 难以下手.</p>
+<p>还记得我最早接触编程的时候, 学的是c, 所以当时写的都是命令式的代码. 那么如果按照命令式的写法, 我上面的例子会怎么写呢? 如下是我的按照命令式的写法改写的例子:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> input = [<span class="string">'1'</span>,<span class="string">'2'</span>,<span class="string">'3'</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">const</span> key <span class="keyword">in</span> list) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(key);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>嗯? 怎么感觉命令式的写法更加的简单? 在这里确实是这样的没错. 但是没够多久, 项目经理要求先判断下元素是否为空, 这时候对于函数式编程来说, 写法是新增一个函数抽象, 然后替换我们传入的函数, 就像下面这样:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//...原函数省略</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">consoleKeyNotNull</span>(<span class="params">key</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//检查是否为null</span></span><br><span class="line">    <span class="keyword">if</span>(key)&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(key);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">listForEach(input, consoleKeyNotNull);</span><br></pre></td></tr></table></figure>
+<p>我们需要改的是新增一个consoleKeyNotNull函数, 以及修改传入的函数即可. 这样的写法符合软件开发的开闭原则, 我们没有去修改原来的函数代码.</p>
+<p>相同的修改放到命令式语法上就有点棘手了, 因为你需要修改源代码, 并且如果项目经理突然变卦让你把控制去掉, 你又得自己改回去, 这种需求如果不断的堆积, 对代码的维护会造成不小的压力.</p>
+<p>此外,由于是函数, 所以一般来说都会给函数一个命名, 所以我们在查阅这些代码的时候, 如果函数命名特别贴切的话, 会一下子提高阅读源码的速度, 我觉得这也是函数式的一个小特点</p>
+<p>此外,我们可能还需要了解下一种说法, 那就是这种使用函数的函数, 我们一般就叫做<code>高阶函数</code>, 一个更加高大上的说法:) </p>
+<h3 id="纯函数"><a href="#纯函数" class="headerlink" title="纯函数"></a>纯函数</h3><p>函数式编程的另一个特点是, 要求函数针对同一个输入有一个相同的输出, 这个概念就和我们小时候学的方程式很类似, 比如方程<code>x + y</code>, 对于给定的输入x和y, 我们可以得出固定的答案. 函数式编程也极大的推崇这个特点. 因为这个特点可以提高我们这个函数的复用性</p>
+<p>试想一下, 如果一个函数是纯函数, 那么任何需要用到它的地方, 都可以放心大胆的使用它, 并且有时候我们可以不对其进行单元测试, 这样对于测试来说, 相当于减少了不稳定要素, 而不稳定要素的减少, 肯定会减少代码bug的出现. 因为很多时候bug都是因为不稳定要素的过多, 导致程序员无法一口气把所有的情况都考虑到而产生的.</p>
+<p>对于纯函数, 我能想到的例子还是很多的, 比如<code>sin(x)</code>,<code>abs(x)</code>,<code>sqrt(x)</code>, 这些函数对于我们的指定的输入, 总是会返回同一个结果. </p>
+<p>不过个人认为完全纯函数是不可能实现的, 因为在实际的开发过程中, 我们面对的是更为复杂的业务场景, 不稳定要素非常多, 比如超时问题,网络问题等等, 所以我觉得函数式编程作为一个编程范式, 它的作用仍然没有面向对象那么重要. 但是在针对一些算法, 一些小的场景下, 使用函数式编程范式, 确实是可以提高一定的生产力</p>
+<h3 id="lambda表达式"><a href="#lambda表达式" class="headerlink" title="lambda表达式"></a>lambda表达式</h3><p>在函数式编程中, lambda表达式是我们的常见的家伙. 由于函数式编程就是一直在写函数, 所以对于一些不需要函数名的场景, lambda表达式可以发挥出简化代码, 提高可读性的作用</p>
+<p>lambda表达式的语法也许不同语言不一致, 但是几乎都如出一辙, 下面我用java语言来演示一些:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//传统写法</span></span><br><span class="line"><span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Anonymous"</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;).start();</span><br><span class="line"></span><br><span class="line"><span class="comment">//使用lambda表达式</span></span><br><span class="line"><span class="keyword">new</span> Thread(</span><br><span class="line">      () -&gt; System.out.println(<span class="string">"lambda"</span>)</span><br><span class="line">    ).start();</span><br></pre></td></tr></table></figure>
+<p>可以看到, lambda表达式的作用其实就是省略到了很多不必要的语法, 只剩下我们真正关心的东西, 比如<code>()</code>代表这个方法没有形参, <code>-&gt;</code>是lambda表达式的核心语法符号, 有表示产出的含义. 最后的<code>System.out.println(&quot;lambda&quot;)</code> 就是方法体, 由于单行, 所以这里省略了花括号</p>
+<p>怎么样? 是不是非常简洁? 不过这只是lambda表达式的初探, 我后续会对其进行详细的说明, 本文主要阐述FP的核心概念, 并不会对具体语法做过多说明</p>
+<p>lambda表达式为函数的编写提供了一种更易读的方式, 支持函数式编程的语言, 都有提供lambda表达式功能, 它是函数式编程之所以简洁的其中一个原因!</p>
+<h3 id="Stream-amp-amp-将控制权交给语言-运行时"><a href="#Stream-amp-amp-将控制权交给语言-运行时" class="headerlink" title="Stream &amp;&amp; 将控制权交给语言/运行时"></a>Stream &amp;&amp; 将控制权交给语言/运行时</h3><p>最能体会到函数式编程乐趣的方式, 其实就是使用Stream.</p>
+<p>Stream内置了大量的函数操作, 使得我们可以借助这些函数来完成各种操作, 最有名的三大函数就是map/filter/reduce</p>
+<p>我会在后续进行Stream的总结(不过是只针对java的), 我们可以从Stream的这些函数操作中, 深刻的体会到函数式编程的魅力! 我给一个简单的Stream的例子吧:</p>
+<p>比如我们需要随机展示 5 至 20 之间不重复的整数并进行排序, 那么传统的方式可能是下面这样的:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ImperativeRandoms</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Random rand = <span class="keyword">new</span> Random(<span class="number">47</span>);</span><br><span class="line">        SortedSet&lt;Integer&gt; rints = <span class="keyword">new</span> TreeSet&lt;&gt;();</span><br><span class="line">        <span class="keyword">while</span>(rints.size() &lt; <span class="number">7</span>) &#123;</span><br><span class="line">            <span class="keyword">int</span> r = rand.nextint(<span class="number">20</span>);</span><br><span class="line">            <span class="keyword">if</span>(r &lt; <span class="number">5</span>) <span class="keyword">continue</span>;</span><br><span class="line">            rints.add(r);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(rints);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>而函数式编程&amp;流后,代码可以变得异常的简单:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Randoms</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">new</span> Random(<span class="number">47</span>)</span><br><span class="line">            .ints(<span class="number">5</span>, <span class="number">20</span>)</span><br><span class="line">            .distinct()</span><br><span class="line">            .limit(<span class="number">7</span>)</span><br><span class="line">            .sorted()</span><br><span class="line">            .forEach(n -&gt; System.out.println(n););</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>怎么样? 这里我们借助了StreamAPI中的各种函数为我们达到了我们要做的目的, 整体代码看上去犹如读一句话一样流畅, 先ints获取数据源, 然后distinct一下排除重复, 然后我们坐下limit限制, 然后再sorted以下让其有序, 最后forEach一下, forEach的内容就是对每个元素进行打印!</p>
+<p>总而言之, 函数式编程的实现会看上去非常的有可读性, 而传统的写法则需要对java语法有一定基础, 才有能力去编写出能用的代码. 不得不说其实这种声明式的写法很大程度上又是对开发人员技术要求的降低, 但是不代表我们不需要去了解其内部的原理. 在这里所有的操作都被移交给了运行时, 不需要我们亲自编写for循环,编写控制代码. </p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文对函数式编程进行一个基础性的表述, 下一章我会使用java语言, 详细的说明java的函数式编程支持语法, </p>
+
+  </div>
+</article>
+
+
+
+      
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#是什么为什么"><span class="toc-number">2.</span> <span class="toc-text">是什么为什么</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#以函数为抽象单元"><span class="toc-number">2.1.</span> <span class="toc-text">以函数为抽象单元</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#纯函数"><span class="toc-number">2.2.</span> <span class="toc-text">纯函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lambda表达式"><span class="toc-number">2.3.</span> <span class="toc-text">lambda表达式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Stream-amp-amp-将控制权交给语言-运行时"><span class="toc-number">2.4.</span> <span class="toc-text">Stream &amp;&amp; 将控制权交给语言/运行时</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://zazalu.space/2019/10/20/learn-FP/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://zazalu.space/2019/10/20/learn-FP/&text=函数式编程范式初探-第一天"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://zazalu.space/2019/10/20/learn-FP/&title=函数式编程范式初探-第一天"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zazalu.space/2019/10/20/learn-FP/&is_video=false&description=函数式编程范式初探-第一天"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=函数式编程范式初探-第一天&body=Check out this article: https://zazalu.space/2019/10/20/learn-FP/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://zazalu.space/2019/10/20/learn-FP/&title=函数式编程范式初探-第一天"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://zazalu.space/2019/10/20/learn-FP/&title=函数式编程范式初探-第一天"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://zazalu.space/2019/10/20/learn-FP/&title=函数式编程范式初探-第一天"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://zazalu.space/2019/10/20/learn-FP/&title=函数式编程范式初探-第一天"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://zazalu.space/2019/10/20/learn-FP/&name=函数式编程范式初探-第一天&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+  </div>
+</div>
+
+      
+      
+
+
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script src="https://he_jia_jun.gitee.io/zazalumonster.github.io//js/md5.min.js"></script>
+    <div id="gitalk-container"></div>
+    <script>
+    if(location.pathname == '/'){
+      //首页不需要评论系统
+    }else{
+      var gitalk = new Gitalk({
+        clientID: '73a23fdac799d4edb132',
+        clientSecret: '8200d919660d513fdd8629a7c45c13d7d13d9b6f',
+        repo: 'zazaluMonster.github.io',
+        owner: 'zazaluMonster',
+        admin: 'zazaluMonster',
+        id: md5(location.origin + "/" +location.pathname),
+        distractionFreeMode: false,
+        pagerDirection: 'first'
+      });
+      gitalk.render('gitalk-container');
+    }
+    </script>
+    <!-- gitalk -->
+
+<footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 zazalu
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+  <!-- 不蒜子统计 -->
+ <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <div>
+    <span id="busuanzi_container_site_pv">
+      本站总访问量<span id="busuanzi_value_site_pv"></span>次
+    </span>
+    <span id="busuanzi_container_site_uv">
+      本站访客数<span id="busuanzi_value_site_uv"></span>人次
+    </span>
+  </div>
+ 
+</footer>
+
+
+
+
+    </div>
+    <!-- styles -->
+<!-- <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/justified-gallery/css/justifiedGallery.min.css"> -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+    <!-- jquery -->
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/jquery/jquery.min.js"></script>
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+    <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?15ccc3aa9c18bcd901435b78b3c09e78";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+<!-- Disqus Comments -->
+
+
+
+    
+
+
+    <!-- 药水制作师live2d -->
+    <!-- 引入css -->
+    <link rel="stylesheet" href="/live2d/css/font-awesome/css/font-awesome.min.css" />
+    <link href="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/css/waifu.css" rel="stylesheet" type="text/css" />
+    <!-- html -->
+
+    <div class="waifu-switch">Live2d</div>
+    <div class="waifu">
+      <div class="waifu-tips"></div>
+      <canvas id="live2d" width="252" height="225" class="live2d"></canvas>
+      <div class="waifu-tool">
+        <i class="fa-times waifu-closed"></i>
+      </div>
+    </div>
+    <!-- 引入js -->
+    <script src="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/live2d.js"></script>
+    <script async src="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/waifu-tips.js"></script>
+    <script type="text/javascript">
+      loadlive2d("live2d", "/live2d/Pio/model.json");
+    </script>
+    <!-- 药水制作师live2d插件结束 -->
+
+    <!-- 引入视差滚动特效js -->
+    <!-- <script src="/parallax/parallax.min.js"></script>
+<script src="/parallax/parallaxController.js"></script> -->
+
+    <!-- 不蒜子统计请见footer.ejs -->
+
+  </body>
+
+  </html>

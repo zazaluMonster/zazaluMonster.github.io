@@ -1,0 +1,107 @@
+/*!
+ * 药水制作师live2d模组所使用的css
+ */
+ .waifu-switch {
+    color: #d44375;
+    font-weight: 200;
+    font-style: normal;
+    font-size: 0.9rem;
+    position: fixed;
+    bottom: 5%;
+    left: 5%;
+    animation: opacity_anime 3s infinite;
+    animation-direction:alternate;
+    -webkit-animation: opacity_anime 3s infinite;
+    -webkit-animation-direction:alternate; /* Safari 和 Chrome */
+ }
+ .waifu-closed {
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: 22px;
+  }
+  .waifu-tool span {
+    display: block;
+    cursor: pointer;
+    color: #5b6c7d;
+    line-height: 20px;
+    transition: 0.2s;
+  }
+  .waifu-tool {
+    display: none;
+    color: #aaa;
+    font-size: 14px;
+    position: fixed;
+    left: 230px;
+    bottom: 172px;
+    z-index: 1;
+  }
+  .waifu-tool.on {
+    display: block;
+  }
+  .waifu-tool.off {
+    display: none;
+  }
+  .waifu-tool:hover {
+    color: #09c;
+  }
+  .fui-cross:before {
+    content: "\e609";
+  }
+  .waifu {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    font-size: 0;
+    transition: all 0.3s ease-in-out;
+    -webkit-transform: translateY(3px);
+    -webkit-transform: translateY(3px);
+    -moz-transform: translateY(3px);
+    -ms-transform: translateY(3px);
+    -o-transform: translateY(3px);
+    transform: translateY(3px);
+  }
+  .waifu:hover {
+    -webkit-transform: translateY(0);
+    -webkit-transform: translateY(0);
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    -o-transform: translateY(0);
+    transform: translateY(0);
+  }
+  @media (max-width: 768px) {
+    .waifu {
+      display: none;
+    }
+  }
+  .waifu-tips {
+    opacity: 0;
+    width: 250px;
+    height: 70px;
+    margin: -20px 20px;
+    padding: 5px 10px;
+    border: 1px solid rgba(224,186,140,0.62);
+    border-radius: 12px;
+    background-color: rgba(236,217,188,0.5);
+    box-shadow: 0 3px 15px 2px rgba(191,158,118,0.2);
+    font-size: 12px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    position: absolute;
+    animation-delay: 5s;
+    animation-duration: 50s;
+    animation-iteration-count: infinite;
+    animation-name: shake;
+    animation-timing-function: ease-in-out;
+  }
+  .waifu #live2d {
+    position: relative;
+  }
+
+  @keyframes opacity_anime
+{
+    0%   {opacity: 0;}
+    25%  {opacity: 0.25;}
+    50%  {opacity: 0.5;}
+    75%  {opacity: 0.75;}
+    100% {opacity: 1;}
+}

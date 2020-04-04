@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang=en>
+  <!-- 引入视差滚动css -->
+  <!-- <link rel="stylesheet" href="/parallax/parallaxCss.css"> -->
+  <head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="前言Disqus用起来啥都还行，就是国内访问不了太差劲了。。 最终决定改用Gitalk， 简单看下了文档， 上手还是很快的， 结合自己写的脚本， 可以做到一键开闭Gitalk功能（日后在完善成package打包到npm上供我自己更方便的使用） 安装Gitalk到Hexo中修改_config.yml在Hexo的_config.yml中添加如下配置：z123456789# Gitalk comment">
+<meta name="keywords" content="hexo魔改">
+<meta property="og:type" content="article">
+<meta property="og:title" content="放弃Disqus, 拥抱Gitalk(基于Hexo)">
+<meta property="og:url" content="https://zazalu.space/2019/09/19/use-gitalk-in-hexo-by-script/index.html">
+<meta property="og:site_name" content="Zazalu&#39;s Blog">
+<meta property="og:description" content="前言Disqus用起来啥都还行，就是国内访问不了太差劲了。。 最终决定改用Gitalk， 简单看下了文档， 上手还是很快的， 结合自己写的脚本， 可以做到一键开闭Gitalk功能（日后在完善成package打包到npm上供我自己更方便的使用） 安装Gitalk到Hexo中修改_config.yml在Hexo的_config.yml中添加如下配置：z123456789# Gitalk comment">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2020-04-04T01:13:08.397Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="放弃Disqus, 拥抱Gitalk(基于Hexo)">
+<meta name="twitter:description" content="前言Disqus用起来啥都还行，就是国内访问不了太差劲了。。 最终决定改用Gitalk， 简单看下了文档， 上手还是很快的， 结合自己写的脚本， 可以做到一键开闭Gitalk功能（日后在完善成package打包到npm上供我自己更方便的使用） 安装Gitalk到Hexo中修改_config.yml在Hexo的_config.yml中添加如下配置：z123456789# Gitalk comment">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>放弃Disqus, 拥抱Gitalk(基于Hexo)</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+
+  <body class="max-width mx-auto px3 ltr">
+    <!-- 添加视差滚动容器 -->
+    <!-- <ul id="scene" class="scene unselectable" data-friction-x="0.1" data-friction-y="0.1" data-scalar-x="25" data-scalar-y="15" style="width: 100%; height: 769px; transform: translate3d(0px, 0px, 0px); transform-style: preserve-3d; backface-visibility: hidden;">
+      <li class="layer" data-depth="0.00" style="position: relative; display: block; left: 0px; top: 0px; transform: translate3d(0px, 0px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="background"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light orange b phase-4"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light purple c phase-5"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light orange d phase-3"></div></li>
+      <li class="layer" data-depth="0.15" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(43.575px, 14.7375px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.30" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(87.15px, 29.475px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.30" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(87.15px, 29.475px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.40" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(116.2px, 39.3px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.50" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(145.25px, 49.125px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="lighthouse depth-60"></div></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.80" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(232.4px, 78.6px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="1.00" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(290.5px, 98.25px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+  </ul> -->
+    
+    <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2019/09/20/pages-hexo-accelerate/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2019/09/17/java-memory-error-solution-Theoretically/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://zazalu.space/2019/09/19/use-gitalk-in-hexo-by-script/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://zazalu.space/2019/09/19/use-gitalk-in-hexo-by-script/&text=放弃Disqus, 拥抱Gitalk(基于Hexo)"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://zazalu.space/2019/09/19/use-gitalk-in-hexo-by-script/&title=放弃Disqus, 拥抱Gitalk(基于Hexo)"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zazalu.space/2019/09/19/use-gitalk-in-hexo-by-script/&is_video=false&description=放弃Disqus, 拥抱Gitalk(基于Hexo)"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=放弃Disqus, 拥抱Gitalk(基于Hexo)&body=Check out this article: https://zazalu.space/2019/09/19/use-gitalk-in-hexo-by-script/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://zazalu.space/2019/09/19/use-gitalk-in-hexo-by-script/&title=放弃Disqus, 拥抱Gitalk(基于Hexo)"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://zazalu.space/2019/09/19/use-gitalk-in-hexo-by-script/&title=放弃Disqus, 拥抱Gitalk(基于Hexo)"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://zazalu.space/2019/09/19/use-gitalk-in-hexo-by-script/&title=放弃Disqus, 拥抱Gitalk(基于Hexo)"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://zazalu.space/2019/09/19/use-gitalk-in-hexo-by-script/&title=放弃Disqus, 拥抱Gitalk(基于Hexo)"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://zazalu.space/2019/09/19/use-gitalk-in-hexo-by-script/&name=放弃Disqus, 拥抱Gitalk(基于Hexo)&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装Gitalk到Hexo中"><span class="toc-number">2.</span> <span class="toc-text">安装Gitalk到Hexo中</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#修改-config-yml"><span class="toc-number">2.1.</span> <span class="toc-text">修改_config.yml</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#编写脚本-自动注入Gitalk启动代码"><span class="toc-number">3.</span> <span class="toc-text">编写脚本-自动注入Gitalk启动代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#大功告成"><span class="toc-number">4.</span> <span class="toc-text">大功告成</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+      
+      <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        放弃Disqus, 拥抱Gitalk(基于Hexo)
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Zazalu's Blog</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-09-19T08:36:36.000Z" itemprop="datePublished">2019-09-19</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/IT/">IT</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/hexo魔改/">hexo魔改</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Disqus用起来啥都还行，就是国内访问不了太差劲了。。</p>
+<p>最终决定改用Gitalk， 简单看下了文档， 上手还是很快的， 结合自己写的脚本， 可以做到一键开闭Gitalk功能（日后在完善成package打包到npm上供我自己更方便的使用）</p>
+<h2 id="安装Gitalk到Hexo中"><a href="#安装Gitalk到Hexo中" class="headerlink" title="安装Gitalk到Hexo中"></a>安装Gitalk到Hexo中</h2><h3 id="修改-config-yml"><a href="#修改-config-yml" class="headerlink" title="修改_config.yml"></a>修改_config.yml</h3><p>在Hexo的<code>_config.yml</code>中添加如下配置：<br>z<br><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Gitalk comments config. (if use Gitalk, please close Disqus comments first)</span></span><br><span class="line"><span class="attr">gitalk:</span></span><br><span class="line"><span class="attr">  enabled:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">  clientID:</span> <span class="string">'GitHub Application Client ID'</span><span class="string">,</span></span><br><span class="line"><span class="attr">  clientSecret:</span> <span class="string">'GitHub Application Client Secret'</span><span class="string">,</span></span><br><span class="line"><span class="attr">  repo:</span> <span class="string">'GitHub repo'</span><span class="string">,</span></span><br><span class="line"><span class="attr">  owner:</span> <span class="string">'GitHub repo owner'</span><span class="string">,</span></span><br><span class="line"><span class="attr">  admin:</span> <span class="string">['GitHub</span> <span class="string">repo</span> <span class="string">owner</span> <span class="string">and</span> <span class="string">collaborators,</span> <span class="string">only</span> <span class="string">these</span> <span class="string">guys</span> <span class="string">can</span> <span class="string">initialize</span> <span class="string">github</span> <span class="string">issues'],</span></span><br><span class="line"><span class="attr">  distractionFreeMode:</span> <span class="literal">false</span> <span class="comment"># 是否需要遮罩</span></span><br></pre></td></tr></table></figure></p>
+<p>该配置中的<code>clientID</code>和<code>clientSecret</code> 需要 GitHub Application，可以在这个网站注册后获得</p>
+<p><a href="https://medium.com/platform-engineer/understanding-java-memory-model-1d0863f6d973" target="_blank" rel="noopener">https://medium.com/platform-engineer/understanding-java-memory-model-1d0863f6d973</a></p>
+<p>注册的时候<code>Homepage URL</code>和<code>Authorization callback URL</code>都填你的博客域名即可</p>
+<p>下面是我的gitalk配置，还不是很理解的小伙伴可以参考下</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Gitalk comments config. (if use Gitalk, please close Disqus comments first)</span></span><br><span class="line"><span class="attr">gitalk:</span></span><br><span class="line"><span class="attr">  enabled:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">  clientID:</span> <span class="string">'我的clientID'</span></span><br><span class="line"><span class="attr">  clientSecret:</span> <span class="string">'我的clientSecret'</span></span><br><span class="line"><span class="attr">  repo:</span> <span class="string">'zazaluMonster.github.io'</span></span><br><span class="line"><span class="attr">  owner:</span> <span class="string">'zazaluMonster'</span></span><br><span class="line"><span class="attr">  admin:</span> <span class="string">['zazaluMonster']</span></span><br><span class="line"><span class="attr">  distractionFreeMode:</span> <span class="literal">false</span> <span class="comment"># 是否需要遮罩</span></span><br></pre></td></tr></table></figure>
+<h2 id="编写脚本-自动注入Gitalk启动代码"><a href="#编写脚本-自动注入Gitalk启动代码" class="headerlink" title="编写脚本-自动注入Gitalk启动代码"></a>编写脚本-自动注入Gitalk启动代码</h2><p>脚本内容如下：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * gitalk_register.js</span></span><br><span class="line"><span class="comment"> * @description 注入gitalk内容到index.html末尾</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> _ = <span class="built_in">require</span>(<span class="string">'lodash'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Apply options with default</span></span><br><span class="line"><span class="keyword">let</span> config = _.defaultsDeep(&#123;</span><br><span class="line">&#125;, hexo.config.gitalk);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(config.enabled)&#123;</span><br><span class="line">  hexo.extend.filter.register(<span class="string">'after_render:html'</span>, (htmlContent) =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> scriptToInject = <span class="string">`</span></span><br><span class="line"><span class="string">    if(location.pathname == '/')&#123;</span></span><br><span class="line"><span class="string">      //首页不需要评论系统</span></span><br><span class="line"><span class="string">    &#125;else&#123;</span></span><br><span class="line"><span class="string">      var gitalk = new Gitalk(&#123;</span></span><br><span class="line"><span class="string">        clientID: '<span class="subst">$&#123;config.clientID&#125;</span>',</span></span><br><span class="line"><span class="string">        clientSecret: '<span class="subst">$&#123;config.clientSecret&#125;</span>',</span></span><br><span class="line"><span class="string">        repo: '<span class="subst">$&#123;config.repo&#125;</span>',</span></span><br><span class="line"><span class="string">        owner: '<span class="subst">$&#123;config.owner&#125;</span>',</span></span><br><span class="line"><span class="string">        admin: '<span class="subst">$&#123;config.admin&#125;</span>',</span></span><br><span class="line"><span class="string">        id: md5(location.pathname),</span></span><br><span class="line"><span class="string">        distractionFreeMode: <span class="subst">$&#123;config.distractionFreeMode&#125;</span></span></span><br><span class="line"><span class="string">      &#125;);</span></span><br><span class="line"><span class="string">      </span></span><br><span class="line"><span class="string">      gitalk.render('gitalk-container');</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">    `</span>;</span><br><span class="line">    <span class="keyword">const</span> contentToInject = <span class="string">`</span></span><br><span class="line"><span class="string">    &lt;link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"&gt;</span></span><br><span class="line"><span class="string">    &lt;script src="https://unpkg.com/gitalk/dist/gitalk.min.js"&gt;&lt;/script&gt;</span></span><br><span class="line"><span class="string">    &lt;script src="/js/md5.min.js"&gt;&lt;/script&gt;</span></span><br><span class="line"><span class="string">    &lt;div id="gitalk-container"&gt;&lt;/div&gt;</span></span><br><span class="line"><span class="string">    &lt;script&gt;<span class="subst">$&#123;scriptToInject&#125;</span>&lt;/script&gt;</span></span><br><span class="line"><span class="string">    `</span>;</span><br><span class="line">    <span class="keyword">let</span> newHtmlContent = htmlContent;</span><br><span class="line">    <span class="keyword">if</span> ((<span class="regexp">/([\n\r\s\t]*&lt;\/body&gt;)/i</span>).test(htmlContent)) &#123;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">const</span> lastIndex = htmlContent.lastIndexOf(<span class="string">'&lt;/body&gt;'</span>);</span><br><span class="line">      newHtmlContent = <span class="string">`<span class="subst">$&#123;htmlContent.substring(<span class="number">0</span>, lastIndex)&#125;</span><span class="subst">$&#123;contentToInject&#125;</span><span class="subst">$&#123;htmlContent.substring(lastIndex, htmlContent.length)&#125;</span>`</span>; <span class="comment">// eslint-disable-line no-magic-numbers</span></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> newHtmlContent;</span><br><span class="line"></span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>没有lodash模块的话使用npm自己安装下.（说实话这里也不需要用到lodash，由于我代码复制过来然后自己改了点，所以保留了这个方法）</p>
+<p>这段脚本就是在渲染完成后的html末尾加上gitalk的启动代码，非常好理解，唯一注意的地方用到了md5加密方法来加密id，防止gittalk报错. id字段不允许超过50个字符，所以迫不得已只能对location.pathname进行加密。</p>
+<p><code>md5.min.js</code>这个js的内容在<a href="https://github.com/blueimp/JavaScript-MD5" target="_blank" rel="noopener">https://github.com/blueimp/JavaScript-MD5</a><br>把这个js下下来后放置到<code>your.github.io\themes\your-theme-folder\source\js</code>下即可</p>
+<p>将该脚本<code>gitalk_register.js</code>放置到<code>your.github.io\themes\your-theme-folder\scripts</code>下即可， 这个文件夹下的js文件会在hexo-cli工具运行的时候自动执行(执行时机就不说明了，可以自己看官方文档)</p>
+<p>如果仍然出现文件404问题，请自行根据自己的情况来改变路径即可</p>
+<h2 id="大功告成"><a href="#大功告成" class="headerlink" title="大功告成"></a>大功告成</h2><p>试试<code>hexo g</code>,<code>hexo d</code>然后看看效果吧</p>
+
+    <div id="donationWrap">
+        <p style="
+      text-align: center;
+      border-top: gold;
+      border-top-style: solid;
+      border-top-width: 1px;
+      color: #eee;
+      font-weight: bold;
+      font-size: 1rem;
+      padding-top: 15px;
+      margin-top: 70px;
+  ">感谢作者</p>
+        <img src="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/tmpImage/blog_donation_zfb.png"
+          style="margin-left: auto;margin-right: auto;display: block;width: 30%;padding-bottom: 30px;">
+      </div>
+      <div id="donationPoint">
+
+
+  <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img style="margin-left: auto;margin-right: auto;display: block;" alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a>
+  <p style="
+  text-align: center;
+  color: #eee;
+  font-weight: bold;
+  font-size: 1rem;">本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>进行许可。</p>
+  <div id="licensePoint"></div></div>
+  </div>
+</article>
+
+
+
+      
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装Gitalk到Hexo中"><span class="toc-number">2.</span> <span class="toc-text">安装Gitalk到Hexo中</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#修改-config-yml"><span class="toc-number">2.1.</span> <span class="toc-text">修改_config.yml</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#编写脚本-自动注入Gitalk启动代码"><span class="toc-number">3.</span> <span class="toc-text">编写脚本-自动注入Gitalk启动代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#大功告成"><span class="toc-number">4.</span> <span class="toc-text">大功告成</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://zazalu.space/2019/09/19/use-gitalk-in-hexo-by-script/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://zazalu.space/2019/09/19/use-gitalk-in-hexo-by-script/&text=放弃Disqus, 拥抱Gitalk(基于Hexo)"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://zazalu.space/2019/09/19/use-gitalk-in-hexo-by-script/&title=放弃Disqus, 拥抱Gitalk(基于Hexo)"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zazalu.space/2019/09/19/use-gitalk-in-hexo-by-script/&is_video=false&description=放弃Disqus, 拥抱Gitalk(基于Hexo)"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=放弃Disqus, 拥抱Gitalk(基于Hexo)&body=Check out this article: https://zazalu.space/2019/09/19/use-gitalk-in-hexo-by-script/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://zazalu.space/2019/09/19/use-gitalk-in-hexo-by-script/&title=放弃Disqus, 拥抱Gitalk(基于Hexo)"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://zazalu.space/2019/09/19/use-gitalk-in-hexo-by-script/&title=放弃Disqus, 拥抱Gitalk(基于Hexo)"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://zazalu.space/2019/09/19/use-gitalk-in-hexo-by-script/&title=放弃Disqus, 拥抱Gitalk(基于Hexo)"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://zazalu.space/2019/09/19/use-gitalk-in-hexo-by-script/&title=放弃Disqus, 拥抱Gitalk(基于Hexo)"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://zazalu.space/2019/09/19/use-gitalk-in-hexo-by-script/&name=放弃Disqus, 拥抱Gitalk(基于Hexo)&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+  </div>
+</div>
+
+      
+      
+
+
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script src="https://he_jia_jun.gitee.io/zazalumonster.github.io//js/md5.min.js"></script>
+    <div id="gitalk-container"></div>
+    <script>
+    if(location.pathname == '/'){
+      //首页不需要评论系统
+    }else{
+      var gitalk = new Gitalk({
+        clientID: '73a23fdac799d4edb132',
+        clientSecret: '8200d919660d513fdd8629a7c45c13d7d13d9b6f',
+        repo: 'zazaluMonster.github.io',
+        owner: 'zazaluMonster',
+        admin: 'zazaluMonster',
+        id: md5(location.origin + "/" +location.pathname),
+        distractionFreeMode: false,
+        pagerDirection: 'first'
+      });
+      gitalk.render('gitalk-container');
+    }
+    </script>
+    <!-- gitalk -->
+
+<footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 zazalu
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+  <!-- 不蒜子统计 -->
+ <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <div>
+    <span id="busuanzi_container_site_pv">
+      本站总访问量<span id="busuanzi_value_site_pv"></span>次
+    </span>
+    <span id="busuanzi_container_site_uv">
+      本站访客数<span id="busuanzi_value_site_uv"></span>人次
+    </span>
+  </div>
+ 
+</footer>
+
+
+
+
+    </div>
+    <!-- styles -->
+<!-- <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/justified-gallery/css/justifiedGallery.min.css"> -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+    <!-- jquery -->
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/jquery/jquery.min.js"></script>
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+    <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?15ccc3aa9c18bcd901435b78b3c09e78";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+<!-- Disqus Comments -->
+
+
+
+    
+
+
+    <!-- 药水制作师live2d -->
+    <!-- 引入css -->
+    <link rel="stylesheet" href="/live2d/css/font-awesome/css/font-awesome.min.css" />
+    <link href="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/css/waifu.css" rel="stylesheet" type="text/css" />
+    <!-- html -->
+
+    <div class="waifu-switch">Live2d</div>
+    <div class="waifu">
+      <div class="waifu-tips"></div>
+      <canvas id="live2d" width="252" height="225" class="live2d"></canvas>
+      <div class="waifu-tool">
+        <i class="fa-times waifu-closed"></i>
+      </div>
+    </div>
+    <!-- 引入js -->
+    <script src="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/live2d.js"></script>
+    <script async src="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/waifu-tips.js"></script>
+    <script type="text/javascript">
+      loadlive2d("live2d", "/live2d/Pio/model.json");
+    </script>
+    <!-- 药水制作师live2d插件结束 -->
+
+    <!-- 引入视差滚动特效js -->
+    <!-- <script src="/parallax/parallax.min.js"></script>
+<script src="/parallax/parallaxController.js"></script> -->
+
+    <!-- 不蒜子统计请见footer.ejs -->
+
+  </body>
+
+  </html>

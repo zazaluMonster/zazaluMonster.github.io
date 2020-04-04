@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang=en>
+  <!-- 引入视差滚动css -->
+  <!-- <link rel="stylesheet" href="/parallax/parallaxCss.css"> -->
+  <head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="前后端分离已经不稀奇了，今天我就稍微讲一下前后端分离后在数据对接上容易出现的跨域问题。 问题何时发生发起一次http请求的时候，若源域名和目标域名(或者ip和端口不一致)不同，则目前大多数服务器都会拒绝响应此http请求。 你会遇到类似如下的http报错 12Access to XMLHttpRequest at ....No &amp;apos;Access-Control-Allow-Origin&amp;a">
+<meta name="keywords" content="跨域访问">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前后端分离之跨域问题以及curl在web测试上的应用">
+<meta property="og:url" content="https://zazalu.space/2019/06/30/CORS-question-and-curl-use-in-web-test/index.html">
+<meta property="og:site_name" content="Zazalu&#39;s Blog">
+<meta property="og:description" content="前后端分离已经不稀奇了，今天我就稍微讲一下前后端分离后在数据对接上容易出现的跨域问题。 问题何时发生发起一次http请求的时候，若源域名和目标域名(或者ip和端口不一致)不同，则目前大多数服务器都会拒绝响应此http请求。 你会遇到类似如下的http报错 12Access to XMLHttpRequest at ....No &amp;apos;Access-Control-Allow-Origin&amp;a">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2020-04-04T01:13:08.378Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="前后端分离之跨域问题以及curl在web测试上的应用">
+<meta name="twitter:description" content="前后端分离已经不稀奇了，今天我就稍微讲一下前后端分离后在数据对接上容易出现的跨域问题。 问题何时发生发起一次http请求的时候，若源域名和目标域名(或者ip和端口不一致)不同，则目前大多数服务器都会拒绝响应此http请求。 你会遇到类似如下的http报错 12Access to XMLHttpRequest at ....No &amp;apos;Access-Control-Allow-Origin&amp;a">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>前后端分离之跨域问题以及curl在web测试上的应用</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+
+  <body class="max-width mx-auto px3 ltr">
+    <!-- 添加视差滚动容器 -->
+    <!-- <ul id="scene" class="scene unselectable" data-friction-x="0.1" data-friction-y="0.1" data-scalar-x="25" data-scalar-y="15" style="width: 100%; height: 769px; transform: translate3d(0px, 0px, 0px); transform-style: preserve-3d; backface-visibility: hidden;">
+      <li class="layer" data-depth="0.00" style="position: relative; display: block; left: 0px; top: 0px; transform: translate3d(0px, 0px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="background"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light orange b phase-4"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light purple c phase-5"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light orange d phase-3"></div></li>
+      <li class="layer" data-depth="0.15" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(43.575px, 14.7375px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.30" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(87.15px, 29.475px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.30" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(87.15px, 29.475px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.40" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(116.2px, 39.3px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.50" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(145.25px, 49.125px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="lighthouse depth-60"></div></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.80" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(232.4px, 78.6px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="1.00" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(290.5px, 98.25px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+  </ul> -->
+    
+    <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2019/07/12/database-timestamp-timezone-notice/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2019/06/24/JavaEncoded3/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://zazalu.space/2019/06/30/CORS-question-and-curl-use-in-web-test/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://zazalu.space/2019/06/30/CORS-question-and-curl-use-in-web-test/&text=前后端分离之跨域问题以及curl在web测试上的应用"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://zazalu.space/2019/06/30/CORS-question-and-curl-use-in-web-test/&title=前后端分离之跨域问题以及curl在web测试上的应用"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zazalu.space/2019/06/30/CORS-question-and-curl-use-in-web-test/&is_video=false&description=前后端分离之跨域问题以及curl在web测试上的应用"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=前后端分离之跨域问题以及curl在web测试上的应用&body=Check out this article: https://zazalu.space/2019/06/30/CORS-question-and-curl-use-in-web-test/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://zazalu.space/2019/06/30/CORS-question-and-curl-use-in-web-test/&title=前后端分离之跨域问题以及curl在web测试上的应用"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://zazalu.space/2019/06/30/CORS-question-and-curl-use-in-web-test/&title=前后端分离之跨域问题以及curl在web测试上的应用"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://zazalu.space/2019/06/30/CORS-question-and-curl-use-in-web-test/&title=前后端分离之跨域问题以及curl在web测试上的应用"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://zazalu.space/2019/06/30/CORS-question-and-curl-use-in-web-test/&title=前后端分离之跨域问题以及curl在web测试上的应用"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://zazalu.space/2019/06/30/CORS-question-and-curl-use-in-web-test/&name=前后端分离之跨域问题以及curl在web测试上的应用&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#问题何时发生"><span class="toc-number">1.</span> <span class="toc-text">问题何时发生</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-通常解决方法"><span class="toc-number">2.</span> <span class="toc-text">2 通常解决方法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-当被拒绝跨域的时候"><span class="toc-number">3.</span> <span class="toc-text">3 当被拒绝跨域的时候</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-使用curl做简单的http测试"><span class="toc-number">4.</span> <span class="toc-text">4 使用curl做简单的http测试</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-尾"><span class="toc-number">5.</span> <span class="toc-text">5 尾</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+      
+      <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        前后端分离之跨域问题以及curl在web测试上的应用
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Zazalu's Blog</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-06-30T08:26:15.000Z" itemprop="datePublished">2019-06-30</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/IT/">IT</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/跨域访问/">跨域访问</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>前后端分离已经不稀奇了，今天我就稍微讲一下前后端分离后在数据对接上容易出现的跨域问题。</p>
+<h1 id="问题何时发生"><a href="#问题何时发生" class="headerlink" title="问题何时发生"></a>问题何时发生</h1><p>发起一次http请求的时候，若源域名和目标域名(或者ip和端口不一致)不同，则目前大多数服务器都会拒绝响应此http请求。</p>
+<p>你会遇到类似如下的http报错</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Access to XMLHttpRequest at ....</span><br><span class="line">No &apos;Access-Control-Allow-Origin&apos; header is present on the requested resource</span><br></pre></td></tr></table></figure>
+<p>因为这种请求属于跨域请求，在web服务器的通用实现方式上，默认的它们被设置为拒绝跨域请求。</p>
+<h1 id="2-通常解决方法"><a href="#2-通常解决方法" class="headerlink" title="2 通常解决方法"></a>2 通常解决方法</h1><p>于是我们第一时间想到的是开启跨域请求。</p>
+<p>先不提开启跨域请求的风险（在javaweb的Model框架中，一般可以使用contants+javaconfig来控制测试环境和生产环境的跨域的开启和关闭）</p>
+<p>开启跨域请求是双向的，首先在请求头中我们必须使用相关header去表示本次请求为跨域请求，其次是服务端开启跨域访问，最重要的一个header域是<code>Access-Control-Allow-Origin</code></p>
+<p>最暴力的做法：<code>&#39;Access-Control-Allow-Origin&#39;： &#39;*&#39;</code><br>这样你的服务器就可以支持所有域名的跨域访问，接受一切</p>
+<p>不过一般我们肯定不希望服务器暴露太多，所以可以根据自己的情况适当调整</p>
+<p>此外，请求端(通常使我们的ajax调用端)，也需要带上跨域的相关header来供后端验证</p>
+<h1 id="3-当被拒绝跨域的时候"><a href="#3-当被拒绝跨域的时候" class="headerlink" title="3 当被拒绝跨域的时候"></a>3 当被拒绝跨域的时候</h1><p>很多人可能都没留意到一个细节，所有POST的跨域请求，如果服务器不支持跨域，那么你的POST请求可能没有发出去就死在了摇篮里。</p>
+<p>因为在HTTP请求规范中，POST请求之前先发送的是OPTIONS请求，用于做一些验证操作</p>
+<p>OPTIONS请求被服务端拒绝跨域，POST请求就根本没必要发送了。</p>
+<h1 id="4-使用curl做简单的http测试"><a href="#4-使用curl做简单的http测试" class="headerlink" title="4 使用curl做简单的http测试"></a>4 使用curl做简单的http测试</h1><p>curl是一个文件下载工具，但是我更喜欢把它当做一个功能全面的http工具</p>
+<p>我们可以通过curl来做一些简单的http测试</p>
+<p>这里我简单的举个例子:<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -XPOST -v -d '&#123; "test": "abc123" &#125;' -H "Content-type: application/json" http://localhost:8080/MyBelfast/crew/login</span><br></pre></td></tr></table></figure></p>
+<p>可以测试<code>http://localhost:8080/MyBelfast/crew/login</code>是否支持接受json数据</p>
+<h1 id="5-尾"><a href="#5-尾" class="headerlink" title="5 尾"></a>5 尾</h1><p>本文提到的跨域问题会常常会在前后端开发阶段中出现，生产上是比较少的。在开发阶段，前端和后端的测试服务器往往被部署在不同的端口，这就会使得两者的http连接是跨域的</p>
+<p>有关跨域访问的事情还远远不止本文所讲的这一些，只不过本文的问题是最容易出现的问题，也是最低级的问题</p>
+<p>参考：<br><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-cors" target="_blank" rel="noopener">https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-cors</a></p>
+
+  </div>
+</article>
+
+
+
+      
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#问题何时发生"><span class="toc-number">1.</span> <span class="toc-text">问题何时发生</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-通常解决方法"><span class="toc-number">2.</span> <span class="toc-text">2 通常解决方法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-当被拒绝跨域的时候"><span class="toc-number">3.</span> <span class="toc-text">3 当被拒绝跨域的时候</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-使用curl做简单的http测试"><span class="toc-number">4.</span> <span class="toc-text">4 使用curl做简单的http测试</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-尾"><span class="toc-number">5.</span> <span class="toc-text">5 尾</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://zazalu.space/2019/06/30/CORS-question-and-curl-use-in-web-test/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://zazalu.space/2019/06/30/CORS-question-and-curl-use-in-web-test/&text=前后端分离之跨域问题以及curl在web测试上的应用"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://zazalu.space/2019/06/30/CORS-question-and-curl-use-in-web-test/&title=前后端分离之跨域问题以及curl在web测试上的应用"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zazalu.space/2019/06/30/CORS-question-and-curl-use-in-web-test/&is_video=false&description=前后端分离之跨域问题以及curl在web测试上的应用"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=前后端分离之跨域问题以及curl在web测试上的应用&body=Check out this article: https://zazalu.space/2019/06/30/CORS-question-and-curl-use-in-web-test/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://zazalu.space/2019/06/30/CORS-question-and-curl-use-in-web-test/&title=前后端分离之跨域问题以及curl在web测试上的应用"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://zazalu.space/2019/06/30/CORS-question-and-curl-use-in-web-test/&title=前后端分离之跨域问题以及curl在web测试上的应用"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://zazalu.space/2019/06/30/CORS-question-and-curl-use-in-web-test/&title=前后端分离之跨域问题以及curl在web测试上的应用"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://zazalu.space/2019/06/30/CORS-question-and-curl-use-in-web-test/&title=前后端分离之跨域问题以及curl在web测试上的应用"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://zazalu.space/2019/06/30/CORS-question-and-curl-use-in-web-test/&name=前后端分离之跨域问题以及curl在web测试上的应用&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+  </div>
+</div>
+
+      
+      
+
+
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script src="https://he_jia_jun.gitee.io/zazalumonster.github.io//js/md5.min.js"></script>
+    <div id="gitalk-container"></div>
+    <script>
+    if(location.pathname == '/'){
+      //首页不需要评论系统
+    }else{
+      var gitalk = new Gitalk({
+        clientID: '73a23fdac799d4edb132',
+        clientSecret: '8200d919660d513fdd8629a7c45c13d7d13d9b6f',
+        repo: 'zazaluMonster.github.io',
+        owner: 'zazaluMonster',
+        admin: 'zazaluMonster',
+        id: md5(location.origin + "/" +location.pathname),
+        distractionFreeMode: false,
+        pagerDirection: 'first'
+      });
+      gitalk.render('gitalk-container');
+    }
+    </script>
+    <!-- gitalk -->
+
+<footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 zazalu
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+  <!-- 不蒜子统计 -->
+ <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <div>
+    <span id="busuanzi_container_site_pv">
+      本站总访问量<span id="busuanzi_value_site_pv"></span>次
+    </span>
+    <span id="busuanzi_container_site_uv">
+      本站访客数<span id="busuanzi_value_site_uv"></span>人次
+    </span>
+  </div>
+ 
+</footer>
+
+
+
+
+    </div>
+    <!-- styles -->
+<!-- <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/justified-gallery/css/justifiedGallery.min.css"> -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+    <!-- jquery -->
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/jquery/jquery.min.js"></script>
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+    <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?15ccc3aa9c18bcd901435b78b3c09e78";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+<!-- Disqus Comments -->
+
+
+
+    
+
+
+    <!-- 药水制作师live2d -->
+    <!-- 引入css -->
+    <link rel="stylesheet" href="/live2d/css/font-awesome/css/font-awesome.min.css" />
+    <link href="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/css/waifu.css" rel="stylesheet" type="text/css" />
+    <!-- html -->
+
+    <div class="waifu-switch">Live2d</div>
+    <div class="waifu">
+      <div class="waifu-tips"></div>
+      <canvas id="live2d" width="252" height="225" class="live2d"></canvas>
+      <div class="waifu-tool">
+        <i class="fa-times waifu-closed"></i>
+      </div>
+    </div>
+    <!-- 引入js -->
+    <script src="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/live2d.js"></script>
+    <script async src="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/waifu-tips.js"></script>
+    <script type="text/javascript">
+      loadlive2d("live2d", "/live2d/Pio/model.json");
+    </script>
+    <!-- 药水制作师live2d插件结束 -->
+
+    <!-- 引入视差滚动特效js -->
+    <!-- <script src="/parallax/parallax.min.js"></script>
+<script src="/parallax/parallaxController.js"></script> -->
+
+    <!-- 不蒜子统计请见footer.ejs -->
+
+  </body>
+
+  </html>

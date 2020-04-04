@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang=en>
+  <!-- 引入视差滚动css -->
+  <!-- <link rel="stylesheet" href="/parallax/parallaxCss.css"> -->
+  <head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="前言上一章 面对涉及金额计算的需求,我该如何应对(一)?  我主要讲了Java层面如何做到高精度的计算 本章我们继续探讨数据库(mysql为例)中如何正确保存我们的金额 其实我们的目的很简单, 一是存储到数据库中的数据必须是能保证精度的数据类型, 而在mysql中能够保证精度的有DECIMAL或者NUMBER, 两者是一致的没有区别, 都是用字符串存储. 或者使用INT,BIGINT等, 这两个虽">
+<meta name="keywords" content="Java高精度计算">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面对涉及金额计算的需求,我该如何应对(二)">
+<meta property="og:url" content="https://zazalu.space/2019/09/27/java-amount-calculation-2/index.html">
+<meta property="og:site_name" content="Zazalu&#39;s Blog">
+<meta property="og:description" content="前言上一章 面对涉及金额计算的需求,我该如何应对(一)?  我主要讲了Java层面如何做到高精度的计算 本章我们继续探讨数据库(mysql为例)中如何正确保存我们的金额 其实我们的目的很简单, 一是存储到数据库中的数据必须是能保证精度的数据类型, 而在mysql中能够保证精度的有DECIMAL或者NUMBER, 两者是一致的没有区别, 都是用字符串存储. 或者使用INT,BIGINT等, 这两个虽">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2020-04-04T01:13:08.389Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="面对涉及金额计算的需求,我该如何应对(二)">
+<meta name="twitter:description" content="前言上一章 面对涉及金额计算的需求,我该如何应对(一)?  我主要讲了Java层面如何做到高精度的计算 本章我们继续探讨数据库(mysql为例)中如何正确保存我们的金额 其实我们的目的很简单, 一是存储到数据库中的数据必须是能保证精度的数据类型, 而在mysql中能够保证精度的有DECIMAL或者NUMBER, 两者是一致的没有区别, 都是用字符串存储. 或者使用INT,BIGINT等, 这两个虽">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>面对涉及金额计算的需求,我该如何应对(二)</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+
+  <body class="max-width mx-auto px3 ltr">
+    <!-- 添加视差滚动容器 -->
+    <!-- <ul id="scene" class="scene unselectable" data-friction-x="0.1" data-friction-y="0.1" data-scalar-x="25" data-scalar-y="15" style="width: 100%; height: 769px; transform: translate3d(0px, 0px, 0px); transform-style: preserve-3d; backface-visibility: hidden;">
+      <li class="layer" data-depth="0.00" style="position: relative; display: block; left: 0px; top: 0px; transform: translate3d(0px, 0px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="background"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light orange b phase-4"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light purple c phase-5"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light orange d phase-3"></div></li>
+      <li class="layer" data-depth="0.15" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(43.575px, 14.7375px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.30" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(87.15px, 29.475px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.30" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(87.15px, 29.475px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.40" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(116.2px, 39.3px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.50" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(145.25px, 49.125px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="lighthouse depth-60"></div></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.80" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(232.4px, 78.6px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="1.00" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(290.5px, 98.25px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+  </ul> -->
+    
+    <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2019/10/02/2019-Happy-National-Day/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2019/09/25/java-amount-calculation/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://zazalu.space/2019/09/27/java-amount-calculation-2/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://zazalu.space/2019/09/27/java-amount-calculation-2/&text=面对涉及金额计算的需求,我该如何应对(二)"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://zazalu.space/2019/09/27/java-amount-calculation-2/&title=面对涉及金额计算的需求,我该如何应对(二)"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zazalu.space/2019/09/27/java-amount-calculation-2/&is_video=false&description=面对涉及金额计算的需求,我该如何应对(二)"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=面对涉及金额计算的需求,我该如何应对(二)&body=Check out this article: https://zazalu.space/2019/09/27/java-amount-calculation-2/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://zazalu.space/2019/09/27/java-amount-calculation-2/&title=面对涉及金额计算的需求,我该如何应对(二)"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://zazalu.space/2019/09/27/java-amount-calculation-2/&title=面对涉及金额计算的需求,我该如何应对(二)"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://zazalu.space/2019/09/27/java-amount-calculation-2/&title=面对涉及金额计算的需求,我该如何应对(二)"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://zazalu.space/2019/09/27/java-amount-calculation-2/&title=面对涉及金额计算的需求,我该如何应对(二)"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://zazalu.space/2019/09/27/java-amount-calculation-2/&name=面对涉及金额计算的需求,我该如何应对(二)&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第一种方式-使用DECIMAL存储金额"><span class="toc-number">2.</span> <span class="toc-text">第一种方式 - 使用DECIMAL存储金额</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#如何使用DECIMAL"><span class="toc-number">2.1.</span> <span class="toc-text">如何使用DECIMAL?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Mybatis中获取写法"><span class="toc-number">2.2.</span> <span class="toc-text">Mybatis中获取写法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#INT-vs-DECIMAL"><span class="toc-number">3.</span> <span class="toc-text">INT vs DECIMAL</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#在JS层面如何展示"><span class="toc-number">4.</span> <span class="toc-text">在JS层面如何展示</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+      
+      <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        面对涉及金额计算的需求,我该如何应对(二)
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Zazalu's Blog</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-09-27T03:29:32.000Z" itemprop="datePublished">2019-09-27</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/IT/">IT</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/Java高精度计算/">Java高精度计算</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>上一章 <a href="https://zazalu.space/2019/09/25/java-amount-calculation/">面对涉及金额计算的需求,我该如何应对(一)? </a></p>
+<p>我主要讲了Java层面如何做到高精度的计算</p>
+<p>本章我们继续探讨数据库(mysql为例)中如何正确保存我们的金额</p>
+<p>其实我们的目的很简单, 一是存储到数据库中的数据必须是能保证精度的数据类型, 而在mysql中能够保证精度的有<code>DECIMAL</code>或者<code>NUMBER</code>, 两者是一致的没有区别, 都是用字符串存储. 或者使用<code>INT</code>,<code>BIGINT</code>等, 这两个虽然是二进制存储, 但是因为不含小数, 所以不会出现精度问题, 缺点是还需要额外维护<code>scale</code>, 如果是国内, 直接除以100的做法也是常见; 二是保证可扩展性以及保证空间不要浪费, 这个其实是非常灵活的一种需求, 需要我们对自己项目所用到的情况有非常深的理解, 最后才能确定使用多少空间去存储.</p>
+<p>事前声明: 本文只是阐述我个人的想法, 是本人通过各类网上查阅别人的解决方案后总结的成果, 并不是我自己的亲身使用经验, 所以请阅读者带有自己的思考, 多问为什么.</p>
+<h2 id="第一种方式-使用DECIMAL存储金额"><a href="#第一种方式-使用DECIMAL存储金额" class="headerlink" title="第一种方式 - 使用DECIMAL存储金额"></a>第一种方式 - 使用DECIMAL存储金额</h2><p>网上讨论什么数据类型去存储金额做了非常多的讨论, 但是绝大部分的答案都会指向使用<code>DECIMAL</code>, 这是个非常有力的答案, 因为Mysql官方都建议我们使用<code>DECIMAL</code>来存储需要精度计算的数字数据. Mysql官方的原文如下:</p>
+<blockquote>
+<p>The DECIMAL and NUMERIC types store exact numeric data values. These types are used when it is important to preserve exact precision, for example with monetary data.</p>
+</blockquote>
+<p>原文地址: <a href="https://dev.mysql.com/doc/refman/5.7/en/fixed-point-types.html" target="_blank" rel="noopener">https://dev.mysql.com/doc/refman/5.7/en/fixed-point-types.html</a></p>
+<p>使用DECIMAL存储金额是一种比较通用的形式, 因为很多成熟的数据库, 都使用这个关键字来作为高精度计算数据类型的名称, 它的存在本身就是为了提供准确的精度计算服务. 由于底层由字符串存储, 和<code>float</code>,<code>double</code>这种近似值数据类型有本质上的区别, 因为浮点数类型底层由二进制存储, 它无法正确显示0.1, 只能存储其近似值, 这个知识点我们在第一章也明确的进行了说明.</p>
+<h3 id="如何使用DECIMAL"><a href="#如何使用DECIMAL" class="headerlink" title="如何使用DECIMAL?"></a>如何使用DECIMAL?</h3><p>就算我们懂得了<code>DECIMAL</code>来存储金额这件事, 我们还需要面对第二个问题, 那就是如何确定一个比较好的DECIMAL精度. </p>
+<p><code>DECIMAL</code>有两个输入参数, 一个是精度precision, 还有一个是小数位数scale, 比如我们定义<code>decimal(19,2)</code>, 在mysql(后续内容全部已mysql为准)中它代表了19为的长度, 小数位只有2位的十进制数字. 需要注意的是这个19代表总长度,它包含了小数点.</p>
+<p>一般来说precision我们可以定义为19就可以完全满足大部分金额的需求, 比如<code>decimal(19,2)</code>, 那么它支持的最大数额是9999999999999999.99, 这个数额差不多是9999千亿元, 注意我的单位是千亿. 如果还不够你可以加大大小 , 不过需要注意decimal最大长度是65(出自mysql官网,The maximum number of digits for DECIMAL is 65)</p>
+<p>scale的长度定义是更加要注意的事情, 目前来看很多人喜欢定义2位小数! 但是我们作为程序员要身怀全球化开发的大志, 稍微了解下其他国家的币种, 你会发现2位是不够的, 为了减少后期需求变动导致2位不足的情况, 其实可以使用4位小数, 比如Bahraini, Jordanian, or Kuwaiti Dinars都是在使用常常有3位小数的币种的国家.</p>
+<h3 id="Mybatis中获取写法"><a href="#Mybatis中获取写法" class="headerlink" title="Mybatis中获取写法"></a>Mybatis中获取写法</h3><p>说完了精度和小数位数的设定, 最后我们还要了解下从mysql数据库读取到java, 这个过程该如何处理, 由于国内Java常见的orm框架是mybatis, 我在这里就不聊jpa或者hibernate或者其他orm框架了, 这里只说明mybatis如何正确读取. </p>
+<p>在mybatis中, 读取decimal类型数据有一种万能的写法, 就是<code>jdbcType=NUMERIC</code>. 如果你觉得这样看不出数据类型具体是啥, 那么你可以这样写<code>jdbcType=DECIMAL</code>, 然后java类型使用<code>java.math.BigDecimal</code>接收即可!</p>
+<p>##　第二种方式 - 使用INT或者BIGINT存储无标度值的金额</p>
+<p>另一种常见的方式是使用2个字段分别存储金额(类似BIgDecimal的底层原理), 一个字段使用<code>INT</code>或者<code>BIGINT</code>存储无标度值的金额, 比如18.134, 保存为18134, 这里提出<code>BIGINT</code>代替<code>INT</code>是因为可能部分场景<code>INT</code>不够你用, 而<code>BIGINT</code>基本不用担心(可以看看<a href="https://segmentfault.com/a/1190000005124246" target="_blank" rel="noopener">这篇文章</a>对这些数据类型重新回顾下).然后使用另一个字段,比如scale保存为3, 这样我们从数据库取出来后,就可以知道是18.134了. 这些操作在精度上是不存在问题的, 所以也是一种可行方案.</p>
+<p>比较值得一提的是,如果只是针对RMB, 你甚至可以不需要保存scale, 默认在程序中做除以100的操作就行了, 也就是针对到分即可.</p>
+<p>到此为止, 网上最流行的方案就是这两种形式, 接下来我们来探讨下到底哪种更好</p>
+<h2 id="INT-vs-DECIMAL"><a href="#INT-vs-DECIMAL" class="headerlink" title="INT vs DECIMAL"></a>INT vs DECIMAL</h2><p>现在我们开始讨论这两种方式到底哪种更优秀</p>
+<p>从空间上来说, INT是胜利的, 因为DECIMAL所需的空间很大</p>
+<p>从性能上来说, 这是一个没法很好定夺的问题, 因为我一直坚持要比对性能, 必须结合实际情况做对应的基准测试, 才能得到自己的结论, 所以这里我就卖个关子, 不回答性能问题.</p>
+<p>从开发复杂度来说, 我认为是DECIMAL简单, 因为直接封装到BigDecimal类中可以直接使用, 而INT还需要做除法操作来移动小数点位置.</p>
+<h2 id="在JS层面如何展示"><a href="#在JS层面如何展示" class="headerlink" title="在JS层面如何展示"></a>在JS层面如何展示</h2><p>最后再来说说JS吧, 在页面上我坚持是只传String过去即可, 这样对于前端工程师来说, 他们不用担心显示出现精度问题, 因为是String的格式. 此外JS做精度计算最好移动到后台处理, 是在巴不得以, 可以使用别人的计算库比如math.js做处理, 减少我们自己编写出现精度问题的几率!</p>
+<p>由于我个人偏后端, 所以前端展示这块不是很熟悉, 就不多扯了.</p>
+<p>本系列到此结束</p>
+
+    <div id="donationWrap">
+        <p style="
+      text-align: center;
+      border-top: gold;
+      border-top-style: solid;
+      border-top-width: 1px;
+      color: #eee;
+      font-weight: bold;
+      font-size: 1rem;
+      padding-top: 15px;
+      margin-top: 70px;
+  ">感谢作者</p>
+        <img src="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/tmpImage/blog_donation_zfb.png"
+          style="margin-left: auto;margin-right: auto;display: block;width: 30%;padding-bottom: 30px;">
+      </div>
+      <div id="donationPoint">
+
+
+  <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img style="margin-left: auto;margin-right: auto;display: block;" alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a>
+  <p style="
+  text-align: center;
+  color: #eee;
+  font-weight: bold;
+  font-size: 1rem;">本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>进行许可。</p>
+  <div id="licensePoint"></div></div>
+  </div>
+</article>
+
+
+
+      
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第一种方式-使用DECIMAL存储金额"><span class="toc-number">2.</span> <span class="toc-text">第一种方式 - 使用DECIMAL存储金额</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#如何使用DECIMAL"><span class="toc-number">2.1.</span> <span class="toc-text">如何使用DECIMAL?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Mybatis中获取写法"><span class="toc-number">2.2.</span> <span class="toc-text">Mybatis中获取写法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#INT-vs-DECIMAL"><span class="toc-number">3.</span> <span class="toc-text">INT vs DECIMAL</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#在JS层面如何展示"><span class="toc-number">4.</span> <span class="toc-text">在JS层面如何展示</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://zazalu.space/2019/09/27/java-amount-calculation-2/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://zazalu.space/2019/09/27/java-amount-calculation-2/&text=面对涉及金额计算的需求,我该如何应对(二)"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://zazalu.space/2019/09/27/java-amount-calculation-2/&title=面对涉及金额计算的需求,我该如何应对(二)"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zazalu.space/2019/09/27/java-amount-calculation-2/&is_video=false&description=面对涉及金额计算的需求,我该如何应对(二)"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=面对涉及金额计算的需求,我该如何应对(二)&body=Check out this article: https://zazalu.space/2019/09/27/java-amount-calculation-2/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://zazalu.space/2019/09/27/java-amount-calculation-2/&title=面对涉及金额计算的需求,我该如何应对(二)"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://zazalu.space/2019/09/27/java-amount-calculation-2/&title=面对涉及金额计算的需求,我该如何应对(二)"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://zazalu.space/2019/09/27/java-amount-calculation-2/&title=面对涉及金额计算的需求,我该如何应对(二)"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://zazalu.space/2019/09/27/java-amount-calculation-2/&title=面对涉及金额计算的需求,我该如何应对(二)"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://zazalu.space/2019/09/27/java-amount-calculation-2/&name=面对涉及金额计算的需求,我该如何应对(二)&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+  </div>
+</div>
+
+      
+      
+
+
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script src="https://he_jia_jun.gitee.io/zazalumonster.github.io//js/md5.min.js"></script>
+    <div id="gitalk-container"></div>
+    <script>
+    if(location.pathname == '/'){
+      //首页不需要评论系统
+    }else{
+      var gitalk = new Gitalk({
+        clientID: '73a23fdac799d4edb132',
+        clientSecret: '8200d919660d513fdd8629a7c45c13d7d13d9b6f',
+        repo: 'zazaluMonster.github.io',
+        owner: 'zazaluMonster',
+        admin: 'zazaluMonster',
+        id: md5(location.origin + "/" +location.pathname),
+        distractionFreeMode: false,
+        pagerDirection: 'first'
+      });
+      gitalk.render('gitalk-container');
+    }
+    </script>
+    <!-- gitalk -->
+
+<footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 zazalu
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+  <!-- 不蒜子统计 -->
+ <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <div>
+    <span id="busuanzi_container_site_pv">
+      本站总访问量<span id="busuanzi_value_site_pv"></span>次
+    </span>
+    <span id="busuanzi_container_site_uv">
+      本站访客数<span id="busuanzi_value_site_uv"></span>人次
+    </span>
+  </div>
+ 
+</footer>
+
+
+
+
+    </div>
+    <!-- styles -->
+<!-- <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/justified-gallery/css/justifiedGallery.min.css"> -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+    <!-- jquery -->
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/jquery/jquery.min.js"></script>
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+    <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?15ccc3aa9c18bcd901435b78b3c09e78";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+<!-- Disqus Comments -->
+
+
+
+    
+
+
+    <!-- 药水制作师live2d -->
+    <!-- 引入css -->
+    <link rel="stylesheet" href="/live2d/css/font-awesome/css/font-awesome.min.css" />
+    <link href="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/css/waifu.css" rel="stylesheet" type="text/css" />
+    <!-- html -->
+
+    <div class="waifu-switch">Live2d</div>
+    <div class="waifu">
+      <div class="waifu-tips"></div>
+      <canvas id="live2d" width="252" height="225" class="live2d"></canvas>
+      <div class="waifu-tool">
+        <i class="fa-times waifu-closed"></i>
+      </div>
+    </div>
+    <!-- 引入js -->
+    <script src="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/live2d.js"></script>
+    <script async src="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/waifu-tips.js"></script>
+    <script type="text/javascript">
+      loadlive2d("live2d", "/live2d/Pio/model.json");
+    </script>
+    <!-- 药水制作师live2d插件结束 -->
+
+    <!-- 引入视差滚动特效js -->
+    <!-- <script src="/parallax/parallax.min.js"></script>
+<script src="/parallax/parallaxController.js"></script> -->
+
+    <!-- 不蒜子统计请见footer.ejs -->
+
+  </body>
+
+  </html>

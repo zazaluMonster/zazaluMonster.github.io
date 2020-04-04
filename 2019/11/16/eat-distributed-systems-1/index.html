@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang=en>
+  <!-- 引入视差滚动css -->
+  <!-- <link rel="stylesheet" href="/parallax/parallaxCss.css"> -->
+  <head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="这一系列用于记录自己学习目前流行的分布式系统, 内容其实都是围绕高并发,高可用,高扩展,架构展开, 从而搞懂分布式是什么,为什么需要分布式, 以及如何开发分布式系统.   前言工作已有两年之久, 这两年间, 驰骋沙场, 磕磕碰碰, 也算是习得了一定本领, 但是正如小时候有一个朋友和我说过,”开车两年的司机最容易出车祸”的道理 在我自以为学的东西已经完全足够解决工作上的问题的时候, 危险肯定也在悄悄">
+<meta name="keywords" content="分布式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="丨大型励志片丨分布式学习记录及吐槽-第一天">
+<meta property="og:url" content="https://zazalu.space/2019/11/16/eat-distributed-systems-1/index.html">
+<meta property="og:site_name" content="Zazalu&#39;s Blog">
+<meta property="og:description" content="这一系列用于记录自己学习目前流行的分布式系统, 内容其实都是围绕高并发,高可用,高扩展,架构展开, 从而搞懂分布式是什么,为什么需要分布式, 以及如何开发分布式系统.   前言工作已有两年之久, 这两年间, 驰骋沙场, 磕磕碰碰, 也算是习得了一定本领, 但是正如小时候有一个朋友和我说过,”开车两年的司机最容易出车祸”的道理 在我自以为学的东西已经完全足够解决工作上的问题的时候, 危险肯定也在悄悄">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2020-04-04T01:13:08.383Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="丨大型励志片丨分布式学习记录及吐槽-第一天">
+<meta name="twitter:description" content="这一系列用于记录自己学习目前流行的分布式系统, 内容其实都是围绕高并发,高可用,高扩展,架构展开, 从而搞懂分布式是什么,为什么需要分布式, 以及如何开发分布式系统.   前言工作已有两年之久, 这两年间, 驰骋沙场, 磕磕碰碰, 也算是习得了一定本领, 但是正如小时候有一个朋友和我说过,”开车两年的司机最容易出车祸”的道理 在我自以为学的东西已经完全足够解决工作上的问题的时候, 危险肯定也在悄悄">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>丨大型励志片丨分布式学习记录及吐槽-第一天</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+
+  <body class="max-width mx-auto px3 ltr">
+    <!-- 添加视差滚动容器 -->
+    <!-- <ul id="scene" class="scene unselectable" data-friction-x="0.1" data-friction-y="0.1" data-scalar-x="25" data-scalar-y="15" style="width: 100%; height: 769px; transform: translate3d(0px, 0px, 0px); transform-style: preserve-3d; backface-visibility: hidden;">
+      <li class="layer" data-depth="0.00" style="position: relative; display: block; left: 0px; top: 0px; transform: translate3d(0px, 0px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="background"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light orange b phase-4"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light purple c phase-5"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light orange d phase-3"></div></li>
+      <li class="layer" data-depth="0.15" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(43.575px, 14.7375px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.30" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(87.15px, 29.475px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.30" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(87.15px, 29.475px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.40" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(116.2px, 39.3px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.50" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(145.25px, 49.125px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="lighthouse depth-60"></div></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.80" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(232.4px, 78.6px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="1.00" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(290.5px, 98.25px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+  </ul> -->
+    
+    <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2020/01/16/Together/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2019/11/06/learn-stream-api-3-md/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://zazalu.space/2019/11/16/eat-distributed-systems-1/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://zazalu.space/2019/11/16/eat-distributed-systems-1/&text=丨大型励志片丨分布式学习记录及吐槽-第一天"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://zazalu.space/2019/11/16/eat-distributed-systems-1/&title=丨大型励志片丨分布式学习记录及吐槽-第一天"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zazalu.space/2019/11/16/eat-distributed-systems-1/&is_video=false&description=丨大型励志片丨分布式学习记录及吐槽-第一天"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=丨大型励志片丨分布式学习记录及吐槽-第一天&body=Check out this article: https://zazalu.space/2019/11/16/eat-distributed-systems-1/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://zazalu.space/2019/11/16/eat-distributed-systems-1/&title=丨大型励志片丨分布式学习记录及吐槽-第一天"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://zazalu.space/2019/11/16/eat-distributed-systems-1/&title=丨大型励志片丨分布式学习记录及吐槽-第一天"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://zazalu.space/2019/11/16/eat-distributed-systems-1/&title=丨大型励志片丨分布式学习记录及吐槽-第一天"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://zazalu.space/2019/11/16/eat-distributed-systems-1/&title=丨大型励志片丨分布式学习记录及吐槽-第一天"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://zazalu.space/2019/11/16/eat-distributed-systems-1/&name=丨大型励志片丨分布式学习记录及吐槽-第一天&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#after-前言"><span class="toc-number">2.</span> <span class="toc-text">after 前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一个系统总会有一个瓶颈点"><span class="toc-number">3.</span> <span class="toc-text">一个系统总会有一个瓶颈点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么要搞分布式微服务"><span class="toc-number">4.</span> <span class="toc-text">为什么要搞分布式微服务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+      
+      <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        丨大型励志片丨分布式学习记录及吐槽-第一天
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Zazalu's Blog</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-11-16T08:57:56.000Z" itemprop="datePublished">2019-11-16</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/IT/">IT</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/分布式/">分布式</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>这一系列用于记录自己学习目前流行的<code>分布式系统</code>, 内容其实都是围绕<code>高并发</code>,<code>高可用</code>,<code>高扩展</code>,<code>架构</code>展开, 从而搞懂分布式是什么,为什么需要分布式, 以及如何开发分布式系统.  </p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>工作已有两年之久, 这两年间, 驰骋沙场, 磕磕碰碰, 也算是习得了一定本领, 但是正如小时候有一个朋友和我说过,”开车两年的司机最容易出车祸”的道理</p>
+<p>在我自以为学的东西已经完全足够解决工作上的问题的时候, 危险肯定也在悄悄逼近, 作为一名普通的半吊子程序员, 一没有好看的文凭, 二没有自己拿得出手的开源项目, 在努力工作的同时, 也经常在无声的夜晚考虑一年后, 两年后的自己会混成什么样子.</p>
+<p>当今的国内环境下, 码农的职业寿命普遍在35岁有分水岭, 企业招收程序员普遍不会录用超过35岁的人来干活, 因为他们包袱重, 干活效率不如应届毕业生</p>
+<p>也许是为了更好的生存下去, 也许只是为了好玩, 但不管怎么样, 我觉得作为一个后台程序员, 是时候开启分布式系统学习的大门, 从一名CRUD程序员, 往软件架构师进行迈进.</p>
+<h2 id="after-前言"><a href="#after-前言" class="headerlink" title="after 前言"></a>after 前言</h2><p>前面说的一堆其实可以说是屁话!</p>
+<p>其实是我们领导一开始就要求我们对分布式微服务展开系统的学习, 因为目前线上在运行的一套东西, 就是一套SpringBoot+Dubbo的多服务分布式系统, 同时也利用了集群,负载均衡,缓存达到了高并发的要求. </p>
+<p>于此时他, 为了未来自己如果想搞自己的产品, 那么也应该具备一定的架构知识, 为产品搭建一套完备的后台架构, 这是产品屹立不倒的基础</p>
+<p>综上原因, 我觉得学习现在流行的<code>分布式系统</code>是必要的. </p>
+<p><strong>[注意]</strong>: 我只是借用了这种说法, 事实上本系列会从架构方面开始一点点的学习, 毕竟<code>分布式</code>是一种很宽泛的说法, 不同服务分布在不同的机器上, 各自履行职业, 就已经可以说是一种<code>分布式系统</code>了, 但是如何做到优秀呢? 那么一定是要往<code>高并发</code>,<code>高可用</code>,<code>高扩展</code>这些方向展开的</p>
+<h2 id="一个系统总会有一个瓶颈点"><a href="#一个系统总会有一个瓶颈点" class="headerlink" title="一个系统总会有一个瓶颈点"></a>一个系统总会有一个瓶颈点</h2><p>在写今天这篇文章前, 我花了很多时间, 看了好多现有国内的架构分析. 然后我发现了一个规律, 那就是不管是什么系统架构, 不可能完全解决压力瓶颈这个缺点.</p>
+<p>比如我们最早的单机应用, 一台服务器作为Server解决一切客户请求, 这时候的瓶颈点在服务器, 服务器的处理能力是我们QPS高不高的核心</p>
+<p>随后演变到多机应用, 用一台负载均衡做转发分流, 这时候的瓶颈点在负载均衡器那里, 而之所以一台服务器比一个负载均衡器更弱, 简单来说那是因为他们的系统架构不一样, 比如说我们用nginx做负载均衡, 因为nginx是模块化，事件驱动，异步，单线程，非阻塞. 这要nginx的处理能力极高, 安排它去单独做最前沿的服务接入点比普通的一台服务器会更优秀.</p>
+<p>但是nginx再强, 也不可能抗得过可以无限增长的并发量. 所以我们说这时候的瓶颈点是负载均衡那里!</p>
+<p>那么我们该怎么解决? 解决方式很简单, 多搞几个nginx即可. 不过问题也来了, 多个nginx又需要另一种更强劲的转发系统来专门将请求转发到我们的多台nginx上. 这时候显然再使用nginx是不可能的, 这时候人们想到了LVS/F5, 这是一类直接跑在操作系统内核甚至硬件上的负载均衡器! 不管怎么说, 肯定比你nginx跑在操作系统应用层要厉害多了, 人家走的路比你少, 肯定比你快!</p>
+<p>可是这样一搞, 我们的瓶颈点依旧存在, 现在的瓶颈点就是LVS/F5啊, 事情依旧没变</p>
+<p>这时候有人想到了DNS多IP来分散并发量, 这确实也是可以的, 而且只要有钱!可以做到无线扩充, 但这时候钱力人力变成了瓶颈点, 老板肯定不乐意的</p>
+<p>所以不管怎么样, 高并发系统总会存在一个瓶颈点, 而不停的进行优化, 才有了现在的答卷, 我们不能断然的说现在已有的高并发系统是完美的, 它们只是在满足当前的需求而已.</p>
+<h2 id="为什么要搞分布式微服务"><a href="#为什么要搞分布式微服务" class="headerlink" title="为什么要搞分布式微服务"></a>为什么要搞分布式微服务</h2><p>我一开始以为搞分布式微服务是为了提高并发, 然后我发现我错了! </p>
+<p>分布式微服务的目的其实是为了提高可维护性和可扩展性, 同时提供更多的工作岗位?(大雾).</p>
+<p>当我们受够了所有东西全部在一个大项目下搞的时候, 我们就开始分解它们, 让他们单独开来自己运行, 我们需要的时候去调用.</p>
+<p>分开来的好处非常多, 我想大家网上查可以搜到很多, 不过我今天发现分开来还有一个更大的好处就是物尽其用!</p>
+<p>比如说原来你把3个服务全部搞在一起对外提供, 然后为了抗住并发, 你复制了三份这种服务, 但是其实只有其中的一个服务有很大的并发量, 而另外两个服务是不怎么常用的.</p>
+<p>所以这时候就出现了网络,硬件资源浪费.</p>
+<p>如果我们把他们拆分开来, 只把真正需要的服务复制三份, 那才是物尽其用.</p>
+<p>其实我们很早就有了这类开发思想在指导我们, 但是为什么最近才开始流行分布式微服务呢?</p>
+<p>因为以前没有一个比较成熟的分布式微服务框架来方便我们程序员去管理那么多服务. 如果没有一个好框架的管理, 那么拆分服务对于我们程序员来说就是噩梦, 因为没有优秀思想的指导, 我们会把项目搞得一团糟, 随之换来的就是开发效率变低以及无止境的加班</p>
+<p>现如今市场对于高并发的需求越来越多, 因为网民数量的增大, 所以推动了分布式微服务框架的发展. </p>
+<p>目前来看, 最流行的分布式微服务框架一个是SpringCloud, 还有一个是阿里的Dubbo.</p>
+<p>由于我目前的公司用的是SpringBoot+Dubbo, 所以我后续打算也先从Dubbo学起. </p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>离三年工作经验还有一年, 我打算这一系列能在一年后完整的结束, 让自己有一个大的突破</p>
+<!-- 在此处插入License模块，若不需要请删除 -->
+
+  <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img style="margin-left: auto;margin-right: auto;display: block;" alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a>
+  <p style="
+  text-align: center;
+  color: #eee;
+  font-weight: bold;
+  font-size: 1rem;">本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>进行许可。</p>
+  <div id="licensePoint"></div>
+  </div>
+</article>
+
+
+
+      
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#after-前言"><span class="toc-number">2.</span> <span class="toc-text">after 前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一个系统总会有一个瓶颈点"><span class="toc-number">3.</span> <span class="toc-text">一个系统总会有一个瓶颈点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么要搞分布式微服务"><span class="toc-number">4.</span> <span class="toc-text">为什么要搞分布式微服务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://zazalu.space/2019/11/16/eat-distributed-systems-1/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://zazalu.space/2019/11/16/eat-distributed-systems-1/&text=丨大型励志片丨分布式学习记录及吐槽-第一天"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://zazalu.space/2019/11/16/eat-distributed-systems-1/&title=丨大型励志片丨分布式学习记录及吐槽-第一天"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zazalu.space/2019/11/16/eat-distributed-systems-1/&is_video=false&description=丨大型励志片丨分布式学习记录及吐槽-第一天"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=丨大型励志片丨分布式学习记录及吐槽-第一天&body=Check out this article: https://zazalu.space/2019/11/16/eat-distributed-systems-1/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://zazalu.space/2019/11/16/eat-distributed-systems-1/&title=丨大型励志片丨分布式学习记录及吐槽-第一天"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://zazalu.space/2019/11/16/eat-distributed-systems-1/&title=丨大型励志片丨分布式学习记录及吐槽-第一天"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://zazalu.space/2019/11/16/eat-distributed-systems-1/&title=丨大型励志片丨分布式学习记录及吐槽-第一天"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://zazalu.space/2019/11/16/eat-distributed-systems-1/&title=丨大型励志片丨分布式学习记录及吐槽-第一天"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://zazalu.space/2019/11/16/eat-distributed-systems-1/&name=丨大型励志片丨分布式学习记录及吐槽-第一天&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+  </div>
+</div>
+
+      
+      
+
+
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script src="https://he_jia_jun.gitee.io/zazalumonster.github.io//js/md5.min.js"></script>
+    <div id="gitalk-container"></div>
+    <script>
+    if(location.pathname == '/'){
+      //首页不需要评论系统
+    }else{
+      var gitalk = new Gitalk({
+        clientID: '73a23fdac799d4edb132',
+        clientSecret: '8200d919660d513fdd8629a7c45c13d7d13d9b6f',
+        repo: 'zazaluMonster.github.io',
+        owner: 'zazaluMonster',
+        admin: 'zazaluMonster',
+        id: md5(location.origin + "/" +location.pathname),
+        distractionFreeMode: false,
+        pagerDirection: 'first'
+      });
+      gitalk.render('gitalk-container');
+    }
+    </script>
+    <!-- gitalk -->
+
+<footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 zazalu
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+  <!-- 不蒜子统计 -->
+ <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <div>
+    <span id="busuanzi_container_site_pv">
+      本站总访问量<span id="busuanzi_value_site_pv"></span>次
+    </span>
+    <span id="busuanzi_container_site_uv">
+      本站访客数<span id="busuanzi_value_site_uv"></span>人次
+    </span>
+  </div>
+ 
+</footer>
+
+
+
+
+    </div>
+    <!-- styles -->
+<!-- <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/justified-gallery/css/justifiedGallery.min.css"> -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+    <!-- jquery -->
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/jquery/jquery.min.js"></script>
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+    <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?15ccc3aa9c18bcd901435b78b3c09e78";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+<!-- Disqus Comments -->
+
+
+
+    
+
+
+    <!-- 药水制作师live2d -->
+    <!-- 引入css -->
+    <link rel="stylesheet" href="/live2d/css/font-awesome/css/font-awesome.min.css" />
+    <link href="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/css/waifu.css" rel="stylesheet" type="text/css" />
+    <!-- html -->
+
+    <div class="waifu-switch">Live2d</div>
+    <div class="waifu">
+      <div class="waifu-tips"></div>
+      <canvas id="live2d" width="252" height="225" class="live2d"></canvas>
+      <div class="waifu-tool">
+        <i class="fa-times waifu-closed"></i>
+      </div>
+    </div>
+    <!-- 引入js -->
+    <script src="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/live2d.js"></script>
+    <script async src="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/waifu-tips.js"></script>
+    <script type="text/javascript">
+      loadlive2d("live2d", "/live2d/Pio/model.json");
+    </script>
+    <!-- 药水制作师live2d插件结束 -->
+
+    <!-- 引入视差滚动特效js -->
+    <!-- <script src="/parallax/parallax.min.js"></script>
+<script src="/parallax/parallaxController.js"></script> -->
+
+    <!-- 不蒜子统计请见footer.ejs -->
+
+  </body>
+
+  </html>

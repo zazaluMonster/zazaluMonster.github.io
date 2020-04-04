@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang=en>
+  <!-- 引入视差滚动css -->
+  <!-- <link rel="stylesheet" href="/parallax/parallaxCss.css"> -->
+  <head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="被人说烂的Java内存模型Java内存模型的相关资料在网上实在是太多了,不管是过时的还是不过时的,网络上充斥的学习资料,比如各类研究Java内存模型的博文,也随着Java的发展,渐渐失去了其内容的准确性. 要在那么多网络资料中找到对Java内存模型最新最全的说法,估计最好的方式只有翻阅Oracle的文档了!(字体大小太不舒服了!) 我最近也不停的查阅和总结了不少网上的资料,不过由于类似资料实在太多">
+<meta name="keywords" content="JVM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="冷静对待你遇到的所有Java内存异常">
+<meta property="og:url" content="https://zazalu.space/2019/09/17/java-memory-error-solution-Theoretically/index.html">
+<meta property="og:site_name" content="Zazalu&#39;s Blog">
+<meta property="og:description" content="被人说烂的Java内存模型Java内存模型的相关资料在网上实在是太多了,不管是过时的还是不过时的,网络上充斥的学习资料,比如各类研究Java内存模型的博文,也随着Java的发展,渐渐失去了其内容的准确性. 要在那么多网络资料中找到对Java内存模型最新最全的说法,估计最好的方式只有翻阅Oracle的文档了!(字体大小太不舒服了!) 我最近也不停的查阅和总结了不少网上的资料,不过由于类似资料实在太多">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2020-04-04T01:13:08.390Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="冷静对待你遇到的所有Java内存异常">
+<meta name="twitter:description" content="被人说烂的Java内存模型Java内存模型的相关资料在网上实在是太多了,不管是过时的还是不过时的,网络上充斥的学习资料,比如各类研究Java内存模型的博文,也随着Java的发展,渐渐失去了其内容的准确性. 要在那么多网络资料中找到对Java内存模型最新最全的说法,估计最好的方式只有翻阅Oracle的文档了!(字体大小太不舒服了!) 我最近也不停的查阅和总结了不少网上的资料,不过由于类似资料实在太多">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>冷静对待你遇到的所有Java内存异常</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+
+  <body class="max-width mx-auto px3 ltr">
+    <!-- 添加视差滚动容器 -->
+    <!-- <ul id="scene" class="scene unselectable" data-friction-x="0.1" data-friction-y="0.1" data-scalar-x="25" data-scalar-y="15" style="width: 100%; height: 769px; transform: translate3d(0px, 0px, 0px); transform-style: preserve-3d; backface-visibility: hidden;">
+      <li class="layer" data-depth="0.00" style="position: relative; display: block; left: 0px; top: 0px; transform: translate3d(0px, 0px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="background"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light orange b phase-4"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light purple c phase-5"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light orange d phase-3"></div></li>
+      <li class="layer" data-depth="0.15" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(43.575px, 14.7375px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.30" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(87.15px, 29.475px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.30" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(87.15px, 29.475px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.40" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(116.2px, 39.3px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.50" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(145.25px, 49.125px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="lighthouse depth-60"></div></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.80" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(232.4px, 78.6px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="1.00" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(290.5px, 98.25px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+  </ul> -->
+    
+    <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2019/09/19/use-gitalk-in-hexo-by-script/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2019/09/04/always-smail-but-not-always-happy/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://zazalu.space/2019/09/17/java-memory-error-solution-Theoretically/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://zazalu.space/2019/09/17/java-memory-error-solution-Theoretically/&text=冷静对待你遇到的所有Java内存异常"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://zazalu.space/2019/09/17/java-memory-error-solution-Theoretically/&title=冷静对待你遇到的所有Java内存异常"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zazalu.space/2019/09/17/java-memory-error-solution-Theoretically/&is_video=false&description=冷静对待你遇到的所有Java内存异常"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=冷静对待你遇到的所有Java内存异常&body=Check out this article: https://zazalu.space/2019/09/17/java-memory-error-solution-Theoretically/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://zazalu.space/2019/09/17/java-memory-error-solution-Theoretically/&title=冷静对待你遇到的所有Java内存异常"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://zazalu.space/2019/09/17/java-memory-error-solution-Theoretically/&title=冷静对待你遇到的所有Java内存异常"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://zazalu.space/2019/09/17/java-memory-error-solution-Theoretically/&title=冷静对待你遇到的所有Java内存异常"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://zazalu.space/2019/09/17/java-memory-error-solution-Theoretically/&title=冷静对待你遇到的所有Java内存异常"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://zazalu.space/2019/09/17/java-memory-error-solution-Theoretically/&name=冷静对待你遇到的所有Java内存异常&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#被人说烂的Java内存模型"><span class="toc-number">1.</span> <span class="toc-text">被人说烂的Java内存模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#从各种OOM异常出发来零距离的理解Java内存模型"><span class="toc-number">2.</span> <span class="toc-text">从各种OOM异常出发来零距离的理解Java内存模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#java-lang-StackOverFlowError"><span class="toc-number">3.</span> <span class="toc-text">java.lang.StackOverFlowError</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#这个Stack是什么鬼东西"><span class="toc-number">3.1.</span> <span class="toc-text">这个Stack是什么鬼东西</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java在哪些地方会使用Stack来存储数据"><span class="toc-number">3.2.</span> <span class="toc-text">Java在哪些地方会使用Stack来存储数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#这种异常是如何发生的"><span class="toc-number">3.3.</span> <span class="toc-text">这种异常是如何发生的?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#一个简单的Demo复现这种异常"><span class="toc-number">3.4.</span> <span class="toc-text">一个简单的Demo复现这种异常</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#相关JVM参数"><span class="toc-number">3.5.</span> <span class="toc-text">相关JVM参数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#java-lang-OutOfMemoryError-Java-heap-space"><span class="toc-number">4.</span> <span class="toc-text">java.lang.OutOfMemoryError: Java heap space</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Java常用的内存空间对应计算机硬件是哪些组件"><span class="toc-number">4.1.</span> <span class="toc-text">Java常用的内存空间对应计算机硬件是哪些组件?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#什么是Java的堆内存-Heap"><span class="toc-number">4.2.</span> <span class="toc-text">什么是Java的堆内存(Heap)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#这种异常是如何发生的-1"><span class="toc-number">4.3.</span> <span class="toc-text">这种异常是如何发生的?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#最小复现Demo"><span class="toc-number">4.4.</span> <span class="toc-text">最小复现Demo</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#相关JVM参数-1"><span class="toc-number">4.5.</span> <span class="toc-text">相关JVM参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#如何处理"><span class="toc-number">4.6.</span> <span class="toc-text">如何处理?</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#java-lang-OutOfMemoryError-GC-Overhead-limit-exceeded"><span class="toc-number">5.</span> <span class="toc-text">java.lang.OutOfMemoryError: GC Overhead limit exceeded</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#最小复现Demo-1"><span class="toc-number">5.1.</span> <span class="toc-text">最小复现Demo</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#这个异常一般如何处理"><span class="toc-number">5.2.</span> <span class="toc-text">这个异常一般如何处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#相关JVM参数-2"><span class="toc-number">5.3.</span> <span class="toc-text">相关JVM参数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#java-lang-OutOfMemoryError-Permgen-space-jdk8已经不会出现此异常-请注意"><span class="toc-number">6.</span> <span class="toc-text">java.lang.OutOfMemoryError: Permgen space  (jdk8已经不会出现此异常,请注意)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#什么是Permgen"><span class="toc-number">6.1.</span> <span class="toc-text">什么是Permgen</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#什么时候会产生这个错误以及如何解决"><span class="toc-number">6.2.</span> <span class="toc-text">什么时候会产生这个错误以及如何解决</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#最小复现Demo-2"><span class="toc-number">6.3.</span> <span class="toc-text">最小复现Demo</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#相关JVM参数-3"><span class="toc-number">6.4.</span> <span class="toc-text">相关JVM参数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#java-lang-OutOfMemoryError-Metaspace-since-jdk8-才有可能抛出的错误"><span class="toc-number">7.</span> <span class="toc-text">java.lang.OutOfMemoryError: Metaspace (since jdk8 才有可能抛出的错误)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#什么是Metaspace"><span class="toc-number">7.1.</span> <span class="toc-text">什么是Metaspace</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#为什么要移除永久代"><span class="toc-number">7.2.</span> <span class="toc-text">为什么要移除永久代</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#最小复现Demo-3"><span class="toc-number">7.3.</span> <span class="toc-text">最小复现Demo</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#如何解决这类异常"><span class="toc-number">7.4.</span> <span class="toc-text">如何解决这类异常</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#相关JVM参数-4"><span class="toc-number">7.5.</span> <span class="toc-text">相关JVM参数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#java-lang-OutOfMemoryError-Unable-to-create-new-native-thread"><span class="toc-number">8.</span> <span class="toc-text">java.lang.OutOfMemoryError: Unable to create new native thread</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#复现demo"><span class="toc-number">8.1.</span> <span class="toc-text">复现demo</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解决方案"><span class="toc-number">8.2.</span> <span class="toc-text">解决方案</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#java-lang-OutOfMemoryError-request-size-bytes-for-reason"><span class="toc-number">9.</span> <span class="toc-text">java.lang.OutOfMemoryError: request size bytes for reason</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#java-lang-OutOfMemoryError-Requested-array-size-exceeds-VM"><span class="toc-number">10.</span> <span class="toc-text">java.lang.OutOfMemoryError: Requested array size exceeds VM</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#尾"><span class="toc-number">11.</span> <span class="toc-text">尾</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+      
+      <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        冷静对待你遇到的所有Java内存异常
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Zazalu's Blog</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-09-17T08:16:02.000Z" itemprop="datePublished">2019-09-17</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/IT/">IT</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/JVM/">JVM</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="被人说烂的Java内存模型"><a href="#被人说烂的Java内存模型" class="headerlink" title="被人说烂的Java内存模型"></a>被人说烂的Java内存模型</h2><p>Java内存模型的相关资料在网上实在是太多了,不管是过时的还是不过时的,网络上充斥的学习资料,比如各类研究Java内存模型的博文,也随着Java的发展,渐渐失去了其内容的准确性.</p>
+<p>要在那么多网络资料中找到对Java内存模型最新最全的说法,估计最好的方式只有翻阅Oracle的文档了!(字体大小太不舒服了!)</p>
+<p>我最近也不停的查阅和总结了不少网上的资料,不过由于类似资料实在太多,所以不打算重复的说明这个被人说烂的Java内存模型</p>
+<h2 id="从各种OOM异常出发来零距离的理解Java内存模型"><a href="#从各种OOM异常出发来零距离的理解Java内存模型" class="headerlink" title="从各种OOM异常出发来零距离的理解Java内存模型"></a>从各种OOM异常出发来零距离的理解Java内存模型</h2><p>对于大脑来说, 大脑更喜欢问题, 而不是从陈述开始.</p>
+<p>本文会从平时工作中可能会遇到的OOM异常出发,来一步步的深入理解我们所熟知的Java内存模型,从而哪怕可以更加理解一点这些方面的编程思想和设计精髓, 也是一个不小的进步</p>
+<h2 id="java-lang-StackOverFlowError"><a href="#java-lang-StackOverFlowError" class="headerlink" title="java.lang.StackOverFlowError"></a>java.lang.StackOverFlowError</h2><h3 id="这个Stack是什么鬼东西"><a href="#这个Stack是什么鬼东西" class="headerlink" title="这个Stack是什么鬼东西"></a>这个Stack是什么鬼东西</h3><p>Stack是个栈, 是一种数据结构, 会占用一块内存空间</p>
+<h3 id="Java在哪些地方会使用Stack来存储数据"><a href="#Java在哪些地方会使用Stack来存储数据" class="headerlink" title="Java在哪些地方会使用Stack来存储数据"></a>Java在哪些地方会使用Stack来存储数据</h3><ol>
+<li><p>最常见的就是虚拟机栈, 它是专门为java Method执行服务的一块内存, 每个方法调用都会往这个栈中压入一个栈帧(stackFrame), 由于方法可以互调,迭代,所以使用栈模型来服务Java Method是很适合的一种数据结构模型</p>
+</li>
+<li><p>别忘了还有一个本地方法栈, 它是专门为java的底层native方法执行服务的一块内存. 然而由于native方法都是术语jdk内部的测试稳定的程序,所以作为应用java开发人员的我们,一般是不可能遇到这个层面抛出的这个异常,同时我也几乎可以判断这种方法是不会直接抛出java.lang.StackOverFlowError异常的,所以我们可以缩小我们的关注范围,把抛出这个异常的原因全部指向于虚拟机栈即可</p>
+</li>
+</ol>
+<h3 id="这种异常是如何发生的"><a href="#这种异常是如何发生的" class="headerlink" title="这种异常是如何发生的?"></a>这种异常是如何发生的?</h3><p>我们知道每调用一次Java Method,就会往虚拟机栈中压入一个栈帧,在方法结束之前都不会出栈. 所以可以直接推理出在一个java线程运行过程中,如果同时调用的方法过多(比如递归的调用一个方法),就会出现这个异常</p>
+<p>事实上,除了恶性递归或者虚拟机栈可用内存过小的情况下, 也很难触发这种异常, 所以一般来说遇到这种异常几乎是可以直接断定程序中存在恶性递归导致的.</p>
+<p>这类问题在实际开发中遇到的并不多, 反而是在做一些算法问题的时候, 由于自己的疏忽从而引发不可预知的恶性递归</p>
+<h3 id="一个简单的Demo复现这种异常"><a href="#一个简单的Demo复现这种异常" class="headerlink" title="一个简单的Demo复现这种异常"></a>一个简单的Demo复现这种异常</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Main.main(<span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述代码就会报StackOverFlowError, 因为main方法会被不停的循环执行, 直到超出虚拟机栈能够承受的大小</p>
+<h3 id="相关JVM参数"><a href="#相关JVM参数" class="headerlink" title="相关JVM参数"></a>相关JVM参数</h3><p>-Xss, 正常取值128K~256K, 如果仍然不够可以进行加大, 这个选项对性能影响比较大，需要严格的测试哦</p>
+<h2 id="java-lang-OutOfMemoryError-Java-heap-space"><a href="#java-lang-OutOfMemoryError-Java-heap-space" class="headerlink" title="java.lang.OutOfMemoryError: Java heap space"></a>java.lang.OutOfMemoryError: Java heap space</h2><p>这个异常表示, Java程序运行过程中遭遇了内存超限问题, 根本原因是Java的堆(Heap)内存超限</p>
+<h3 id="Java常用的内存空间对应计算机硬件是哪些组件"><a href="#Java常用的内存空间对应计算机硬件是哪些组件" class="headerlink" title="Java常用的内存空间对应计算机硬件是哪些组件?"></a>Java常用的内存空间对应计算机硬件是哪些组件?</h3><ol>
+<li>寄存器(比如每个Java线程独享程序计数器(Program Counter Register))</li>
+<li>RAM(也就是我们常说的内存,java中的虚拟机栈,堆内存都用的这块)</li>
+</ol>
+<h3 id="什么是Java的堆内存-Heap"><a href="#什么是Java的堆内存-Heap" class="headerlink" title="什么是Java的堆内存(Heap)"></a>什么是Java的堆内存(Heap)</h3><p>这就涉及了Java的运行时内存模型了~ </p>
+<p>我就简单来说下吧~</p>
+<p>一个JVM进程运行后, 会有一个主线程去运行我们写的Java程序, 那么每一个这种线程都拥有两大块内存空间</p>
+<ul>
+<li>线程共享内存空间<ul>
+<li>堆(Heap, 所有java的对象实例和数组,jdk8后还存放了字符串常量池和类静态变量)</li>
+<li>方法区(存放类元数据,符号引用,静态常量,jdk8后HotSpot将其从永久代移动到了Metaspace)</li>
+</ul>
+</li>
+<li>线程独享内存空间<ul>
+<li>虚拟机栈(为Java方法提供的一块内存空间,内部有栈帧组成)</li>
+<li>本地方法栈(为Java的native方法)</li>
+<li>程序计数器(PC寄存器,记录执行行号)</li>
+</ul>
+</li>
+</ul>
+<p>所以Java的堆内存就是JVM中设定的一块专门存储所有java的对象实例和数组,jdk8后甚至包括字符串常量池和类静态变量的内存区域</p>
+<h3 id="这种异常是如何发生的-1"><a href="#这种异常是如何发生的-1" class="headerlink" title="这种异常是如何发生的?"></a>这种异常是如何发生的?</h3><p>如果是1.7以前, Java堆溢出的问题根源是简单的, 就是运行时存在的对象实例和数组太多了!</p>
+<p>但是在1.8后, 由于还存放了字符串常量, 所以出现异常还有一种可能就是 interned Strings 过多导致的哦!</p>
+<h3 id="最小复现Demo"><a href="#最小复现Demo" class="headerlink" title="最小复现Demo"></a>最小复现Demo</h3><p>执行前最好先修改下JVM参数,防止等待时间过长<br>JVM参数:<br>-Xms20m<br>-Xmx20m<br>-XX:MetaspaceSize=10m<br>-XX:MaxMetaspaceSize=10m<br>-XX:-UseGCOverheadLimit</p>
+<p>JVM参数说明: 限制堆大小20M,方便快速报错! 由于我用的是jdk8,所以限制了元空间的大小为10m,说实话在这个情况下没啥用哈哈哈哈哈哈哈(就是觉得加上去舒服才加的,不信我说的你可以自己google)!最后一个参数-XX:-UseGCOverheadLimit这个有必要加一下. 因为我的demo程序属于那种恶意的程序,所以一次GC几乎没办法清理任何对象实例,因为他们都在被占用着! 所以必须使用这个参数来防止GC检测出我的这种恶意程序,从而正常的提示堆溢出的错误而不是GC Overhead limit exceeded错误(这个错误会在后面细讲)</p>
+<ol>
+<li>普通的对象实例爆掉堆内存</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        List&lt;Object&gt; list = <span class="keyword">new</span> ArrayList();</span><br><span class="line">        <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(<span class="keyword">true</span>)&#123;</span><br><span class="line">            list.add(<span class="keyword">new</span> Object());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>interned Strings过多爆掉堆内存(有待考证此代码的准确性,请不要盲目相信,要有自己的想法)</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        List&lt;String&gt; list = <span class="keyword">new</span> ArrayList();</span><br><span class="line">        <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(<span class="keyword">true</span>)&#123;</span><br><span class="line">            list.add(String.valueOf(i++).intern());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>代码说明: 这串代码会每次生成一个新的interned String, 也就是数字递增对应的String表示, 所以最终爆掉内存, 证明了是interned Strings爆掉了内存, 相同的代码在jkd1.7以前是不会报堆内存溢出的, 请注意</p>
+<h3 id="相关JVM参数-1"><a href="#相关JVM参数-1" class="headerlink" title="相关JVM参数"></a>相关JVM参数</h3><p>-Xms : 初始堆大小<br>-Xmx : 最大堆大小</p>
+<h3 id="如何处理"><a href="#如何处理" class="headerlink" title="如何处理?"></a>如何处理?</h3><p>查看jvm快照,分析占用内存大的对象是哪些, 然后定位到代码位置, 最后进行优化</p>
+<p>我一般使用visualVM来查看这类问题</p>
+<h2 id="java-lang-OutOfMemoryError-GC-Overhead-limit-exceeded"><a href="#java-lang-OutOfMemoryError-GC-Overhead-limit-exceeded" class="headerlink" title="java.lang.OutOfMemoryError: GC Overhead limit exceeded"></a>java.lang.OutOfMemoryError: GC Overhead limit exceeded</h2><p>这个异常表示您的Java程序在运行的时候, 98%的时间都在执行GC回收, 但是每次回收只回收不到2%的空间!</p>
+<p>换句话说,其实这个异常往往是抛出java.lang.OutOfMemoryError: Java heap space异常的前兆! 因为Java程序每次都GC回收只能回收一点点内存空间,而你的程序却仍然在不停的产生新的对象实例, 这无疑导致了两种可能结果: </p>
+<ol>
+<li>不停的进行GC</li>
+<li>直接超出的堆内存大小</li>
+</ol>
+<p>这个问题还有一些细节需要我们去掌握,我们先从下面的例子来看吧</p>
+<h3 id="最小复现Demo-1"><a href="#最小复现Demo-1" class="headerlink" title="最小复现Demo"></a>最小复现Demo</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        Map map = System.getProperties();</span><br><span class="line">        Random r = <span class="keyword">new</span> Random();</span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            map.put(r.nextInt(), <span class="string">"value"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>代码说明:  这段代码不停的往map中加入新的key-value,导致map大小不断变大! 当到达堆内存顶点的时候,GC发生, 但是清理完毕后,JVM发现清理前后的堆内存大小改变很小,不到2%; 这时候程序继续运行,继续往map中加数据!GC又发生了!又只清理不到2%! 如此不停的循环, 最后JVM得出了一个判断! 你的Java程序在占用CPU进行运算的时间里,98%的时间都特么的在垃圾回收,而每次GC居然只能回收堆内存的2%空间, 这肯定是代码存在问题,于是抛出了这个异常. 如果这个时候,你断定不是自己的代码问题, 使用JVM参数-XX:-UseGCOverheadLimit来关闭这种检查! 然后你就会发现你的程序抛出了堆溢出异常! 为什么呢? 因为堆内存不断的被占满,最终导致最后一次加入新的int的时候, 堆内存空间直接不足了!</p>
+<h3 id="这个异常一般如何处理"><a href="#这个异常一般如何处理" class="headerlink" title="这个异常一般如何处理"></a>这个异常一般如何处理</h3><p>和堆溢出的解决方式一致</p>
+<h3 id="相关JVM参数-2"><a href="#相关JVM参数-2" class="headerlink" title="相关JVM参数"></a>相关JVM参数</h3><p>-XX:-UseGCOverheadLimit</p>
+<h2 id="java-lang-OutOfMemoryError-Permgen-space-jdk8已经不会出现此异常-请注意"><a href="#java-lang-OutOfMemoryError-Permgen-space-jdk8已经不会出现此异常-请注意" class="headerlink" title="java.lang.OutOfMemoryError: Permgen space  (jdk8已经不会出现此异常,请注意)"></a>java.lang.OutOfMemoryError: Permgen space  (jdk8已经不会出现此异常,请注意)</h2><p>只存在于jdk1.8以前的java程序中! 这个异常表示,永久代大小不够!</p>
+<h3 id="什么是Permgen"><a href="#什么是Permgen" class="headerlink" title="什么是Permgen"></a>什么是Permgen</h3><p>是HotSpot在jdk1.8以前存在的一个区域,用于实现方法区</p>
+<h3 id="什么时候会产生这个错误以及如何解决"><a href="#什么时候会产生这个错误以及如何解决" class="headerlink" title="什么时候会产生这个错误以及如何解决"></a>什么时候会产生这个错误以及如何解决</h3><p>由于是实现方法区的地方, 所以肯定是类元信息或者常量（jdk1.7后部分常量已经挪到堆中），静态常量和JIT即时编译器编译后的代码等数据太多导致大小不够</p>
+<p>乍一看也许你会头晕! 不过没关系, 根据我两年的开发经验, 我碰到过的唯一一次Permgen space问题是因为SpringIoC容器一口气加载了过多的Bean导致的!</p>
+<p>所以正常来说, 直接扩大这个区域的大小即可!</p>
+<p>比如使用如下JVM参数扩大:<br>-XX:MaxNewSize=xxxm -XX:MaxPermSize=xxxm</p>
+<h3 id="最小复现Demo-2"><a href="#最小复现Demo-2" class="headerlink" title="最小复现Demo"></a>最小复现Demo</h3><p>运行要求: jdk版本 &lt;= 1.6</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> javassist.ClassPool;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MicroGenerator</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100_000_000</span>; i++) &#123;</span><br><span class="line">      generate(<span class="string">"eu.plumbr.demo.Generated"</span> + i);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Class <span class="title">generate</span><span class="params">(String name)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    ClassPool pool = ClassPool.getDefault();</span><br><span class="line">    <span class="keyword">return</span> pool.makeClass(name).toClass();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>借助了javassist来不停的加载新的class,直至爆掉永久代区域</p>
+<h3 id="相关JVM参数-3"><a href="#相关JVM参数-3" class="headerlink" title="相关JVM参数"></a>相关JVM参数</h3><p>-XX:PermSize=xxxm<br>-XX:MaxPermSize=xxxm</p>
+<h2 id="java-lang-OutOfMemoryError-Metaspace-since-jdk8-才有可能抛出的错误"><a href="#java-lang-OutOfMemoryError-Metaspace-since-jdk8-才有可能抛出的错误" class="headerlink" title="java.lang.OutOfMemoryError: Metaspace (since jdk8 才有可能抛出的错误)"></a>java.lang.OutOfMemoryError: Metaspace (since jdk8 才有可能抛出的错误)</h2><p>这个异常表示: Metaspace的空间不足导致OOM异常发生</p>
+<h3 id="什么是Metaspace"><a href="#什么是Metaspace" class="headerlink" title="什么是Metaspace"></a>什么是Metaspace</h3><p>有些不太专注JVM知识的小伙伴可能对Metaspace是陌生的, 因为这玩意是jdk8开始才正式登场的一块内存区域. 它专门用于替代原来的永久代, 且存在于本地内存中, 所以它的最大内存理论就是你电脑的最大内存. 和永久代不一样的是, 它可以进行自我扩容, 直到达到规定的MaxMetaspaceSize或者到达本机的最大可用内存为止. </p>
+<p>Metaspace接替了永久代的任务, 方法区的内容全部转移到此处(除了字符串常量池被挪到了堆中)</p>
+<p>不过相比于永久代, Metaspace进行GC的时候, 稍微改变了一点规则, Metaspace中类元数据是否需要回收是根据类加载器死活来来决定的, 这不同于永久代的, 只要类引用消失就会被回收. 这种规则会产生一些问题: </p>
+<ol>
+<li><a href="https://blog.csdn.net/xyghehehehe/article/details/78820135#commentsedit" target="_blank" rel="noopener">https://blog.csdn.net/xyghehehehe/article/details/78820135#commentsedit</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/25634935" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/25634935</a></li>
+</ol>
+<p>所以在jdk8后使用反射,动态代理等会生成class对象的方法, 一定要小心MetaSpace是否会对其进行回收, 如果不会, 则需要进行相应的优化处理</p>
+<h3 id="为什么要移除永久代"><a href="#为什么要移除永久代" class="headerlink" title="为什么要移除永久代"></a>为什么要移除永久代</h3><ol>
+<li><p>方法区大小难以设定，容易发生内存溢出。永久代会存放Class的相关信息，一般这些信息在编译期间就能确定大小。但是如果是在一些需要动态生成大量Class的应用中，如：Spring的动态代理、大量的JSP页面或动态生成JSP页面等，由于方法区的大小在一开始就要分配好，因此就能难确定大小，容易出现内存溢出</p>
+</li>
+<li><p>GC复杂且效率低。方法区存储了类的元数据信息和各种常量，它的内存回收目标理应当是对这些类型的卸载和常量的回收。但由于这些数据被类的实例引用，卸载条件变得复杂且严格，回收不当会导致堆中的类实例失去元数据信息和常量信息。因此，回收方法区内存不是一件简单高效的事情。</p>
+</li>
+<li><p>促进HotSpot JVM与JRockit VM的融合。JRockit没有方法区，移除永久代可以促进HotSpot JVM与JRockit VM的融合。</p>
+</li>
+</ol>
+<h3 id="最小复现Demo-3"><a href="#最小复现Demo-3" class="headerlink" title="最小复现Demo"></a>最小复现Demo</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> -XX:MetaspaceSize=8m</span></span><br><span class="line"><span class="comment"> -XX:MaxMetaspaceSize=8m</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MetaSpaceOOMTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            Enhancer enhancer = <span class="keyword">new</span> Enhancer();</span><br><span class="line">            enhancer.setSuperclass(OOMObject.class);</span><br><span class="line">            enhancer.setUseCache(<span class="keyword">false</span>);</span><br><span class="line">            enhancer.setCallback(<span class="keyword">new</span> MethodInterceptor() &#123;</span><br><span class="line">                <span class="function"><span class="keyword">public</span> Object <span class="title">intercept</span><span class="params">(Object obj, Method method, Object[] args, MethodProxy proxy)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">                    <span class="keyword">return</span> proxy.invokeSuper(obj, args);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">            <span class="comment">//无限创建动态代理，生成Class对象</span></span><br><span class="line">            enhancer.create();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">OOMObject</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="如何解决这类异常"><a href="#如何解决这类异常" class="headerlink" title="如何解决这类异常"></a>如何解决这类异常</h3><ol>
+<li><p>增大MetaSpace的最大空间大小</p>
+</li>
+<li><p>类似检查永久代异常一样的处理方式, 检查dump文件, 查看哪些类加载存在异常</p>
+</li>
+</ol>
+<h3 id="相关JVM参数-4"><a href="#相关JVM参数-4" class="headerlink" title="相关JVM参数"></a>相关JVM参数</h3><p> -XX:MetaspaceSize=8m<br> -XX:MaxMetaspaceSize=8m</p>
+<h2 id="java-lang-OutOfMemoryError-Unable-to-create-new-native-thread"><a href="#java-lang-OutOfMemoryError-Unable-to-create-new-native-thread" class="headerlink" title="java.lang.OutOfMemoryError: Unable to create new native thread"></a>java.lang.OutOfMemoryError: Unable to create new native thread</h2><p>这个异常表示,JVM无法再创建新的线程了!JVM能够创建的线程数是有限制的,</p>
+<h3 id="复现demo"><a href="#复现demo" class="headerlink" title="复现demo"></a>复现demo</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestNativeOutOfMemoryError</span> </span>&#123;  </span><br><span class="line">  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;  </span><br><span class="line">  </span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>;; i++) &#123;  </span><br><span class="line">            System.out.println(<span class="string">"i = "</span> + i);  </span><br><span class="line">            <span class="keyword">new</span> Thread(<span class="keyword">new</span> HoldThread()).start();  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HoldThread</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;  </span><br><span class="line">    CountDownLatch cdl = <span class="keyword">new</span> CountDownLatch(<span class="number">1</span>);  </span><br><span class="line">  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">HoldThread</span><span class="params">()</span> </span>&#123;  </span><br><span class="line">        <span class="keyword">this</span>.setDaemon(<span class="keyword">true</span>);  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;  </span><br><span class="line">        <span class="keyword">try</span> &#123;  </span><br><span class="line">            cdl.await();  </span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><ol>
+<li><p>去用线程池!</p>
+</li>
+<li><p>检查代码是否存在bug在不停的生成新线程!</p>
+</li>
+<li><p>如果确实需要那么多线程,那就修改OS和JVM的参数设置,并且加大你的硬件内存容量!</p>
+</li>
+</ol>
+<h2 id="java-lang-OutOfMemoryError-request-size-bytes-for-reason"><a href="#java-lang-OutOfMemoryError-request-size-bytes-for-reason" class="headerlink" title="java.lang.OutOfMemoryError: request size bytes for reason"></a>java.lang.OutOfMemoryError: request size bytes for reason</h2><p>如果你看到了这个异常, 说明你的OS内存不够用了, JVM想本地操作系统申请内存被拒绝, 导致JVM进程无法继续运行! 发生这个问题的原因一般是你的Java程序需要的内存容量超过了操作系统可提供给JVM的最大内存容量, 连swap内存都没了</p>
+<h2 id="java-lang-OutOfMemoryError-Requested-array-size-exceeds-VM"><a href="#java-lang-OutOfMemoryError-Requested-array-size-exceeds-VM" class="headerlink" title="java.lang.OutOfMemoryError: Requested array size exceeds VM"></a>java.lang.OutOfMemoryError: Requested array size exceeds VM</h2><p>当你正准备创建一个超过虚拟机允许的大小的数组时，这条错误就会出现在你眼前!</p>
+<h2 id="尾"><a href="#尾" class="headerlink" title="尾"></a>尾</h2><p>本文对java常见的OOM异常做了总结说明,同时对于涉及的Java内存模型进行了说明,希望可以在日后遇到类似问题的时候可以沉着冷静,不慌不忙的来排查问题</p>
+<p>参考:<br><a href="https://medium.com/platform-engineer/understanding-java-memory-model-1d0863f6d973" target="_blank" rel="noopener">https://medium.com/platform-engineer/understanding-java-memory-model-1d0863f6d973</a><br><a href="https://juejin.im/post/5ca02d046fb9a05e6a086cb7" target="_blank" rel="noopener">https://juejin.im/post/5ca02d046fb9a05e6a086cb7</a><br><a href="https://zhuanlan.zhihu.com/p/25634935" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/25634935</a><br><a href="https://www.zhihu.com/question/39990490/answer/369690291" target="_blank" rel="noopener">https://www.zhihu.com/question/39990490/answer/369690291</a></p>
+
+    <div id="donationWrap">
+        <p style="
+      text-align: center;
+      border-top: gold;
+      border-top-style: solid;
+      border-top-width: 1px;
+      color: #eee;
+      font-weight: bold;
+      font-size: 1rem;
+      padding-top: 15px;
+      margin-top: 70px;
+  ">感谢作者</p>
+        <img src="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/tmpImage/blog_donation_zfb.png"
+          style="margin-left: auto;margin-right: auto;display: block;width: 30%;padding-bottom: 30px;">
+      </div>
+      <div id="donationPoint">
+
+
+  <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img style="margin-left: auto;margin-right: auto;display: block;" alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a>
+  <p style="
+  text-align: center;
+  color: #eee;
+  font-weight: bold;
+  font-size: 1rem;">本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>进行许可。</p>
+  <div id="licensePoint"></div></div>
+  </div>
+</article>
+
+
+
+      
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#被人说烂的Java内存模型"><span class="toc-number">1.</span> <span class="toc-text">被人说烂的Java内存模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#从各种OOM异常出发来零距离的理解Java内存模型"><span class="toc-number">2.</span> <span class="toc-text">从各种OOM异常出发来零距离的理解Java内存模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#java-lang-StackOverFlowError"><span class="toc-number">3.</span> <span class="toc-text">java.lang.StackOverFlowError</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#这个Stack是什么鬼东西"><span class="toc-number">3.1.</span> <span class="toc-text">这个Stack是什么鬼东西</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java在哪些地方会使用Stack来存储数据"><span class="toc-number">3.2.</span> <span class="toc-text">Java在哪些地方会使用Stack来存储数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#这种异常是如何发生的"><span class="toc-number">3.3.</span> <span class="toc-text">这种异常是如何发生的?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#一个简单的Demo复现这种异常"><span class="toc-number">3.4.</span> <span class="toc-text">一个简单的Demo复现这种异常</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#相关JVM参数"><span class="toc-number">3.5.</span> <span class="toc-text">相关JVM参数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#java-lang-OutOfMemoryError-Java-heap-space"><span class="toc-number">4.</span> <span class="toc-text">java.lang.OutOfMemoryError: Java heap space</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Java常用的内存空间对应计算机硬件是哪些组件"><span class="toc-number">4.1.</span> <span class="toc-text">Java常用的内存空间对应计算机硬件是哪些组件?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#什么是Java的堆内存-Heap"><span class="toc-number">4.2.</span> <span class="toc-text">什么是Java的堆内存(Heap)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#这种异常是如何发生的-1"><span class="toc-number">4.3.</span> <span class="toc-text">这种异常是如何发生的?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#最小复现Demo"><span class="toc-number">4.4.</span> <span class="toc-text">最小复现Demo</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#相关JVM参数-1"><span class="toc-number">4.5.</span> <span class="toc-text">相关JVM参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#如何处理"><span class="toc-number">4.6.</span> <span class="toc-text">如何处理?</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#java-lang-OutOfMemoryError-GC-Overhead-limit-exceeded"><span class="toc-number">5.</span> <span class="toc-text">java.lang.OutOfMemoryError: GC Overhead limit exceeded</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#最小复现Demo-1"><span class="toc-number">5.1.</span> <span class="toc-text">最小复现Demo</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#这个异常一般如何处理"><span class="toc-number">5.2.</span> <span class="toc-text">这个异常一般如何处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#相关JVM参数-2"><span class="toc-number">5.3.</span> <span class="toc-text">相关JVM参数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#java-lang-OutOfMemoryError-Permgen-space-jdk8已经不会出现此异常-请注意"><span class="toc-number">6.</span> <span class="toc-text">java.lang.OutOfMemoryError: Permgen space  (jdk8已经不会出现此异常,请注意)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#什么是Permgen"><span class="toc-number">6.1.</span> <span class="toc-text">什么是Permgen</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#什么时候会产生这个错误以及如何解决"><span class="toc-number">6.2.</span> <span class="toc-text">什么时候会产生这个错误以及如何解决</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#最小复现Demo-2"><span class="toc-number">6.3.</span> <span class="toc-text">最小复现Demo</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#相关JVM参数-3"><span class="toc-number">6.4.</span> <span class="toc-text">相关JVM参数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#java-lang-OutOfMemoryError-Metaspace-since-jdk8-才有可能抛出的错误"><span class="toc-number">7.</span> <span class="toc-text">java.lang.OutOfMemoryError: Metaspace (since jdk8 才有可能抛出的错误)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#什么是Metaspace"><span class="toc-number">7.1.</span> <span class="toc-text">什么是Metaspace</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#为什么要移除永久代"><span class="toc-number">7.2.</span> <span class="toc-text">为什么要移除永久代</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#最小复现Demo-3"><span class="toc-number">7.3.</span> <span class="toc-text">最小复现Demo</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#如何解决这类异常"><span class="toc-number">7.4.</span> <span class="toc-text">如何解决这类异常</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#相关JVM参数-4"><span class="toc-number">7.5.</span> <span class="toc-text">相关JVM参数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#java-lang-OutOfMemoryError-Unable-to-create-new-native-thread"><span class="toc-number">8.</span> <span class="toc-text">java.lang.OutOfMemoryError: Unable to create new native thread</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#复现demo"><span class="toc-number">8.1.</span> <span class="toc-text">复现demo</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解决方案"><span class="toc-number">8.2.</span> <span class="toc-text">解决方案</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#java-lang-OutOfMemoryError-request-size-bytes-for-reason"><span class="toc-number">9.</span> <span class="toc-text">java.lang.OutOfMemoryError: request size bytes for reason</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#java-lang-OutOfMemoryError-Requested-array-size-exceeds-VM"><span class="toc-number">10.</span> <span class="toc-text">java.lang.OutOfMemoryError: Requested array size exceeds VM</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#尾"><span class="toc-number">11.</span> <span class="toc-text">尾</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://zazalu.space/2019/09/17/java-memory-error-solution-Theoretically/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://zazalu.space/2019/09/17/java-memory-error-solution-Theoretically/&text=冷静对待你遇到的所有Java内存异常"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://zazalu.space/2019/09/17/java-memory-error-solution-Theoretically/&title=冷静对待你遇到的所有Java内存异常"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zazalu.space/2019/09/17/java-memory-error-solution-Theoretically/&is_video=false&description=冷静对待你遇到的所有Java内存异常"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=冷静对待你遇到的所有Java内存异常&body=Check out this article: https://zazalu.space/2019/09/17/java-memory-error-solution-Theoretically/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://zazalu.space/2019/09/17/java-memory-error-solution-Theoretically/&title=冷静对待你遇到的所有Java内存异常"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://zazalu.space/2019/09/17/java-memory-error-solution-Theoretically/&title=冷静对待你遇到的所有Java内存异常"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://zazalu.space/2019/09/17/java-memory-error-solution-Theoretically/&title=冷静对待你遇到的所有Java内存异常"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://zazalu.space/2019/09/17/java-memory-error-solution-Theoretically/&title=冷静对待你遇到的所有Java内存异常"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://zazalu.space/2019/09/17/java-memory-error-solution-Theoretically/&name=冷静对待你遇到的所有Java内存异常&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+  </div>
+</div>
+
+      
+      
+
+
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script src="https://he_jia_jun.gitee.io/zazalumonster.github.io//js/md5.min.js"></script>
+    <div id="gitalk-container"></div>
+    <script>
+    if(location.pathname == '/'){
+      //首页不需要评论系统
+    }else{
+      var gitalk = new Gitalk({
+        clientID: '73a23fdac799d4edb132',
+        clientSecret: '8200d919660d513fdd8629a7c45c13d7d13d9b6f',
+        repo: 'zazaluMonster.github.io',
+        owner: 'zazaluMonster',
+        admin: 'zazaluMonster',
+        id: md5(location.origin + "/" +location.pathname),
+        distractionFreeMode: false,
+        pagerDirection: 'first'
+      });
+      gitalk.render('gitalk-container');
+    }
+    </script>
+    <!-- gitalk -->
+
+<footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 zazalu
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+  <!-- 不蒜子统计 -->
+ <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <div>
+    <span id="busuanzi_container_site_pv">
+      本站总访问量<span id="busuanzi_value_site_pv"></span>次
+    </span>
+    <span id="busuanzi_container_site_uv">
+      本站访客数<span id="busuanzi_value_site_uv"></span>人次
+    </span>
+  </div>
+ 
+</footer>
+
+
+
+
+    </div>
+    <!-- styles -->
+<!-- <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/justified-gallery/css/justifiedGallery.min.css"> -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+    <!-- jquery -->
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/jquery/jquery.min.js"></script>
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+    <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?15ccc3aa9c18bcd901435b78b3c09e78";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+<!-- Disqus Comments -->
+
+
+
+    
+
+
+    <!-- 药水制作师live2d -->
+    <!-- 引入css -->
+    <link rel="stylesheet" href="/live2d/css/font-awesome/css/font-awesome.min.css" />
+    <link href="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/css/waifu.css" rel="stylesheet" type="text/css" />
+    <!-- html -->
+
+    <div class="waifu-switch">Live2d</div>
+    <div class="waifu">
+      <div class="waifu-tips"></div>
+      <canvas id="live2d" width="252" height="225" class="live2d"></canvas>
+      <div class="waifu-tool">
+        <i class="fa-times waifu-closed"></i>
+      </div>
+    </div>
+    <!-- 引入js -->
+    <script src="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/live2d.js"></script>
+    <script async src="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/waifu-tips.js"></script>
+    <script type="text/javascript">
+      loadlive2d("live2d", "/live2d/Pio/model.json");
+    </script>
+    <!-- 药水制作师live2d插件结束 -->
+
+    <!-- 引入视差滚动特效js -->
+    <!-- <script src="/parallax/parallax.min.js"></script>
+<script src="/parallax/parallaxController.js"></script> -->
+
+    <!-- 不蒜子统计请见footer.ejs -->
+
+  </body>
+
+  </html>

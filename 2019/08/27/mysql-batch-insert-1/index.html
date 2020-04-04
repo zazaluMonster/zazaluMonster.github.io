@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang=en>
+  <!-- 引入视差滚动css -->
+  <!-- <link rel="stylesheet" href="/parallax/parallaxCss.css"> -->
+  <head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="1银行项目一直用的oracle, 所以我回忆起来自己从来没碰过mysql的批量随机数据插入… 主要是简单记录下批量插入的方式, 会有一个优化的过程, 希望对你有点帮助哦 下面我就讲解如何插入100w条随机测试数据到mysql中 建表12345678910-- drop table Merchantcreate table Merchant(    id int auto_increment,">
+<meta name="keywords" content="batchInsert">
+<meta property="og:type" content="article">
+<meta property="og:title" content="我还记得去年写过oracle的批量插入随机数据的脚本,今天补个mysql的吧">
+<meta property="og:url" content="https://zazalu.space/2019/08/27/mysql-batch-insert-1/index.html">
+<meta property="og:site_name" content="Zazalu&#39;s Blog">
+<meta property="og:description" content="1银行项目一直用的oracle, 所以我回忆起来自己从来没碰过mysql的批量随机数据插入… 主要是简单记录下批量插入的方式, 会有一个优化的过程, 希望对你有点帮助哦 下面我就讲解如何插入100w条随机测试数据到mysql中 建表12345678910-- drop table Merchantcreate table Merchant(    id int auto_increment,">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2020-04-04T01:13:08.394Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="我还记得去年写过oracle的批量插入随机数据的脚本,今天补个mysql的吧">
+<meta name="twitter:description" content="1银行项目一直用的oracle, 所以我回忆起来自己从来没碰过mysql的批量随机数据插入… 主要是简单记录下批量插入的方式, 会有一个优化的过程, 希望对你有点帮助哦 下面我就讲解如何插入100w条随机测试数据到mysql中 建表12345678910-- drop table Merchantcreate table Merchant(    id int auto_increment,">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="https://he_jia_jun.gitee.io/zazalumonster.github.io//images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>我还记得去年写过oracle的批量插入随机数据的脚本,今天补个mysql的吧</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+
+  <body class="max-width mx-auto px3 ltr">
+    <!-- 添加视差滚动容器 -->
+    <!-- <ul id="scene" class="scene unselectable" data-friction-x="0.1" data-friction-y="0.1" data-scalar-x="25" data-scalar-y="15" style="width: 100%; height: 769px; transform: translate3d(0px, 0px, 0px); transform-style: preserve-3d; backface-visibility: hidden;">
+      <li class="layer" data-depth="0.00" style="position: relative; display: block; left: 0px; top: 0px; transform: translate3d(0px, 0px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="background"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light orange b phase-4"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light purple c phase-5"></div></li>
+      <li class="layer" data-depth="0.10" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(29.05px, 9.825px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="light orange d phase-3"></div></li>
+      <li class="layer" data-depth="0.15" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(43.575px, 14.7375px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.30" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(87.15px, 29.475px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.30" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(87.15px, 29.475px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.40" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(116.2px, 39.3px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.50" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(145.25px, 49.125px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class="lighthouse depth-60"></div></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"></li>
+      <li class="layer" data-depth="0.60" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(174.3px, 58.95px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="0.80" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(232.4px, 78.6px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+      <li class="layer" data-depth="1.00" style="position: absolute; display: block; left: 0px; top: 0px; transform: translate3d(290.5px, 98.25px, 0px); transform-style: preserve-3d; backface-visibility: hidden;"><div class=""></div></li>
+  </ul> -->
+    
+    <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2019/08/28/mysql-pagination-optimization-1/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2019/08/25/why-i-cannot-see-all-pics-in-pictures-panel-when-i-set-lock-screen/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://zazalu.space/2019/08/27/mysql-batch-insert-1/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://zazalu.space/2019/08/27/mysql-batch-insert-1/&text=我还记得去年写过oracle的批量插入随机数据的脚本,今天补个mysql的吧"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://zazalu.space/2019/08/27/mysql-batch-insert-1/&title=我还记得去年写过oracle的批量插入随机数据的脚本,今天补个mysql的吧"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zazalu.space/2019/08/27/mysql-batch-insert-1/&is_video=false&description=我还记得去年写过oracle的批量插入随机数据的脚本,今天补个mysql的吧"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=我还记得去年写过oracle的批量插入随机数据的脚本,今天补个mysql的吧&body=Check out this article: https://zazalu.space/2019/08/27/mysql-batch-insert-1/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://zazalu.space/2019/08/27/mysql-batch-insert-1/&title=我还记得去年写过oracle的批量插入随机数据的脚本,今天补个mysql的吧"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://zazalu.space/2019/08/27/mysql-batch-insert-1/&title=我还记得去年写过oracle的批量插入随机数据的脚本,今天补个mysql的吧"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://zazalu.space/2019/08/27/mysql-batch-insert-1/&title=我还记得去年写过oracle的批量插入随机数据的脚本,今天补个mysql的吧"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://zazalu.space/2019/08/27/mysql-batch-insert-1/&title=我还记得去年写过oracle的批量插入随机数据的脚本,今天补个mysql的吧"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://zazalu.space/2019/08/27/mysql-batch-insert-1/&name=我还记得去年写过oracle的批量插入随机数据的脚本,今天补个mysql的吧&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1"><span class="toc-number">1.</span> <span class="toc-text">1</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#建表"><span class="toc-number">2.</span> <span class="toc-text">建表</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#存储引擎的配置进行优化"><span class="toc-number">3.</span> <span class="toc-text">存储引擎的配置进行优化</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#insert语句优化"><span class="toc-number">4.</span> <span class="toc-text">insert语句优化</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#随机数据如何处理"><span class="toc-number">5.</span> <span class="toc-text">随机数据如何处理?</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+      
+      <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        我还记得去年写过oracle的批量插入随机数据的脚本,今天补个mysql的吧
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Zazalu's Blog</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-08-27T14:25:17.000Z" itemprop="datePublished">2019-08-27</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/计算机/">计算机</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/batchInsert/">batchInsert</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="1"><a href="#1" class="headerlink" title="1"></a>1</h1><p>银行项目一直用的oracle, 所以我回忆起来自己从来没碰过mysql的批量随机数据插入…</p>
+<p>主要是简单记录下批量插入的方式, 会有一个优化的过程, 希望对你有点帮助哦</p>
+<p>下面我就讲解如何插入100w条随机测试数据到mysql中</p>
+<h1 id="建表"><a href="#建表" class="headerlink" title="建表"></a>建表</h1><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- drop table Merchant</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> Merchant</span><br><span class="line">(</span><br><span class="line">    <span class="keyword">id</span> <span class="built_in">int</span> auto_increment,</span><br><span class="line">    merchantId <span class="built_in">VARCHAR</span>(<span class="number">10</span>) <span class="keyword">not</span> <span class="literal">null</span> <span class="keyword">comment</span> <span class="string">'10位商户编号'</span>,</span><br><span class="line">    merchantName <span class="built_in">VARCHAR</span>(<span class="number">10</span>) <span class="keyword">not</span> <span class="literal">null</span> <span class="keyword">comment</span> <span class="string">'商户名称'</span>,</span><br><span class="line">    createTime <span class="built_in">VARCHAR</span>(<span class="number">12</span>) <span class="keyword">not</span> <span class="literal">null</span> <span class="keyword">comment</span> <span class="string">'创建时间'</span>,</span><br><span class="line">    <span class="keyword">constraint</span> Merchant_pk</span><br><span class="line">        primary <span class="keyword">key</span> (<span class="keyword">id</span>)</span><br><span class="line">) <span class="keyword">comment</span> <span class="string">'商户表'</span>;</span><br></pre></td></tr></table></figure>
+<h1 id="存储引擎的配置进行优化"><a href="#存储引擎的配置进行优化" class="headerlink" title="存储引擎的配置进行优化"></a>存储引擎的配置进行优化</h1><p>可以见:<br><a href="https://blog.csdn.net/QWERDF10010/article/details/79770764" target="_blank" rel="noopener">https://blog.csdn.net/QWERDF10010/article/details/79770764</a></p>
+<h1 id="insert语句优化"><a href="#insert语句优化" class="headerlink" title="insert语句优化"></a>insert语句优化</h1><p>先来看看最暴力的插入</p>
+<ol>
+<li>包含100w条数据的爆炸sql :)</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 100w条insert语句</span></span><br><span class="line"><span class="keyword">insert</span> (...) <span class="keyword">values</span> (...);</span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line">..</span><br><span class="line">.</span><br></pre></td></tr></table></figure>
+<p>这种形式,就算MyISAM都救不了你, 按下回车后你就可以去睡一觉了, 醒来说不定就好了,嘻嘻</p>
+<ol start="2">
+<li>存储过程 写个循环100w次的插入</li>
+</ol>
+<p>这种其实和第一种性质一样, 也是巨慢无比的.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">delimiter //</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">procedure</span> batchInsert()</span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">    <span class="keyword">declare</span> <span class="keyword">num</span> <span class="built_in">int</span>;</span><br><span class="line">    <span class="keyword">set</span> <span class="keyword">num</span>=<span class="number">1</span>;</span><br><span class="line">    while num&lt;=1000000do</span><br><span class="line">    <span class="comment">-- 100w次loop</span></span><br><span class="line">    <span class="keyword">insert</span> (...) <span class="keyword">values</span> (...);</span><br><span class="line">    <span class="keyword">set</span> <span class="keyword">num</span>=<span class="keyword">num</span>+<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">end</span> <span class="keyword">while</span>;</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line">//</span><br><span class="line">delimiter;</span><br></pre></td></tr></table></figure>
+<p>看完了暴力的,就来看看怎么优化.</p>
+<p>其实优化很简单, 有一种特别简便的方式就可以达到插入速度提升几百倍, 就是使用批量插入的功能</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> (xxx) <span class="keyword">values</span>(...),(...),(...),(...),(...) ....;</span><br></pre></td></tr></table></figure>
+<p>你可以像上面这样, 一次插入几百条.<br>然后你就会惊人的发现, 真的很快, 100w条数据大概30多s左右(不同机器环境稍微会不同)就可以完成,由于30s左右已经是我可以接受的范围了. 所以就停手不进行下一步优化, 如果你还是有一点深入的兴趣, 可以看看<a href="https://www.jianshu.com/p/36b87cb3a05a" target="_blank" rel="noopener">这篇文章</a></p>
+<h1 id="随机数据如何处理"><a href="#随机数据如何处理" class="headerlink" title="随机数据如何处理?"></a>随机数据如何处理?</h1><p>你可以使用sql的函数,也可以用任意高级编程语言生成sql文件, 这样你就可以接住高级编程语言的一些api去做随机数据的处理了</p>
+<p>如果你和我一样,希望统一用sql帮我们干事, 那么目前来看<code>rand()</code>, <code>floor()</code>等函数适合你, 但是注意多一个函数就相当于sql慢一点哦 :)</p>
+
+  </div>
+</article>
+
+
+
+      
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1"><span class="toc-number">1.</span> <span class="toc-text">1</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#建表"><span class="toc-number">2.</span> <span class="toc-text">建表</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#存储引擎的配置进行优化"><span class="toc-number">3.</span> <span class="toc-text">存储引擎的配置进行优化</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#insert语句优化"><span class="toc-number">4.</span> <span class="toc-text">insert语句优化</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#随机数据如何处理"><span class="toc-number">5.</span> <span class="toc-text">随机数据如何处理?</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://zazalu.space/2019/08/27/mysql-batch-insert-1/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://zazalu.space/2019/08/27/mysql-batch-insert-1/&text=我还记得去年写过oracle的批量插入随机数据的脚本,今天补个mysql的吧"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://zazalu.space/2019/08/27/mysql-batch-insert-1/&title=我还记得去年写过oracle的批量插入随机数据的脚本,今天补个mysql的吧"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zazalu.space/2019/08/27/mysql-batch-insert-1/&is_video=false&description=我还记得去年写过oracle的批量插入随机数据的脚本,今天补个mysql的吧"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=我还记得去年写过oracle的批量插入随机数据的脚本,今天补个mysql的吧&body=Check out this article: https://zazalu.space/2019/08/27/mysql-batch-insert-1/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://zazalu.space/2019/08/27/mysql-batch-insert-1/&title=我还记得去年写过oracle的批量插入随机数据的脚本,今天补个mysql的吧"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://zazalu.space/2019/08/27/mysql-batch-insert-1/&title=我还记得去年写过oracle的批量插入随机数据的脚本,今天补个mysql的吧"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://zazalu.space/2019/08/27/mysql-batch-insert-1/&title=我还记得去年写过oracle的批量插入随机数据的脚本,今天补个mysql的吧"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://zazalu.space/2019/08/27/mysql-batch-insert-1/&title=我还记得去年写过oracle的批量插入随机数据的脚本,今天补个mysql的吧"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://zazalu.space/2019/08/27/mysql-batch-insert-1/&name=我还记得去年写过oracle的批量插入随机数据的脚本,今天补个mysql的吧&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+  </div>
+</div>
+
+      
+      
+
+
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script src="https://he_jia_jun.gitee.io/zazalumonster.github.io//js/md5.min.js"></script>
+    <div id="gitalk-container"></div>
+    <script>
+    if(location.pathname == '/'){
+      //首页不需要评论系统
+    }else{
+      var gitalk = new Gitalk({
+        clientID: '73a23fdac799d4edb132',
+        clientSecret: '8200d919660d513fdd8629a7c45c13d7d13d9b6f',
+        repo: 'zazaluMonster.github.io',
+        owner: 'zazaluMonster',
+        admin: 'zazaluMonster',
+        id: md5(location.origin + "/" +location.pathname),
+        distractionFreeMode: false,
+        pagerDirection: 'first'
+      });
+      gitalk.render('gitalk-container');
+    }
+    </script>
+    <!-- gitalk -->
+
+<footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 zazalu
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">主页</a></li>
+         
+          <li><a href="/about/">我是谁</a></li>
+         
+          <li><a href="/archives/">随笔</a></li>
+         
+          <li><a href="/tags/">标签</a></li>
+         
+          <li><a href="/categories/">分类</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+  <!-- 不蒜子统计 -->
+ <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <div>
+    <span id="busuanzi_container_site_pv">
+      本站总访问量<span id="busuanzi_value_site_pv"></span>次
+    </span>
+    <span id="busuanzi_container_site_uv">
+      本站访客数<span id="busuanzi_value_site_uv"></span>人次
+    </span>
+  </div>
+ 
+</footer>
+
+
+
+
+    </div>
+    <!-- styles -->
+<!-- <link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/justified-gallery/css/justifiedGallery.min.css"> -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+    <!-- jquery -->
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/jquery/jquery.min.js"></script>
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="https://he_jia_jun.gitee.io/zazalumonster.github.io/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+    <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?15ccc3aa9c18bcd901435b78b3c09e78";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+<!-- Disqus Comments -->
+
+
+
+    
+
+
+    <!-- 药水制作师live2d -->
+    <!-- 引入css -->
+    <link rel="stylesheet" href="/live2d/css/font-awesome/css/font-awesome.min.css" />
+    <link href="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/css/waifu.css" rel="stylesheet" type="text/css" />
+    <!-- html -->
+
+    <div class="waifu-switch">Live2d</div>
+    <div class="waifu">
+      <div class="waifu-tips"></div>
+      <canvas id="live2d" width="252" height="225" class="live2d"></canvas>
+      <div class="waifu-tool">
+        <i class="fa-times waifu-closed"></i>
+      </div>
+    </div>
+    <!-- 引入js -->
+    <script src="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/live2d.js"></script>
+    <script async src="https://he_jia_jun.gitee.io/zazalumonster.github.io//live2d/waifu-tips.js"></script>
+    <script type="text/javascript">
+      loadlive2d("live2d", "/live2d/Pio/model.json");
+    </script>
+    <!-- 药水制作师live2d插件结束 -->
+
+    <!-- 引入视差滚动特效js -->
+    <!-- <script src="/parallax/parallax.min.js"></script>
+<script src="/parallax/parallaxController.js"></script> -->
+
+    <!-- 不蒜子统计请见footer.ejs -->
+
+  </body>
+
+  </html>
