@@ -30,14 +30,14 @@
   </url>
   
   <url>
-    <loc>https://zazalu.space/interview/index.html</loc>
+    <loc>https://zazalu.space/resume/index.html</loc>
     
     <lastmod>2020-04-04T01:13:08.406Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://zazalu.space/resume/index.html</loc>
+    <loc>https://zazalu.space/interview/index.html</loc>
     
     <lastmod>2020-04-04T01:13:08.406Z</lastmod>
     
@@ -205,14 +205,14 @@
   </url>
   
   <url>
-    <loc>https://zazalu.space/2019/08/14/mysql-redis-diff-in-my-eyes/</loc>
+    <loc>https://zazalu.space/2019/08/24/one-day-i-lost-all-my-Memory-but-i-just-laugh-at-last/</loc>
     
     <lastmod>2020-04-04T01:13:08.395Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://zazalu.space/2019/08/24/one-day-i-lost-all-my-Memory-but-i-just-laugh-at-last/</loc>
+    <loc>https://zazalu.space/2019/08/14/mysql-redis-diff-in-my-eyes/</loc>
     
     <lastmod>2020-04-04T01:13:08.395Z</lastmod>
     
@@ -226,13 +226,6 @@
   </url>
   
   <url>
-    <loc>https://zazalu.space/2019/08/27/mysql-batch-insert-1/</loc>
-    
-    <lastmod>2020-04-04T01:13:08.394Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://zazalu.space/2019/07/31/mybatis-level-2-cache-global-i/</loc>
     
     <lastmod>2020-04-04T01:13:08.394Z</lastmod>
@@ -240,14 +233,21 @@
   </url>
   
   <url>
-    <loc>https://zazalu.space/2019/10/28/learn-stream-api-2/</loc>
+    <loc>https://zazalu.space/2019/08/27/mysql-batch-insert-1/</loc>
+    
+    <lastmod>2020-04-04T01:13:08.394Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zazalu.space/2019/11/06/learn-stream-api-3-md/</loc>
     
     <lastmod>2020-04-04T01:13:08.393Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://zazalu.space/2019/11/06/learn-stream-api-3-md/</loc>
+    <loc>https://zazalu.space/2019/10/28/learn-stream-api-2/</loc>
     
     <lastmod>2020-04-04T01:13:08.393Z</lastmod>
     
@@ -275,14 +275,14 @@
   </url>
   
   <url>
-    <loc>https://zazalu.space/2019/10/25/learn-FP-4/</loc>
+    <loc>https://zazalu.space/2019/10/21/learn-FP-2/</loc>
     
     <lastmod>2020-04-04T01:13:08.391Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://zazalu.space/2019/10/21/learn-FP-2/</loc>
+    <loc>https://zazalu.space/2019/10/25/learn-FP-4/</loc>
     
     <lastmod>2020-04-04T01:13:08.391Z</lastmod>
     
@@ -303,14 +303,14 @@
   </url>
   
   <url>
-    <loc>https://zazalu.space/2019/09/25/java-amount-calculation/</loc>
+    <loc>https://zazalu.space/2019/07/13/javascript-setCookie-path/</loc>
     
     <lastmod>2020-04-04T01:13:08.390Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://zazalu.space/2019/07/13/javascript-setCookie-path/</loc>
+    <loc>https://zazalu.space/2019/09/25/java-amount-calculation/</loc>
     
     <lastmod>2020-04-04T01:13:08.390Z</lastmod>
     
@@ -422,14 +422,14 @@
   </url>
   
   <url>
-    <loc>https://zazalu.space/2019/06/24/JavaEncoded3/</loc>
+    <loc>https://zazalu.space/2019/06/11/JAVA%E5%A0%86%E6%8E%92%E5%BA%8F/</loc>
     
     <lastmod>2020-04-04T01:13:08.379Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://zazalu.space/2019/06/11/JAVA%E5%A0%86%E6%8E%92%E5%BA%8F/</loc>
+    <loc>https://zazalu.space/2019/06/24/JavaEncoded3/</loc>
     
     <lastmod>2020-04-04T01:13:08.379Z</lastmod>
     
